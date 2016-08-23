@@ -1,0 +1,31 @@
+{
+    "name": "snscripts/mycal",
+    "description": "Framework agnostic Calendar & Events",
+    "keywords": ["Calendar", "Events", "Framework Agnostic"],
+    "homepage": "https://github.com/snscripts/MyCal",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mike Barlow",
+            "email": "mike@mikebarlow.co.uk",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "squizlabs/php_codesniffer": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Snscripts\\MyCal\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Snscripts\\MyCal\\Tests\\": "tests"
+        }
+    }
+}
