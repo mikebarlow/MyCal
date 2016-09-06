@@ -13,7 +13,8 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "cartalyst/collections": "1.1.*"
+        "cartalyst/collections": "1.1.*",
+        "aura/payload": "3.0.*"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
@@ -28,5 +29,8 @@
         "psr-4": {
             "Snscripts\\MyCal\\Tests\\": "tests"
         }
+    },
+    "suggests": {
+        "illuminate/database": "Use Eloquent as the method for saving your calendars / events"
     }
 }
