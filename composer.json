@@ -30,7 +30,7 @@
             "Snscripts\\MyCal\\Tests\\": "tests"
         }
     },
-    "suggests": {
+    "suggest": {
         "illuminate/database": "Use Eloquent as the method for saving your calendars / events"
     }
 }
