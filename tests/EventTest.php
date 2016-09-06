@@ -1,11 +1,11 @@
 <?php
 namespace Snscripts\MyCal\Tests;
 
-use Snscripts\MyCal\Calendar;
+use Snscripts\MyCal\Event;
 use Snscripts\MyCal\Interfaces\CalendarInterface;
 use Snscripts\MyCal\Interfaces\EventInterface;
 
-class CalendarTest extends \PHPUnit_Framework_TestCase
+class EventTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -16,8 +16,8 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
     public function testCanCreateInstance()
     {
         $this->assertInstanceOf(
-            'Snscripts\MyCal\Calendar',
-            new Calendar(
+            'Snscripts\MyCal\Event',
+            new Event(
                 $this->CalendarInterfaceMock,
                 $this->EventInterfaceMock
             )
@@ -26,51 +26,59 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 
     public function testBaseObjectGetSet()
     {
-        $Calendar = new Calendar(
+        $Event = new Event(
             $this->CalendarInterfaceMock,
             $this->EventInterfaceMock
         );
 
-        $Calendar->name = 'My Calendar';
-        $Calendar->author = 'Mike';
+        $Event->name = 'My Event';
+        $Event->location = 'UK';
+        $Event->date = '2016-09-06';
 
         $this->assertSame(
-            'My Calendar',
-            $Calendar->name
+            'My Event',
+            $Event->name
         );
 
         $this->assertSame(
-            'Mike',
-            $Calendar->author
+            'UK',
+            $Event->location
+        );
+
+        $this->assertSame(
+            '2016-09-06',
+            $Event->date
         );
     }
 
     public function testBaseObjectToArrayAndToJson()
     {
-        $Calendar = new Calendar(
+        $Event = new Event(
             $this->CalendarInterfaceMock,
             $this->EventInterfaceMock
         );
 
-        $Calendar->name = 'My Calendar';
-        $Calendar->author = 'Mike';
+        $Event->name = 'My Event';
+        $Event->location = 'UK';
+        $Event->date = '2016-09-06';
 
         $this->assertSame(
             [
-                'name' => 'My Calendar',
-                'author' => 'Mike'
+                'name' => 'My Event',
+                'location' => 'UK',
+                'date' => '2016-09-06'
             ],
-            $Calendar->toArray()
+            $Event->toArray()
         );
 
         $this->assertSame(
-            '{"name":"My Calendar","author":"Mike"}',
-            $Calendar->toJson()
+            '{"name":"My Event","location":"UK","date":"2016-09-06"}',
+            $Event->toJson()
         );
 
         $this->assertSame(
-            '{"name":"My Calendar","author":"Mike"}',
-            $Calendar->__toString()
+            '{"name":"My Event","location":"UK","date":"2016-09-06"}',
+            $Event->__toString()
         );
     }
 }
