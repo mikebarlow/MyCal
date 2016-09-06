@@ -20,6 +20,6 @@ class Calendar
         EventInterface $eventProvider
     ) {
         $this->calendarProvider = $calendarProvider;
-        $this->$eventProvider = $eventProvider;
+        $this->eventProvider = $eventProvider;
     }
 }

@@ -21,7 +21,7 @@ class CalendarFactory
         EventInterface $eventProvider
     ) {
         $this->calendarProvider = $calendarProvider;
-        $this->$eventProvider = $eventProvider;
+        $this->eventProvider = $eventProvider;
     }
 
     /**

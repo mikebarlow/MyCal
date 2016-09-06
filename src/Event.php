@@ -12,6 +12,6 @@ class Event
      */
     public function __construct(EventInterface $eventProvider)
     {
-        $this->$eventProvider = $eventProvider;
+        $this->eventProvider = $eventProvider;
     }
 }
