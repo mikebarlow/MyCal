@@ -9,6 +9,7 @@ class CalendarFactoryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->CalendarInterfaceMock = $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+        $this->DateFactoryMock = $this->getMock('\Snscripts\MyCal\DateFactory');
     }
 
     public function testCanCreateInstance()
@@ -16,7 +17,8 @@ class CalendarFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(
             'Snscripts\MyCal\CalendarFactory',
             new CalendarFactory(
-                $this->CalendarInterfaceMock
+                $this->CalendarInterfaceMock,
+                $this->DateFactoryMock
             )
         );
     }
@@ -24,7 +26,8 @@ class CalendarFactoryTest extends \PHPUnit_Framework_TestCase
     public function testNewInstanceReturnsCalendarObject()
     {
         $Factory = new CalendarFactory(
-            $this->CalendarInterfaceMock
+            $this->CalendarInterfaceMock,
+            $this->DateFactoryMock
         );
 
         $this->assertInstanceOf(
