@@ -2,26 +2,21 @@
 namespace Snscripts\MyCal;
 
 use Snscripts\MyCal\Interfaces\CalendarInterface;
-use Snscripts\MyCal\Interfaces\EventInterface;
-use Snscripts\MyCal\Calendar;
+use Snscripts\MyCal\Calendar\Calendar;
 
 class CalendarFactory
 {
     protected $calendarProvider;
-    protected $eventProvider;
 
     /**
      * Setup a new calendar factory with these providers
      *
      * @param CalendarInterface $calendarProvider
-     * @param EventInterface $eventProvider
      */
     public function __construct(
-        CalendarInterface $calendarProvider,
-        EventInterface $eventProvider
+        CalendarInterface $calendarProvider
     ) {
         $this->calendarProvider = $calendarProvider;
-        $this->eventProvider = $eventProvider;
     }
 
     /**
@@ -32,8 +27,7 @@ class CalendarFactory
     public function newInstance()
     {
         return new Calendar(
-            $this->calendarProvider,
-            $this->eventProvider
+            $this->calendarProvider
         );
     }
 }

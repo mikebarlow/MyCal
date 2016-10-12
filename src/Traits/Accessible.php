@@ -1,7 +1,8 @@
 <?php
-namespace Snscripts\MyCal;
 
-class BaseObject
+namespace Snscripts\MyCal\Traits;
+
+trait Accessible
 {
     protected $data = [];
 
