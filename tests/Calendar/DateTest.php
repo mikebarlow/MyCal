@@ -2,6 +2,7 @@
 namespace Snscripts\MyCal\Tests;
 
 use Snscripts\MyCal\Calendar\Date;
+use DateTimeZone;
 
 class DateTest extends \PHPUnit_Framework_TestCase
 {
@@ -9,7 +10,11 @@ class DateTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(
             'Snscripts\MyCal\Calendar\Date',
-            new Date
+            new Date(
+                time(),
+                new DateTimeZone('Europe/London'),
+                Date::MONDAY
+            )
         );
     }
 }
