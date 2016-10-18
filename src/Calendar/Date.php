@@ -9,6 +9,7 @@ class Date
     use Traits\Accessible;
 
     protected $timestamp;
+    protected $datetime;
     protected $timezone;
     protected $isWeekend;
     protected $isWeekStart;
@@ -31,9 +32,9 @@ class Date
      */
     public function __construct($timestamp, \DateTimeZone $Timezone, $weekStart)
     {
-        $date = date('Y-m-d H:i:s', $timestamp);
-        $this->isWeekend = $this->setWeekend($date, $Timezone);
-        $this->isWeekStart = $this->setWeekStart($date, $Timezone, $weekStart);
+        $this->datetime = date('Y-m-d H:i:s', $timestamp);
+        $this->isWeekend = $this->setWeekend($this->datetime, $Timezone);
+        $this->isWeekStart = $this->setWeekStart($this->datetime, $Timezone, $weekStart);
 
         $this->timestamp = $timestamp;
         $this->timezone = $Timezone;
@@ -94,5 +95,28 @@ class Date
         $DateTime->setTimezone($Timezone);
 
         return ($DateTime->format('w') === $weekStart);
+    }
+
+    /**
+     * return the date given the format
+     *
+     * @param string $format Date format as php.net/date
+     * @param DateTimeZone $Timezone Optional custom timezone to set
+     * @return string $date
+     */
+    public function display($format, $Timezone = '')
+    {
+        $DateTime = new \DateTime(
+            $this->datetime,
+            new DateTimeZone('UTC')
+        );
+
+        if (! empty($Timezone) && is_a($Timezone, 'DateTimeZone')) {
+            $DateTime->setTimezone($Timezone);
+        } else {
+            $DateTime->setTimezone($this->timezone);
+        }
+
+        return $DateTime->format($format);
     }
 }
