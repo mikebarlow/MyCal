@@ -2,7 +2,7 @@
     "name": "snscripts/mycal",
     "description": "Framework agnostic Calendar & Events",
     "keywords": ["Calendar", "Events", "Framework Agnostic"],
-    "homepage": "https://github.com/snscripts/MyCal",
+    "homepage": "https://github.com/mikebarlow/MyCal",
     "license": "MIT",
     "authors": [
         {
