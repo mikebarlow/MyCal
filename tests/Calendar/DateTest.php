@@ -48,4 +48,61 @@ class DateTest extends \PHPUnit_Framework_TestCase
             $Date->display('Y-m-d H:i:s')
         );
     }
+
+    public function testIsWeekStartReturnsTrueWhenWeekStartMatches()
+    {
+        // 24/10/2016 is a Monday - Date is marked for week start of Monday
+        $time = mktime('12', '00', '00', '10', '24', '2016');
+        $Date = new Date(
+            $time,
+            new DateTimeZone('Europe/London'),
+            Date::MONDAY
+        );
+
+        $this->assertTrue(
+            $Date->isWeekStart()
+        );
+    }
+
+    public function testIsWeekStartReturnsFalseWhenWeekStartDoesNotMatch()
+    {
+        // 23/10/2016 is a Sunday - Date is marked for week start of Monday
+        $time = mktime('12', '00', '00', '10', '23', '2016');
+        $Date = new Date(
+            $time,
+            new DateTimeZone('Europe/London'),
+            Date::MONDAY
+        );
+
+        $this->assertFalse(
+            $Date->isWeekStart()
+        );
+    }
+
+    public function testIsWeekendReturnsCorrectValue()
+    {
+        // 24/10/2016 is a Monday
+        $time = mktime('12', '00', '00', '10', '24', '2016');
+        $Date = new Date(
+            $time,
+            new DateTimeZone('Europe/London'),
+            Date::MONDAY
+        );
+
+        $this->assertFalse(
+            $Date->isWeekend()
+        );
+
+        // 23/10/2016 is a Sunday
+        $time = mktime('12', '00', '00', '10', '23', '2016');
+        $Date = new Date(
+            $time,
+            new DateTimeZone('Europe/London'),
+            Date::MONDAY
+        );
+
+        $this->assertTrue(
+            $Date->isWeekend()
+        );
+    }
 }

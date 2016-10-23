@@ -75,7 +75,7 @@ class Date
         );
         $DateTime->setTimezone($Timezone);
 
-        return in_array($DateTime->format('w'), [6, 0]);
+        return in_array(intval($DateTime->format('w')), [6, 0]);
     }
 
     /**
@@ -94,7 +94,7 @@ class Date
         );
         $DateTime->setTimezone($Timezone);
 
-        return ($DateTime->format('w') === $weekStart);
+        return (intval($DateTime->format('w')) === $weekStart);
     }
 
     /**
