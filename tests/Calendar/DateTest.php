@@ -49,6 +49,38 @@ class DateTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testDisplayMethodsCorrectlyOutputsDateWithExtraTimeZone()
+    {
+        $time = mktime('12', '00', '00', '10', '23', '2016');
+        $Date = new Date(
+            $time,
+            new DateTimeZone('Europe/London'),
+            Date::MONDAY
+        );
+
+        $this->assertSame(
+            '2016-10-23 08:00:00',
+            $Date->display(
+                'Y-m-d H:i:s',
+                new DateTimeZone('America/New_York')
+            )
+        );
+
+        $Date = new Date(
+            $time,
+            new DateTimeZone('America/New_York'),
+            Date::MONDAY
+        );
+
+        $this->assertSame(
+            '2016-10-23 14:00:00',
+            $Date->display(
+                'Y-m-d H:i:s',
+                new DateTimeZone('Europe/Berlin')
+            )
+        );
+    }
+
     public function testIsWeekStartReturnsTrueWhenWeekStartMatches()
     {
         // 24/10/2016 is a Monday - Date is marked for week start of Monday
