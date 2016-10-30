@@ -11,18 +11,22 @@ class Calendar
 
     protected $calendarProvider;
     protected $dateFactory;
+    protected $Options;
 
     /**
      * Setup a new calendar object
      *
      * @param CalendarInterface $calendarProvider
      * @param DateFactory $dateFactory
+     * @param Options $Options
      */
     public function __construct(
         CalendarInterface $calendarProvider,
-        DateFactory $dateFactory
+        DateFactory $dateFactory,
+        Options $Options
     ) {
         $this->calendarProvider = $calendarProvider;
         $this->dateFactory = $dateFactory;
+        $this->Options = $Options;
     }
 }

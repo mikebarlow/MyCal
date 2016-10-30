@@ -16,20 +16,21 @@ class Options
     public $defaultTimezone;
 
     /**
-     * constructor to setup Options
+     * Static method for loading options up
      *
-     * @param array $options calendar options
+     * @static
+     * @param array $userOpts
+     * @return Options $Options
      */
-    public function __construct($options)
+    public static function set($userOpts = [])
     {
-        $options = array_merge(
-            $this->defaultOptions(),
-            $options
+        $Options = new static;
+        $Options->mergeVars(
+            $Options->defaultOptions(),
+            $userOpts
         );
 
-        foreach ($options as $key => $value) {
-            $this->{$key} = $value;
-        }
+        return $Options;
     }
 
     /**
@@ -43,5 +44,23 @@ class Options
             'weekStartsOn' => Date::MONDAY,
             'defaultTimezone' => 'Europe/London'
         ];
+    }
+
+    /**
+     * Merge the default options with the user supplied
+     *
+     * @param array $defaults
+     * @param array $userOpts
+     */
+    public function mergeVars($defaults, $userOpts)
+    {
+        $options = array_merge(
+            $this->defaultOptions(),
+            $userOpts
+        );
+
+        foreach ($options as $key => $value) {
+            $this->{$key} = $value;
+        }
     }
 }
