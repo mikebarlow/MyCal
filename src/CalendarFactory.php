@@ -27,9 +27,10 @@ class CalendarFactory
     /**
      * create a new calendar instance
      *
+     * @param mixed $id Identifier to find calendar
      * @return Calendar $Calendar
      */
-    public function newInstance()
+    public function load($id = '')
     {
         return new Calendar(
             $this->calendarProvider,

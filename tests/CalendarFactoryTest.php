@@ -32,7 +32,7 @@ class CalendarFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(
             'Snscripts\MyCal\Calendar\Calendar',
-            $Factory->newInstance()
+            $Factory->load()
         );
     }
 }
