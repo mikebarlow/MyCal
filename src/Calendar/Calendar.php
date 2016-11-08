@@ -52,7 +52,7 @@ class Calendar
             $endDate
         );
 
-        $DateTimeZone = new DateTimeZone(
+        $DateTimeZone = new \DateTimeZone(
             $this->Options->defaultTimezone
         );
 
