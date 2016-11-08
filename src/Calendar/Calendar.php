@@ -60,7 +60,7 @@ class Calendar
             $dates[] = $this->dateFactory->newInstance(
                 $date->getTimestamp(),
                 $DateTimeZone,
-                $this->Options->weekStart
+                $this->Options->weekStartsOn
             );
         }
 
