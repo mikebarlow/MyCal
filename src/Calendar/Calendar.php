@@ -33,29 +33,57 @@ class Calendar
     /**
      * Get a collection of dates inclusive of given dates
      *
-     * @todo tidy this up
-     * @param date $start Start date to get Y-m-d format
-     * @param date $end End date to get Y-m-d format
+     * @param string $start Start date to get Y-m-d format
+     * @param string $end End date to get Y-m-d format
      * @return \Cartalyst\Collections\Collection
      */
     public function build($start, $end)
     {
-        $dates = [];
-
-        $startDate = new \DateTime($start);
-        $endDate = new \DateTime($end);
-
-        $interval = new \DateInterval('P1D');
-        $range = new \DatePeriod(
-            $startDate,
-            $interval,
-            $endDate
+        $dates = $this->processDateRange(
+            $this->getRange($start, $end)
         );
 
+        return new \Cartalyst\Collections\Collection($dates);
+    }
+
+    /**
+     * get a DatePeriod array of dates
+     *
+     * @param string $start Start date to get Y-m-d format
+     * @param string $end End date to get Y-m-d format
+     * @return |DatePeriod
+     */
+    public function getRange($start, $end)
+    {
+        $utcTime = new \DateTimeZone('UTC');
+
+        return new \DatePeriod(
+            new \DateTime(
+                $start,
+                $utcTime
+            ),
+            new \DateInterval('P1D'),
+            (new \DateTime(
+                $end,
+                $utcTime
+            ))->modify("+1 Day")
+        );
+    }
+
+    /**
+     * given a DatePeriod return an array of
+     * MyCal Date Objects
+     *
+     * @param \DatePeriod $range
+     * @return array
+     */
+    public function processDateRange($range)
+    {
         $DateTimeZone = new \DateTimeZone(
             $this->Options->defaultTimezone
         );
 
+        $dates = [];
         foreach ($range as $date) {
             $dates[] = $this->dateFactory->newInstance(
                 $date->getTimestamp(),
@@ -64,6 +92,6 @@ class Calendar
             );
         }
 
-        return new \Cartalyst\Collections\Collection($dates);
+        return $dates;
     }
 }

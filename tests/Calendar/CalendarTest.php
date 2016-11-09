@@ -3,6 +3,7 @@ namespace Snscripts\MyCal\Tests;
 
 use Snscripts\MyCal\Calendar\Calendar;
 use Snscripts\MyCal\Interfaces\CalendarInterface;
+use Snscripts\MyCal\Calendar\Date;
 
 class CalendarTest extends \PHPUnit_Framework_TestCase
 {
@@ -74,6 +75,47 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             '{"name":"My Calendar","author":"Mike"}',
             $Calendar->__toString()
+        );
+    }
+
+    public function testGetRangeReturnsCorrectDateRange()
+    {
+        $Calendar = new Calendar(
+            $this->CalendarInterfaceMock,
+            $this->DateFactoryMock,
+            \Snscripts\MyCal\Calendar\Options::set()
+        );
+
+        $this->assertInstanceOf(
+            'DatePeriod',
+            $Calendar->getRange('2016-11-01', '2016-11-30')
+        );
+    }
+
+    public function testProcessDateRangeReturnsArrayOfDateObjects()
+    {
+        $Calendar = new Calendar(
+            $this->CalendarInterfaceMock,
+            new \Snscripts\MyCal\DateFactory,
+            \Snscripts\MyCal\Calendar\Options::set()
+        );
+
+        $this->assertSame(
+            [
+                new Date(
+                    strtotime('2016-11-01'),
+                    new \DateTimeZone('Europe/London'),
+                    Date::MONDAY
+                ),
+                new Date(
+                    strtotime('2016-11-02'),
+                    new \DateTimeZone('Europe/London'),
+                    Date::MONDAY
+                )
+            ],
+            $Calendar->processDateRange(
+                $Calendar->getRange('2016-11-01', '2016-11-02')
+            )
         );
     }
 }
