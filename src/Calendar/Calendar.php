@@ -31,6 +31,22 @@ class Calendar
     }
 
     /**
+     * display html table calendar of given dates
+     *
+     * @param string $start Start date to get Y-m-d format
+     * @param string $end End date to get Y-m-d format
+     * @return string
+     */
+    public function display($start, $end)
+    {
+        $dates = $this->build($start, $end);
+        $html = '';
+
+
+        return $html;
+    }
+
+    /**
      * Get a collection of dates inclusive of given dates
      *
      * @param string $start Start date to get Y-m-d format
