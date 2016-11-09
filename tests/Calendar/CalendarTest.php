@@ -100,22 +100,30 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             \Snscripts\MyCal\Calendar\Options::set()
         );
 
-        $this->assertSame(
-            [
-                new Date(
-                    strtotime('2016-11-01'),
-                    new \DateTimeZone('Europe/London'),
-                    Date::MONDAY
-                ),
-                new Date(
-                    strtotime('2016-11-02'),
-                    new \DateTimeZone('Europe/London'),
-                    Date::MONDAY
-                )
-            ],
-            $Calendar->processDateRange(
-                $Calendar->getRange('2016-11-01', '2016-11-02')
+        $expected = [
+            new Date(
+                strtotime('2016-11-01'),
+                new \DateTimeZone('Europe/London'),
+                Date::MONDAY
+            ),
+            new Date(
+                strtotime('2016-11-02'),
+                new \DateTimeZone('Europe/London'),
+                Date::MONDAY
             )
+        ];
+
+        $generated = $Calendar->processDateRange(
+            $Calendar->getRange('2016-11-01', '2016-11-02')
         );
+
+        foreach ($expected as $key => $Date) {
+            $this->assertSame(
+                $Date->display('Y-m-d'),
+                $generated[$key]->display('Y-m-d')
+            );
+        }
+
+        
     }
 }
