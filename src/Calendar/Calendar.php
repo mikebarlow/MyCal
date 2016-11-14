@@ -166,7 +166,6 @@ class Calendar
                 $first = false;
             }
 
-
             $body .= '<td class="' . $this->Options->displayTable['dateClass'] . '">' .
                 $Date->display('j') .
                 '</td>';

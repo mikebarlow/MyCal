@@ -59,8 +59,8 @@ class Options
                 'headerRowClass' => 'mycal-header-row',
                 'headerClass' => 'mycal-header',
                 'rowClass' => 'mycal-row',
-                'date' => 'mycal-date',
-                'empty' => 'mycal-empty'
+                'dateClass' => 'mycal-date',
+                'emptyClass' => 'mycal-empty'
             ],
             'days' => [
                 0 => 'Sun',
