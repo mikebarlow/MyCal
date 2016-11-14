@@ -42,9 +42,11 @@ class Calendar
         $dates = $this->build($start, $end);
 
         $header = $this->getTableHeader();
-        $content = $this->getTableBody();
+        $content = $this->getTableBody(
+            $dates
+        );
 
-        return $this->tableWrapper($header . $content);
+        return $this->getTableWrapper($header . $content);
     }
 
     /**
@@ -112,14 +114,10 @@ class Calendar
         return $dates;
     }
 
-    public function tableWrapper($content)
+    public function getTableWrapper($content)
     {
-        return '<table
-            class="' . $this->Options->displayTable['tableClass'] . '"
-            id="' . $this->Options->displayTable['tableId'] . '">' .
-
+        return '<table class="' . $this->Options->displayTable['tableClass'] . '" id="' . $this->Options->displayTable['tableId'] . '">' .
             $content .
-
             '</table>';
     }
 
@@ -143,5 +141,37 @@ class Calendar
 
         $header .= '</tr></thead>';
         return $header;
+    }
+
+    public function getTableBody($dates)
+    {
+        $body = '<tbody><tr class="' . $this->Options->displayTable['rowClass'] . '">';
+
+        $day = $startOn = $this->Options->weekStartsOn;
+        $first = true;
+
+        foreach ($dates as $Date) {
+            if ($first && ! $Date->isWeekStart()) {
+
+                while($day != $startOn) {
+                    $body .= '<td class="' . $this->Options->displayTable['emptyClass'] . '"> &nbsp; </td>';
+
+                    if ($day == 6) {
+                        $day = 0;
+                    } else {
+                        $day++;
+                    }
+                }
+
+                $first = false;
+            }
+
+
+            $body .= '<td class="' . $this->Options->displayTable['dateClass'] . '">' .
+                $Date->display('j') .
+                '</td>';
+        }
+
+        return $body . '</tr></tbody>';
     }
 }
