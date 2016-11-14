@@ -100,30 +100,57 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             \Snscripts\MyCal\Calendar\Options::set()
         );
 
-        $expected = [
-            new Date(
-                strtotime('2016-11-01'),
-                new \DateTimeZone('Europe/London'),
-                Date::MONDAY
-            ),
-            new Date(
-                strtotime('2016-11-02'),
-                new \DateTimeZone('Europe/London'),
-                Date::MONDAY
-            )
-        ];
-
         $generated = $Calendar->processDateRange(
-            $Calendar->getRange('2016-11-01', '2016-11-02')
+            $Calendar->getRange('2016-11-01', '2016-11-05')
         );
-
-        foreach ($expected as $key => $Date) {
-            $this->assertSame(
-                $Date->display('Y-m-d'),
-                $generated[$key]->display('Y-m-d')
+        $dates = [];
+        foreach ($generated as $Date) {
+            $this->assertInstanceOf(
+                'Snscripts\MyCal\Calendar\Date',
+                $Date
             );
+            $dates[] = $Date->display('Y-m-d');
         }
 
-        
+        $this->assertTrue(
+            is_array($generated)
+        );
+
+        $this->assertSame(
+            ['2016-11-01', '2016-11-02', '2016-11-03', '2016-11-04', '2016-11-05'],
+            $dates
+        );
+    }
+
+    public function testGetTableHeaderReturnsCorrectHtmlForHeaderRow()
+    {
+        $Calendar = new Calendar(
+            $this->CalendarInterfaceMock,
+            new \Snscripts\MyCal\DateFactory,
+            \Snscripts\MyCal\Calendar\Options::set()
+        );
+
+        $expected = '<thead><tr class="mycal-header-row"><td class="mycal-header">Mon</td><td class="mycal-header">Tue</td><td class="mycal-header">Wed</td><td class="mycal-header">Thu</td><td class="mycal-header">Fri</td><td class="mycal-header">Sat</td><td class="mycal-header">Sun</td></tr></thead>';
+
+        $this->assertSame(
+            $expected,
+            $Calendar->getTableHeader()
+        );
+    }
+
+    public function testGetTableHeaderReturnsCorrectHtmlForHeaderRowWhenStartingOnSunday()
+    {
+        $Calendar = new Calendar(
+            $this->CalendarInterfaceMock,
+            new \Snscripts\MyCal\DateFactory,
+            \Snscripts\MyCal\Calendar\Options::set(['weekStartsOn' => Date::SUNDAY])
+        );
+
+        $expected = '<thead><tr class="mycal-header-row"><td class="mycal-header">Sun</td><td class="mycal-header">Mon</td><td class="mycal-header">Tue</td><td class="mycal-header">Wed</td><td class="mycal-header">Thu</td><td class="mycal-header">Fri</td><td class="mycal-header">Sat</td></tr></thead>';
+
+        $this->assertSame(
+            $expected,
+            $Calendar->getTableHeader()
+        );
     }
 }

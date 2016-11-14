@@ -16,6 +16,16 @@ class Options
     public $defaultTimezone;
 
     /**
+     * array of class / id defaults for the display table
+     */
+    public $displayTable;
+
+    /**
+     * day labels for use on the display calendar
+     */
+    public $days;
+
+    /**
      * Static method for loading options up
      *
      * @static
@@ -42,7 +52,25 @@ class Options
     {
         return [
             'weekStartsOn' => Date::MONDAY,
-            'defaultTimezone' => 'Europe/London'
+            'defaultTimezone' => 'Europe/London',
+            'displayTable' => [
+                'tableClass' => 'table mycal',
+                'tableId' => 'MyCal',
+                'headerRowClass' => 'mycal-header-row',
+                'headerClass' => 'mycal-header',
+                'rowClass' => 'mycal-row',
+                'date' => 'mycal-date',
+                'empty' => 'mycal-empty'
+            ],
+            'days' => [
+                0 => 'Sun',
+                1 => 'Mon',
+                2 => 'Tue',
+                3 => 'Wed',
+                4 => 'Thu',
+                5 => 'Fri',
+                6 => 'Sat'
+            ]
         ];
     }
 

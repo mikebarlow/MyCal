@@ -40,10 +40,11 @@ class Calendar
     public function display($start, $end)
     {
         $dates = $this->build($start, $end);
-        $html = '';
 
+        $header = $this->getTableHeader();
+        $content = $this->getTableBody();
 
-        return $html;
+        return $this->tableWrapper($header . $content);
     }
 
     /**
@@ -109,5 +110,38 @@ class Calendar
         }
 
         return $dates;
+    }
+
+    public function tableWrapper($content)
+    {
+        return '<table
+            class="' . $this->Options->displayTable['tableClass'] . '"
+            id="' . $this->Options->displayTable['tableId'] . '">' .
+
+            $content .
+
+            '</table>';
+    }
+
+    public function getTableHeader()
+    {
+        $header = '<thead><tr class="' . $this->Options->displayTable['headerRowClass'] . '">';
+
+        $day = $this->Options->weekStartsOn;
+
+        for ($i = 0; $i <= 6; $i++) {
+            $header .= '<td class="' . $this->Options->displayTable['headerClass'] . '">' .
+                $this->Options->days[$day] .
+                '</td>';
+
+            if ($day == 6) {
+                $day = 0;
+            } else {
+                $day++;
+            }
+        }
+
+        $header .= '</tr></thead>';
+        return $header;
     }
 }

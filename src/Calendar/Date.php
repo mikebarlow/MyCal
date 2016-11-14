@@ -23,6 +23,7 @@ class Date
         SATURDAY  = 6,
         SUNDAY    = 0;
 
+
     /**
      * setup the date object
      *
