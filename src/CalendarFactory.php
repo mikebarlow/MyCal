@@ -34,7 +34,7 @@ class CalendarFactory
      */
     public function load($id = '', Options $Options = null)
     {
-        if (empty($options)) {
+        if (empty($Options)) {
             $Options = Options::set();
         }
 

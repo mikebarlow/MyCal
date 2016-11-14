@@ -114,6 +114,12 @@ class Calendar
         return $dates;
     }
 
+    /**
+     * given the content of the table wrap in a table
+     *
+     * @param string $content Table header and body to display
+     * @return string
+     */
     public function getTableWrapper($content)
     {
         return '<table class="' . $this->Options->displayTable['tableClass'] . '" id="' . $this->Options->displayTable['tableId'] . '">' .
@@ -121,6 +127,11 @@ class Calendar
             '</table>';
     }
 
+    /**
+     * build the days header for the table
+     *
+     * @return string
+     */
     public function getTableHeader()
     {
         $header = '<thead><tr class="' . $this->Options->displayTable['headerRowClass'] . '">';
@@ -143,6 +154,13 @@ class Calendar
         return $header;
     }
 
+    /**
+     * generate the calendar table dates
+     *
+     * @todo Refactor this majorly, messy and got to be a better way to do it
+     * @param \Cartalyst\Collections\Collection $dates Collection of dates to display
+     * @return string
+     */
     public function getTableBody($dates)
     {
         $body = '<tbody><tr class="' . $this->Options->displayTable['rowClass'] . '">';
@@ -152,8 +170,9 @@ class Calendar
 
         foreach ($dates as $Date) {
             if ($first && ! $Date->isWeekStart()) {
+                $dateDay = $Date->display('w');
 
-                while($day != $startOn) {
+                while($day != $dateDay) {
                     $body .= '<td class="' . $this->Options->displayTable['emptyClass'] . '"> &nbsp; </td>';
 
                     if ($day == 6) {
@@ -164,11 +183,31 @@ class Calendar
                 }
 
                 $first = false;
+            } elseif ($Date->isWeekStart()) {
+                $body .= '</tr><tr class="' . $this->Options->displayTable['rowClass'] . '">';
             }
 
             $body .= '<td class="' . $this->Options->displayTable['dateClass'] . '">' .
                 $Date->display('j') .
                 '</td>';
+        }
+
+        // work out if we need to pad the row
+        $day = $dates->last()->display('w');
+        if ($day == 6) {
+            $day = 0;
+        } else {
+            $day++;
+        }
+
+        while($day !== $startOn) {
+            $body .= '<td class="' . $this->Options->displayTable['emptyClass'] . '"> &nbsp; </td>';
+
+            if ($day == 6) {
+                $day = 0;
+            } else {
+                $day++;
+            }
         }
 
         return $body . '</tr></tbody>';
