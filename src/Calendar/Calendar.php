@@ -181,15 +181,14 @@ class Calendar
                         $day++;
                     }
                 }
-
-                $first = false;
-            } elseif ($Date->isWeekStart()) {
+            } elseif (!$first && $Date->isWeekStart()) {
                 $body .= '</tr><tr class="' . $this->Options->displayTable['rowClass'] . '">';
             }
 
             $body .= '<td class="' . $this->Options->displayTable['dateClass'] . '">' .
                 $Date->display('j') .
                 '</td>';
+            $first = false;
         }
 
         // work out if we need to pad the row
