@@ -1,5 +1,5 @@
 <?php
-namespace Snscripts\MyCal\Providers\Eloquent\Models;
+namespace Snscripts\MyCal\Integrations\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

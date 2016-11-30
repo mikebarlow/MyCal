@@ -8,20 +8,20 @@ use Snscripts\MyCal\Calendar\Options;
 
 class CalendarFactory
 {
-    protected $calendarProvider;
+    protected $calendarIntegration;
     protected $dateFactory;
 
     /**
-     * Setup a new calendar factory with these providers
+     * Setup a new calendar factory
      *
-     * @param CalendarInterface $calendarProvider
+     * @param CalendarInterface $calendarIntegration
      * @param DateFactory $dateFactory
      */
     public function __construct(
-        CalendarInterface $calendarProvider,
+        CalendarInterface $calendarIntegration,
         DateFactory $dateFactory
     ) {
-        $this->calendarProvider = $calendarProvider;
+        $this->calendarIntegration = $calendarIntegration;
         $this->dateFactory = $dateFactory;
     }
 
@@ -39,7 +39,7 @@ class CalendarFactory
         }
 
         return new Calendar(
-            $this->calendarProvider,
+            $this->calendarIntegration,
             $this->dateFactory,
             $Options
         );

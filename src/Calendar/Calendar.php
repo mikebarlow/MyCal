@@ -9,23 +9,23 @@ class Calendar
 {
     use Traits\Accessible;
 
-    protected $calendarProvider;
+    protected $calendarIntegration;
     protected $dateFactory;
     protected $Options;
 
     /**
      * Setup a new calendar object
      *
-     * @param CalendarInterface $calendarProvider
+     * @param CalendarInterface $calendarIntegration
      * @param DateFactory $dateFactory
      * @param Options $Options
      */
     public function __construct(
-        CalendarInterface $calendarProvider,
+        CalendarInterface $calendarIntegration,
         DateFactory $dateFactory,
         Options $Options
     ) {
-        $this->calendarProvider = $calendarProvider;
+        $this->calendarIntegration = $calendarIntegration;
         $this->dateFactory = $dateFactory;
         $this->Options = $Options;
     }

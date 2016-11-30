@@ -1,12 +1,11 @@
 <?php
-namespace Snscripts\MyCal\Providers\Eloquent;
+namespace Snscripts\MyCal\Integrations\Eloquent;
 
 use Snscripts\MyCal\Interfaces\CalendarInterface;
-use Aura\Payload_Interface\PayloadStatus;
 
 class Calendar implements CalendarInterface
 {
-    protected $model = 'Snscripts\Providers\Eloquent\Models\Calendar';
+    protected $model = 'Snscripts\MyCal\Integrations\Eloquent\Models\Calendar';
 
     protected $fields = [
         'id',
