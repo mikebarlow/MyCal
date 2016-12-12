@@ -2,50 +2,25 @@
 namespace Snscripts\MyCal\Integrations\Eloquent;
 
 use Snscripts\MyCal\Interfaces\CalendarInterface;
+use Snscripts\MyCal\Integrations\BaseIntegration;
+use Snscripts\MyCal\Calendar\Calendar as CalendarObj;
 
-class Calendar implements CalendarInterface
+class Calendar extends BaseIntegration implements CalendarInterface
 {
     protected $model = 'Snscripts\MyCal\Integrations\Eloquent\Models\Calendar';
 
-    protected $fields = [
-        'id',
-        'name',
-        'is_active'
-    ];
-
     /**
-     * Save a calendar
+     * Save a calendar and it's options
      *
-     * @param Calendar $Calendar
-     * @return Aura\Payload_Interface\PayloadInterface $Payload
+     * @param Snscripts\MyCal\Calendar $Calendar
+     * @return Snscripts\Result\Result $Result
      */
-    public function save($Calendar)
+    public function save(CalendarObj $Calendar)
     {
-        $Model = new $this->model;
+        $name = $this->extractName($Calendar);
+        $data = $this->extractData($Calendar);
+        $options = $this->extractOptions($Calendar);
 
-        foreach ($this->fields as $field) {
-            if (isset($Calendar->{$field})) {
-                $Model->{$field} = $Calendar->{$field};
-            }
-        }
-
-        // todo: validation?
-
-        $PayloadFactory = new \Aura\Payload\PayloadFactory;
-        $Payload = $PayloadFactory->newInstance();
-
-        try {
-            if ($Model->save()) {
-                $Payload->setStatus(PayloadStatus::SUCCESS);
-            } else {
-                $Payload->setStatus(PayloadStatus::FAILURE);
-            }
-        } catch (\Exception $e) {
-            $Payload->setStatus(PayloadStatus::ERROR)
-                ->setMessages($e->getMessage())
-                ->setInput($Model);
-        }
-
-        return $Payload;
+        
     }
 }

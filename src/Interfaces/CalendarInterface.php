@@ -1,17 +1,13 @@
 <?php
 namespace Snscripts\MyCal\Interfaces;
 
-use Snscripts\MyCal\Calendar;
-use Aura\Payload_Interface\PayloadInterface;
-
 interface CalendarInterface
 {
     /**
-     * Save a calendar
+     * Save a calendar and it's options
      *
-     * @param Calendar $Calendar
-     * @return PayloadInterface $Payload
+     * @param Snscripts\MyCal\Calendar $Calendar
+     * @return Snscripts\Result\Result $Result
      */
     public function save($Calendar);
-
 }
