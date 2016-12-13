@@ -16,10 +16,10 @@ class BaseIntegration
      */
     public function extractName(Calendar $Calendar)
     {
-        $name = $Calendar->name;
+        $name = $Calendar->{$this->nameField};
 
         if (empty($name)) {
-            throw new \DomainException('No Calendar name set');
+            throw new \DomainException('No Calendar ' . $this->nameField . ' set');
         }
 
         return $name;
