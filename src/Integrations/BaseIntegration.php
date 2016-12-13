@@ -16,6 +16,13 @@ class BaseIntegration
      */
     public function extractName(Calendar $Calendar)
     {
+        $name = $Calendar->name;
+
+        if (empty($name)) {
+            throw new \DomainException('No Calendar name set');
+        }
+
+        return $name;
     }
 
     /**
@@ -27,6 +34,9 @@ class BaseIntegration
      */
     public function extractData(Calendar $Calendar)
     {
+        $data = $Calendar->toArray();
+        unset($data['name']);
+        return $data;
     }
 
     /**
@@ -37,5 +47,6 @@ class BaseIntegration
      */
     public function extractOptions(Calendar $Calendar)
     {
+        return $Calendar->Options->toArray();
     }
 }

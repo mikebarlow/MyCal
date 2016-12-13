@@ -11,7 +11,7 @@ class Calendar
 
     protected $calendarIntegration;
     protected $dateFactory;
-    protected $Options;
+    public $Options;
 
     /**
      * Setup a new calendar object

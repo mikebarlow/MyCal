@@ -1,29 +1,11 @@
 <?php
 namespace Snscripts\MyCal\Calendar;
 
+use Snscripts\MyCal\Traits;
+
 class Options
 {
-    /**
-     * Week starts on
-     */
-    public $weekStartsOn;
-
-    /**
-     * Default timezone
-     *
-     * @see http://php.net/manual/en/timezones.php
-     */
-    public $defaultTimezone;
-
-    /**
-     * array of class / id defaults for the display table
-     */
-    public $displayTable;
-
-    /**
-     * day labels for use on the display calendar
-     */
-    public $days;
+    use Traits\Accessible;
 
     /**
      * Static method for loading options up
