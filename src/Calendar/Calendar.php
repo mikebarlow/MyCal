@@ -11,7 +11,7 @@ class Calendar
 
     protected $calendarIntegration;
     protected $dateFactory;
-    public $Options;
+    protected $Options;
 
     /**
      * Setup a new calendar object
@@ -172,7 +172,7 @@ class Calendar
             if ($first && ! $Date->isWeekStart()) {
                 $dateDay = $Date->display('w');
 
-                while($day != $dateDay) {
+                while ($day != $dateDay) {
                     $body .= '<td class="' . $this->Options->displayTable['emptyClass'] . '"> &nbsp; </td>';
 
                     if ($day == 6) {
@@ -199,7 +199,7 @@ class Calendar
             $day++;
         }
 
-        while($day !== $startOn) {
+        while ($day !== $startOn) {
             $body .= '<td class="' . $this->Options->displayTable['emptyClass'] . '"> &nbsp; </td>';
 
             if ($day == 6) {
@@ -210,5 +210,26 @@ class Calendar
         }
 
         return $body . '</tr></tbody>';
+    }
+
+    /**
+     * getter for Options
+     *
+     * @return Snscripts\MyCal\Calendar\Option
+     */
+    public function getOptions()
+    {
+        return $this->Options;
+    }
+
+    /**
+     * setter for Options
+     *
+     * @param Snscripts\MyCal\Calendar\Option $Options
+     */
+    public function setOptions(Options $Options)
+    {
+        $this->Options = $Options;
+        return $this;
     }
 }

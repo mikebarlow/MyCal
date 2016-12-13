@@ -78,6 +78,93 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testGetOptionsReturnsOptionObject()
+    {
+        $Calendar = new Calendar(
+            $this->CalendarInterfaceMock,
+            $this->DateFactoryMock,
+            \Snscripts\MyCal\Calendar\Options::set()
+        );
+
+        $this->assertInstanceOf(
+            'Snscripts\MyCal\Calendar\Options',
+            $Calendar->getOptions()
+        );
+
+        $this->assertSame(
+            [
+                'weekStartsOn' => 1,
+                'defaultTimezone' => 'Europe/London',
+                'displayTable' => [
+                    'tableClass' => 'table mycal',
+                    'tableId' => 'MyCal',
+                    'headerRowClass' => 'mycal-header-row',
+                    'headerClass' => 'mycal-header',
+                    'rowClass' => 'mycal-row',
+                    'dateClass' => 'mycal-date',
+                    'emptyClass' => 'mycal-empty'
+                ],
+                'days' => [
+                    0 => 'Sun',
+                    1 => 'Mon',
+                    2 => 'Tue',
+                    3 => 'Wed',
+                    4 => 'Thu',
+                    5 => 'Fri',
+                    6 => 'Sat'
+                ]
+            ],
+            $Calendar->getOptions()->toArray()
+        );
+    }
+
+    public function testSetOptionsSetsOptionObjectCorrectly()
+    {
+        $Calendar = new Calendar(
+            $this->CalendarInterfaceMock,
+            $this->DateFactoryMock,
+            \Snscripts\MyCal\Calendar\Options::set()
+        );
+
+        $Options = \Snscripts\MyCal\Calendar\Options::set([
+            'weekStartsOn' => Date::SUNDAY,
+            'defaultTimezone' => 'America/New_York'
+        ]);
+
+        $Calendar->setOptions($Options);
+
+        $this->assertInstanceOf(
+            'Snscripts\MyCal\Calendar\Options',
+            $Calendar->getOptions()
+        );
+
+        $this->assertSame(
+            [
+                'weekStartsOn' => 0,
+                'defaultTimezone' => 'America/New_York',
+                'displayTable' => [
+                    'tableClass' => 'table mycal',
+                    'tableId' => 'MyCal',
+                    'headerRowClass' => 'mycal-header-row',
+                    'headerClass' => 'mycal-header',
+                    'rowClass' => 'mycal-row',
+                    'dateClass' => 'mycal-date',
+                    'emptyClass' => 'mycal-empty'
+                ],
+                'days' => [
+                    0 => 'Sun',
+                    1 => 'Mon',
+                    2 => 'Tue',
+                    3 => 'Wed',
+                    4 => 'Thu',
+                    5 => 'Fri',
+                    6 => 'Sat'
+                ]
+            ],
+            $Calendar->getOptions()->toArray()
+        );
+    }
+
     public function testGetRangeReturnsCorrectDateRange()
     {
         $Calendar = new Calendar(

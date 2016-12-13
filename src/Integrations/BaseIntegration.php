@@ -36,7 +36,7 @@ class BaseIntegration
     {
         $data = $Calendar->toArray();
         unset($data['name']);
-        return $data;
+        return $this->serializeData($data);
     }
 
     /**
@@ -47,6 +47,28 @@ class BaseIntegration
      */
     public function extractOptions(Calendar $Calendar)
     {
-        return $Calendar->Options->toArray();
+        return $this->serializeData(
+            $Calendar->getOptions()->toArray()
+        );
+    }
+
+    /**
+     * loop array of data and serialize any arrays / objects
+     *
+     * @param array $data
+     * @return array
+     */
+    public function serializeData($data)
+    {
+        array_walk(
+            $data,
+            function (&$value, $key) {
+                if (is_object($value) || is_array($value)) {
+                    $value = serialize($value);
+                }
+            }
+        );
+
+        return $data;
     }
 }
