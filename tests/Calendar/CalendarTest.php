@@ -209,6 +209,27 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testBuildReturnsCollectionOfDates()
+    {
+        $Calendar = new Calendar(
+            $this->CalendarInterfaceMock,
+            new \Snscripts\MyCal\DateFactory,
+            \Snscripts\MyCal\Calendar\Options::set()
+        );
+
+        $Dates = $Calendar->build('2016-12-01', '2016-12-05');
+
+        $this->assertInstanceOf(
+            'Cartalyst\Collections\Collection',
+            $Dates
+        );
+
+        $this->assertSame(
+            5,
+            $Dates->count()
+        );
+    }
+
     public function testGetTableHeaderReturnsCorrectHtmlForHeaderRow()
     {
         $Calendar = new Calendar(
@@ -238,6 +259,52 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             $expected,
             $Calendar->getTableHeader()
+        );
+    }
+
+    public function testGetTableBodyCreatesCorrectHtmlBody()
+    {
+        $Calendar = new Calendar(
+            $this->CalendarInterfaceMock,
+            new \Snscripts\MyCal\DateFactory,
+            \Snscripts\MyCal\Calendar\Options::set()
+        );
+
+        $Dates = $Calendar->build('2016-12-01', '2016-12-05');
+
+        $this->assertSame(
+            '<tbody><tr class="mycal-row"><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-date">1</td><td class="mycal-date">2</td><td class="mycal-date">3</td><td class="mycal-date">4</td></tr><tr class="mycal-row"><td class="mycal-date">5</td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td></tr></tbody>',
+            $Calendar->getTableBody($Dates)
+        );
+    }
+
+    public function testGetTableBodyCreatesCorrectHtmlBodyWhenStartingOnSunday()
+    {
+        $Calendar = new Calendar(
+            $this->CalendarInterfaceMock,
+            new \Snscripts\MyCal\DateFactory,
+            \Snscripts\MyCal\Calendar\Options::set(['weekStartsOn' => Date::SUNDAY])
+        );
+
+        $Dates = $Calendar->build('2016-12-01', '2016-12-05');
+
+        $this->assertSame(
+            '<tbody><tr class="mycal-row"><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-date">1</td><td class="mycal-date">2</td><td class="mycal-date">3</td></tr><tr class="mycal-row"><td class="mycal-date">4</td><td class="mycal-date">5</td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td></tr></tbody>',
+            $Calendar->getTableBody($Dates)
+        );
+    }
+
+    public function testGetTableWrapperReturnsContentWithTableTags()
+    {
+        $Calendar = new Calendar(
+            $this->CalendarInterfaceMock,
+            new \Snscripts\MyCal\DateFactory,
+            \Snscripts\MyCal\Calendar\Options::set(['weekStartsOn' => Date::SUNDAY])
+        );
+
+        $this->assertSame(
+            '<table class="table mycal" id="MyCal"><tr><td>My Test Row</td></tr></table>',
+            $Calendar->getTableWrapper('<tr><td>My Test Row</td></tr>')
         );
     }
 }
