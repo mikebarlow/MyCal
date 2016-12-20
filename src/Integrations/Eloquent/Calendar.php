@@ -15,6 +15,7 @@ class Calendar extends BaseIntegration implements CalendarInterface
     /**
      * Save a calendar and it's options
      *
+     * @todo refactor for tests
      * @param Snscripts\MyCal\Calendar $Calendar
      * @return Snscripts\Result\Result $Result
      */
