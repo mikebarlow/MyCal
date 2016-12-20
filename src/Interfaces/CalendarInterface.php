@@ -11,5 +11,5 @@ interface CalendarInterface
      * @param Snscripts\MyCal\Calendar $Calendar
      * @return Snscripts\Result\Result $Result
      */
-    public function save(CalendarObj $Calendar)
+    public function save(CalendarObj $Calendar);
 }
