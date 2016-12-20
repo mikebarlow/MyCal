@@ -39,17 +39,16 @@ class Calendar extends BaseIntegration implements CalendarInterface
         $Model->name = $name;
         $Model->user_id = $user_id;
 
-        $calendarExtras = [];
-        array_walk(
-            $calData,
-            function ($value, $key, &$calendarExtras) {
+        $calendarExtras = array_map(
+            function ($value, $key) {
                 $Extra = new $this->extraModel;
                 $Extra->slug = $key;
                 $Extra->value = $value;
 
-                $calendarExtras[] = $Extra;
+                return $Extra;
             },
-            $calendarExtras
+            $calData,
+            array_keys($calData)
         );
 
         try {
