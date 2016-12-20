@@ -32,8 +32,13 @@ class Calendar
 
     /**
      * Save the current calendar
+     *
+     * @return Snscripts\Result\Result
      */
-
+    public function save()
+    {
+        return $this->calendarIntegration->save($this);
+    }
 
     /**
      * display html table calendar of given dates
