@@ -1,6 +1,8 @@
 <?php
 namespace Snscripts\MyCal\Interfaces;
 
+use Snscripts\MyCal\Calendar\Calendar as CalendarObj;
+
 interface CalendarInterface
 {
     /**
@@ -9,5 +11,5 @@ interface CalendarInterface
      * @param Snscripts\MyCal\Calendar $Calendar
      * @return Snscripts\Result\Result $Result
      */
-    public function save($Calendar);
+    public function save(CalendarObj $Calendar)
 }
