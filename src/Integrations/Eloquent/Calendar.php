@@ -62,7 +62,7 @@ class Calendar extends BaseIntegration implements CalendarInterface
         }
 
         try {
-            $Model->calendarExtra->saveMany($calendarExtras);
+            $Model->calendarExtra()->saveMany($calendarExtras);
         } catch (\Exception $e) {
             return Result::fail(
                 Result::ERROR,
