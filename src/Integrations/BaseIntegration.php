@@ -5,10 +5,25 @@ use Snscripts\MyCal\Calendar\Calendar;
 
 class BaseIntegration
 {
-    protected $nameField = 'name';
+    /**
+     * extract the id field from the calendar
+     *
+     * @param Snscripts\MyCal\Calendar\Calendar
+     * @return int|null $id
+     */
+    public function extractId(Calendar $Calendar)
+    {
+        $id = $Calendar->id;
+
+        if (empty($id)) {
+            return null;
+        }
+
+        return $id;
+    }
 
     /**
-     * extract the name field from the calendar DateFactory
+     * extract the name field from the calendar
      *
      * @param Snscripts\MyCal\Calendar\Calendar
      * @return string $calName
@@ -16,13 +31,30 @@ class BaseIntegration
      */
     public function extractName(Calendar $Calendar)
     {
-        $name = $Calendar->{$this->nameField};
+        $name = $Calendar->name;
 
         if (empty($name)) {
-            throw new \DomainException('No Calendar ' . $this->nameField . ' set');
+            throw new \DomainException('No Calendar ' . $name . ' set');
         }
 
         return $name;
+    }
+
+    /**
+     * extract the id field from the calendar
+     *
+     * @param Snscripts\MyCal\Calendar\Calendar
+     * @return int|null $id
+     */
+    public function extractUserId(Calendar $Calendar)
+    {
+        $user_id = $Calendar->user_id;
+
+        if (empty($user_id)) {
+            return null;
+        }
+
+        return $user_id;
     }
 
     /**
@@ -35,7 +67,7 @@ class BaseIntegration
     public function extractData(Calendar $Calendar)
     {
         $data = $Calendar->toArray();
-        unset($data['name']);
+        unset($data['id'], $data['name'], $data['user_id']);
         return $this->serializeData($data);
     }
 

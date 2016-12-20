@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCalendar extends Migration
+class CreateOptions extends Migration
 {
     /**
      * Run the migrations.
@@ -13,23 +13,15 @@ class CreateCalendar extends Migration
      */
     public function up()
     {
-        Schema::create('calendars', function (Blueprint $table) {
+        Schema::create('options', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->integer('user_id')->unsigned();
-            $table->timestamps();
-        });
-
-        Schema::create('calendar_extras', function (Blueprint $table) {
-            $table->string('slug');
-            $table->text('value');
+            $table->string('name', 100);
+            $table->text('data');
             $table->integer('calendar_id')->unsigned();
             $table->timestamps();
-
-            $table->primary(['slug', 'calendar_id']);
         });
 
-        Schema::table('calendar_extras', function (Blueprint $table) {
+        Schema::table('options', function (Blueprint $table) {
             $table->foreign('calendar_id')
                 ->references('id')->on('calendars');
         });
@@ -42,7 +34,6 @@ class CreateCalendar extends Migration
      */
     public function down()
     {
-        Schema::drop('calendar_extras');
-        Schema::drop('calendars');
+        Schema::drop('options');
     }
 }

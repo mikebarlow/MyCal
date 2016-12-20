@@ -6,6 +6,38 @@ use Snscripts\MyCal\Integrations\BaseIntegration;
 
 class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
 {
+    public function testExtractIdReturnsId()
+    {
+        $Factory = new CalendarFactory(
+            $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
+            $this->getMock('\Snscripts\MyCal\DateFactory')
+        );
+        $Calendar = $Factory->load();
+        $Calendar->id = 22;
+
+        $BaseIntegration = new BaseIntegration;
+
+        $this->assertSame(
+            22,
+            $BaseIntegration->extractId($Calendar)
+        );
+    }
+
+    public function testExtractIdReturnsNullWhenNoIdSet()
+    {
+        $Factory = new CalendarFactory(
+            $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
+            $this->getMock('\Snscripts\MyCal\DateFactory')
+        );
+        $Calendar = $Factory->load();
+
+        $BaseIntegration = new BaseIntegration;
+
+        $this->assertNull(
+            $BaseIntegration->extractId($Calendar)
+        );
+    }
+
     public function testExtractNameReturnsName()
     {
         $Factory = new CalendarFactory(
@@ -41,6 +73,38 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
 
         $BaseIntegration = new BaseIntegration;
         $BaseIntegration->extractName($Calendar);
+    }
+
+    public function testExtractUserIdReturnsId()
+    {
+        $Factory = new CalendarFactory(
+            $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
+            $this->getMock('\Snscripts\MyCal\DateFactory')
+        );
+        $Calendar = $Factory->load();
+        $Calendar->user_id = 69;
+
+        $BaseIntegration = new BaseIntegration;
+
+        $this->assertSame(
+            69,
+            $BaseIntegration->extractUserId($Calendar)
+        );
+    }
+
+    public function testExtractUserIdReturnsNullWhenNoIdSet()
+    {
+        $Factory = new CalendarFactory(
+            $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
+            $this->getMock('\Snscripts\MyCal\DateFactory')
+        );
+        $Calendar = $Factory->load();
+
+        $BaseIntegration = new BaseIntegration;
+
+        $this->assertNull(
+            $BaseIntegration->extractUserId($Calendar)
+        );
     }
 
     public function testExtractDataReturnsArrayOfData()
