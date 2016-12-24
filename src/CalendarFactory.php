@@ -38,10 +38,16 @@ class CalendarFactory
             $Options = Options::set();
         }
 
-        return new Calendar(
+        $Calendar = new Calendar(
             $this->calendarIntegration,
             $this->dateFactory,
             $Options
         );
+
+        if (! empty($id)) {
+            $Calendar = $Calendar->load($id);
+        }
+
+        return $Calendar;
     }
 }
