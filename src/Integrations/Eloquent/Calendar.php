@@ -75,4 +75,35 @@ class Calendar extends BaseIntegration implements CalendarInterface
 
         return Result::success();
     }
+
+    /**
+     * load the calendar and options
+     *
+     * @param int $id
+     * @return Snscripts\Result\Result $Result
+     */
+    public function load($id)
+    {
+        $Model = new $this->calModel;
+        $Model = $Model
+            ->where('id', '=', $id)
+            ->with(['calendarExtra'])
+            ->first();
+
+        $calData = $Model->toArray();
+        $calData['extras'] = [];
+        foreach ($calData['calendar_extra'] as $extras) {
+            $calData['extras'][$extras['slug']] = $extras['value'];
+        }
+        unset($calData['calendar_extra']);
+
+        if (! empty($calData['extras'])) {
+            $calData['extras'] = $this->unserializeData(
+                $calData['extras']
+            );
+        }
+
+        return Result::success()
+            ->setExtra('calData', $calData);
+    }
 }

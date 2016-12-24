@@ -103,4 +103,25 @@ class BaseIntegration
 
         return $data;
     }
+
+    /**
+     * loop array of data and unserialize any arrays / objects
+     *
+     * @param array $data
+     * @return array
+     */
+    public function unserializeData($data)
+    {
+        array_walk(
+            $data,
+            function (&$value, $key) {
+                $unserialized = @unserialize($value);
+                if ($unserialized !== false) {
+                    $value = $unserialized;
+                }
+            }
+        );
+
+        return $data;
+    }
 }

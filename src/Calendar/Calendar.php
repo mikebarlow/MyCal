@@ -41,6 +41,27 @@ class Calendar
     }
 
     /**
+     * load a calendar and it's options
+     *
+     * @param mixed $id
+     * @return Calendar $this
+     */
+    public function load($id)
+    {
+        $Result = $this->calendarIntegration->load($id);
+        $calData = $Result->getExtra('calData');
+        $extras = $calData['extras'];
+        unset($calData['extras']);
+
+        $this->data = array_merge(
+            $calData,
+            $extras
+        );
+
+        return $this;
+    }
+
+    /**
      * display html table calendar of given dates
      *
      * @param string $start Start date to get Y-m-d format
