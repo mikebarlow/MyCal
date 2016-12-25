@@ -44,3 +44,15 @@ or adding to your projects `composer.json` file.
             "snscripts/mycal": "1.*"
         }
     }
+
+### Setup
+
+To initiate the package setup the Calendar Factory along with the Date Factory and the calendar integration you wish to use.
+
+Currently only Laravel Eloquent integration is available, you can setup the Calendar Factory like so:
+
+    $CalendarFactory = new \Snscripts\MyCal\CalendarFactory(
+        new \Snscripts\MyCal\Integrations\Eloquent\Calendar,
+        new \Snscripts\MyCal\DateFactory
+    );
+    
