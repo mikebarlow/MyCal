@@ -13,7 +13,7 @@ class Calendar extends Model
         );
     }
 
-    public function option()
+    public function calendarOption()
     {
         return $this->hasMany(
             'Snscripts\MyCal\Integrations\Eloquent\Models\Option',

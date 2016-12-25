@@ -14,11 +14,12 @@ class CreateOptions extends Migration
     public function up()
     {
         Schema::create('options', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name', 100);
-            $table->text('data');
+            $table->string('slug');
+            $table->text('value');
             $table->integer('calendar_id')->unsigned();
             $table->timestamps();
+
+            $table->primary(['slug', 'calendar_id']);
         });
 
         Schema::table('options', function (Blueprint $table) {

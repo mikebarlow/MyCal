@@ -52,6 +52,18 @@ class Calendar extends BaseIntegration implements CalendarInterface
             array_keys($calData)
         );
 
+        $calendarOptions = array_map(
+            function ($value, $key) {
+                $Option = new $this->optModel;
+                $Option->slug = $key;
+                $Option->value = $value;
+
+                return $Option;
+            },
+            $options,
+            array_keys($options)
+        );
+
         try {
             $Model->save();
         } catch (\Exception $e) {
@@ -73,6 +85,18 @@ class Calendar extends BaseIntegration implements CalendarInterface
             );
         }
 
+        try {
+            $OptModel = $this->optModel;
+            $OptModel::where('calendar_id', '=', $Model->id)->delete();
+
+            $Model->calendarOption()->saveMany($calendarOptions);
+        } catch (\Exception $e) {
+            return Result::fail(
+                Result::ERROR,
+                $e->getMessage()
+            );
+        }
+
         return Result::success();
     }
 
@@ -87,7 +111,10 @@ class Calendar extends BaseIntegration implements CalendarInterface
         $Model = new $this->calModel;
         $Model = $Model
             ->where('id', '=', $id)
-            ->with(['calendarExtra'])
+            ->with([
+                'calendarExtra',
+                'calendarOption'
+            ])
             ->first();
 
         $calData = $Model->toArray();
@@ -95,13 +122,24 @@ class Calendar extends BaseIntegration implements CalendarInterface
         foreach ($calData['calendar_extra'] as $extras) {
             $calData['extras'][$extras['slug']] = $extras['value'];
         }
-        unset($calData['calendar_extra']);
 
         if (! empty($calData['extras'])) {
             $calData['extras'] = $this->unserializeData(
                 $calData['extras']
             );
         }
+
+        $calData['options'] = [];
+        foreach ($calData['calendar_option'] as $options) {
+            $calData['options'][$options['slug']] = $options['value'];
+        }
+
+        if (! empty($calData['options'])) {
+            $calData['options'] = $this->unserializeData(
+                $calData['options']
+            );
+        }
+        unset($calData['calendar_extra'], $calData['calendar_option']);
 
         return Result::success()
             ->setExtra('calData', $calData);
