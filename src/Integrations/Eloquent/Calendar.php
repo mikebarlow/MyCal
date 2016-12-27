@@ -97,12 +97,14 @@ class Calendar extends BaseIntegration implements CalendarInterface
             );
         }
 
-        return Result::success();
+        return Result::success()
+            ->setCode(Result::SAVED);
     }
 
     /**
      * load the calendar and options
      *
+     * @todo refactor for tests
      * @param int $id
      * @return Snscripts\Result\Result $Result
      */
@@ -116,6 +118,12 @@ class Calendar extends BaseIntegration implements CalendarInterface
                 'calendarOption'
             ])
             ->first();
+
+        if (empty($Model)) {
+            return Result::fail()
+                ->setCode(Result::NOT_FOUND)
+                ->setMessage('Could not load calendar #' . $id);
+        }
 
         $calData = $Model->toArray();
         $calData['extras'] = [];
@@ -142,6 +150,7 @@ class Calendar extends BaseIntegration implements CalendarInterface
         unset($calData['calendar_extra'], $calData['calendar_option']);
 
         return Result::success()
+            ->setCode(Result::FOUND)
             ->setExtra('calData', $calData);
     }
 }
