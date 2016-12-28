@@ -65,7 +65,7 @@ class Options
     public function mergeVars($defaults, $userOpts)
     {
         $options = array_merge(
-            $this->defaultOptions(),
+            $defaults,
             $userOpts
         );
 

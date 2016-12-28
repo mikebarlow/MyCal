@@ -59,12 +59,20 @@ class Calendar
 
         $calData = $Result->getExtra('calData');
         $extras = $calData['extras'];
-        unset($calData['extras']);
+        $calOptions = $calData['options'];
+        unset($calData['extras'], $calData['options']);
 
-        $this->data = array_merge(
-            $calData,
-            $extras
+        $this->setAllData(
+            array_merge(
+                $calData,
+                $extras
+            )
         );
+
+        $Options = new \Snscripts\MyCal\Calendar\Options;
+        $Options->setAllData($calOptions);
+        $this->setOptions($Options);
+        unset($calData['options']);
 
         return $this;
     }
@@ -161,7 +169,8 @@ class Calendar
      */
     public function getTableWrapper($content)
     {
-        return '<table class="' . $this->Options->displayTable['tableClass'] . '" id="' . $this->Options->displayTable['tableId'] . '">' .
+        return '<table class="' . $this->Options->displayTable['tableClass']
+            . '" id="' . $this->Options->displayTable['tableId'] . '">' .
             $content .
             '</table>';
     }
