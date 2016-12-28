@@ -45,10 +45,18 @@ class Calendar
      *
      * @param mixed $id
      * @return Calendar $this
+     * @throws Snscripts\MyCal\Exceptions\NotFoundException
      */
     public function load($id)
     {
         $Result = $this->calendarIntegration->load($id);
+
+        if ($Result->isFail()) {
+            throw new \Snscripts\MyCal\Exceptions\NotFoundException(
+                $Result->getMessage()
+            );
+        }
+
         $calData = $Result->getExtra('calData');
         $extras = $calData['extras'];
         unset($calData['extras']);
