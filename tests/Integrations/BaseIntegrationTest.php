@@ -1,5 +1,5 @@
 <?php
-namespace Snscripts\MyCal\Tests;
+namespace Snscripts\MyCal\Tests\Integrations;
 
 use Snscripts\MyCal\CalendarFactory;
 use Snscripts\MyCal\Integrations\BaseIntegration;

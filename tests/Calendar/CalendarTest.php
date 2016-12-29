@@ -1,5 +1,5 @@
 <?php
-namespace Snscripts\MyCal\Tests;
+namespace Snscripts\MyCal\Tests\Calendar;
 
 use Snscripts\MyCal\Calendar\Calendar;
 use Snscripts\MyCal\Interfaces\CalendarInterface;

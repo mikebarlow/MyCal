@@ -1,10 +1,13 @@
 <?php
 namespace Snscripts\MyCal\Integrations\Eloquent;
 
+use Snscripts\Result\Result;
 use Snscripts\MyCal\Interfaces\CalendarInterface;
 use Snscripts\MyCal\Integrations\BaseIntegration;
 use Snscripts\MyCal\Calendar\Calendar as CalendarObj;
-use Snscripts\Result\Result;
+use Snscripts\MyCal\Integrations\Eloquent\Models\Calendar as CalendarModel;
+use Snscripts\MyCal\Integrations\Eloquent\Models\CalendarExtra as CalendarExtraModel;
+use Snscripts\MyCal\Integrations\Eloquent\Models\Option as OptionModel;
 
 class Calendar extends BaseIntegration implements CalendarInterface
 {
@@ -22,56 +25,34 @@ class Calendar extends BaseIntegration implements CalendarInterface
      */
     public function save(CalendarObj $Calendar)
     {
-        $id = $this->extractId($Calendar);
-        $name = $this->extractName($Calendar);
-        $user_id = $this->extractUserId($Calendar);
+        $data = $this->getCalendarData($Calendar);
 
-        $calData = $this->extractData($Calendar);
-        $options = $this->extractOptions($Calendar);
-
-        $Model = new $this->calModel;
-
-        if (! empty($id)) {
-            $Model = $Model->find($id);
-        } else {
-            $Model->id = $id;
-        }
-
-        $Model->name = $name;
-        $Model->user_id = $user_id;
-
-        $calendarExtras = array_map(
-            function ($value, $key) {
-                $Extra = new $this->extraModel;
-                $Extra->slug = $key;
-                $Extra->value = $value;
-
-                return $Extra;
-            },
-            $calData,
-            array_keys($calData)
+        $Model = $this->setupModel(
+            new $this->calModel,
+            $data
+        );
+        $calendarExtras = $this->setupExtras(
+            new $this->extraModel,
+            $data
+        );
+        $calendarOptions = $this->setupOptions(
+            new $this->optModel,
+            $data
         );
 
-        $calendarOptions = array_map(
-            function ($value, $key) {
-                $Option = new $this->optModel;
-                $Option->slug = $key;
-                $Option->value = $value;
-
-                return $Option;
-            },
-            $options,
-            array_keys($options)
-        );
-
-        try {
-            $Model->save();
-        } catch (\Exception $e) {
+        $calendarResult = $this->saveCalendar($Model);
+        if ($result !== false) {
             return Result::fail(
                 Result::ERROR,
-                $e->getMessage()
+                $calendarResult
             );
         }
+
+        $this->saveExtras($Model, $calendarExtras);
+        $this->saveOptions($Model, $calendarOptions);
+
+        return Result::success()
+            ->setCode(Result::SAVED);
 
         try {
             $ExtraModel = $this->extraModel;
@@ -96,10 +77,115 @@ class Calendar extends BaseIntegration implements CalendarInterface
                 $e->getMessage()
             );
         }
-
-        return Result::success()
-            ->setCode(Result::SAVED);
     }
+
+    /**
+     * extract the calendar data for the model
+     *
+     * @param Snscripts\MyCal\Calendar $Calendar
+     * @return array $data array of modal data
+     */
+    public function getCalendarData(CalendarObj $Calendar)
+    {
+        return [
+            'id' => $this->extractId($Calendar),
+            'name' => $this->extractName($Calendar),
+            'user_id' => $this->extractUserId($Calendar),
+            'extras' => $this->extractData($Calendar),
+            'options' => $this->extractOptions($Calendar)
+        ];
+    }
+
+    /**
+     * setup new modal
+     *
+     * @param CalendarModel $Calendar
+     * @param array $data array of modal data
+     * @return CalendarModel
+     */
+    public function setupModel(CalendarModel $Calendar, $data)
+    {
+        if (! empty($data['id'])) {
+            $Calendar = $Calendar->find($data['id']);
+        } else {
+            $Calendar->id = $data['id'];
+        }
+
+        $Calendar->name = $data['name'];
+        $Calendar->user_id = $data['user_id'];
+
+        return $Calendar;
+    }
+
+    /**
+     * setup any model extras
+     *
+     * @param CalendarExtraModel $ExtraModel
+     * @param array $data array of modal data
+     * @return array $calendarExtras
+     */
+    public function setupExtras(CalendarExtraModel $ExtraModel, $data)
+    {
+        if (empty($data['extras'])) {
+            return [];
+        }
+
+        return array_map(
+            function ($value, $key) use ($ExtraModel) {
+                $Extra = $ExtraModel->newInstance();
+                $Extra->slug = $key;
+                $Extra->value = $value;
+
+                return $Extra;
+            },
+            $data['extras'],
+            array_keys($data['extras'])
+        );
+    }
+
+    /**
+     * setup any model extras
+     *
+     * @param CalendarExtraModel $Extra
+     * @param array $data array of modal data
+     * @return array $calendarExtras
+     */
+    public function setupOptions(OptionModel $OptionModel, $data)
+    {
+        if (empty($data['options'])) {
+            return [];
+        }
+
+        return array_map(
+            function ($value, $key) use ($OptionModel) {
+                $Option = $OptionModel->newInstance();
+                $Option->slug = $key;
+                $Option->value = $value;
+
+                return $Option;
+            },
+            $data['options'],
+            array_keys($data['options'])
+        );
+    }
+
+    /**
+     * Save the calendar Model
+     *
+     * @param CalendarModel $Calendar
+     * @return bool|string
+     */
+    public function saveCalendar(CalendarModel $Calendar)
+    {
+        try {
+            $Calendar->save();
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+
+        return true;
+    }
+
 
     /**
      * load the calendar and options
