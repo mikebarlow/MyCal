@@ -27,7 +27,7 @@ class Calendar extends BaseIntegration implements CalendarInterface
     {
         $data = $this->getCalendarData($Calendar);
 
-        $Model = $this->setupModel(
+        $Calendar = $this->setupModel(
             new $this->calModel,
             $data
         );
@@ -40,43 +40,31 @@ class Calendar extends BaseIntegration implements CalendarInterface
             $data
         );
 
-        $calendarResult = $this->saveCalendar($Model);
-        if ($result !== false) {
-            return Result::fail(
-                Result::ERROR,
-                $calendarResult
-            );
+        $calendarResult = $this->saveCalendar($Calendar);
+        if ($calendarResult->isFail()) {
+            return $calendarResult;
         }
 
-        $this->saveExtras($Model, $calendarExtras);
-        $this->saveOptions($Model, $calendarOptions);
+        $extrasResult = $this->saveExtras(
+            $Calendar,
+            new $this->extraModel,
+            $calendarExtras
+        );
+        if ($extrasResult->isFail()) {
+            return $extrasResult;
+        }
+
+        $optionsResults = $this->saveOptions(
+            $Calendar,
+            new $this->optModel,
+            $calendarOptions
+        );
+        if ($optionsResults->isFail()) {
+            return $optionsResults;
+        }
 
         return Result::success()
             ->setCode(Result::SAVED);
-
-        try {
-            $ExtraModel = $this->extraModel;
-            $ExtraModel::where('calendar_id', '=', $Model->id)->delete();
-
-            $Model->calendarExtra()->saveMany($calendarExtras);
-        } catch (\Exception $e) {
-            return Result::fail(
-                Result::ERROR,
-                $e->getMessage()
-            );
-        }
-
-        try {
-            $OptModel = $this->optModel;
-            $OptModel::where('calendar_id', '=', $Model->id)->delete();
-
-            $Model->calendarOption()->saveMany($calendarOptions);
-        } catch (\Exception $e) {
-            return Result::fail(
-                Result::ERROR,
-                $e->getMessage()
-            );
-        }
     }
 
     /**
@@ -180,12 +168,69 @@ class Calendar extends BaseIntegration implements CalendarInterface
         try {
             $Calendar->save();
         } catch (\Exception $e) {
-            return $e->getMessage();
+            return Result::fail(
+                Result::ERROR,
+                $e->getMessage()
+            );
         }
 
-        return true;
+        return Result::success()
+            ->setCode(Result::SAVED);
     }
 
+    /**
+     * Save the calendarExtra Model
+     *
+     * @param CalendarModel $Calendar
+     * @param CalendarExtraModel $CalendarExtra
+     * @param array $extras
+     * @return bool|string
+     */
+    public function saveExtras(
+        CalendarModel $Calendar,
+        CalendarExtraModel $ExtraModel,
+        $calendarExtras
+    ) {
+        try {
+            $ExtraModel->where('calendar_id', '=', $Calendar->id)->delete();
+            $Calendar->calendarExtra()->saveMany($calendarExtras);
+        } catch (\Exception $e) {
+            return Result::fail(
+                Result::ERROR,
+                $e->getMessage()
+            );
+        }
+
+        return Result::success()
+            ->setCode(Result::SAVED);
+    }
+
+    /**
+     * Save the Options Model
+     *
+     * @param CalendarModel $Calendar
+     * @param CalendarExtraModel $CalendarExtra
+     * @param array $extras
+     * @return bool|string
+     */
+    public function saveOptions(
+        CalendarModel $Calendar,
+        OptionModel $OptionModel,
+        $calendarOptions
+    ) {
+        try {
+            $OptModel->where('calendar_id', '=', $Model->id)->delete();
+            $Calendar->calendarOption()->saveMany($calendarOptions);
+        } catch (\Exception $e) {
+            return Result::fail(
+                Result::ERROR,
+                $e->getMessage()
+            );
+        }
+
+        return Result::success()
+            ->setCode(Result::SAVED);
+    }
 
     /**
      * load the calendar and options
