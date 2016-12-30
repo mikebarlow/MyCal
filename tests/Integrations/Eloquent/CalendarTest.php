@@ -192,4 +192,41 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testSaveCalendarReturnsSuccessResultObject()
+    {
+        $CalendarModel = $this->getMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
+        $CalendarModel->method('save')
+            ->willReturn(true);
+
+        $CalendarIntegration = new CalendarIntegration;
+        $Result = $CalendarIntegration->saveCalendar($CalendarModel);
+
+        $this->assertTrue(
+            $Result->isSuccess()
+        );
+
+        $this->assertSame(
+            'saved',
+            $Result->getCode()
+        );
+    }
+
+    public function testSaveCalendarReturnsFailResultObject()
+    {
+        $CalendarModel = $this->getMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
+        $CalendarModel->method('save')
+            ->will($this->throwException(new \Exception('Save failed')));
+
+        $CalendarIntegration = new CalendarIntegration;
+        $Result = $CalendarIntegration->saveCalendar($CalendarModel);
+
+        $this->assertTrue(
+            $Result->isFail()
+        );
+
+        $this->assertSame(
+            'Save failed',
+            $Result->getMessage()
+        );
+    }
 }
