@@ -232,22 +232,11 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveExtrasReturnsSuccessResultObject()
     {
-        $CalendarModel = $this->getMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
-        $CalendarModel->method('calendarExtra')
-            ->willReturn(new CalendarExtraRelationSuccess);
-
-        $CalendarModel->method('__get')
-            ->with('id')
-            ->willReturn(1);
-
-        $CalendarExtraModel = $this->getMock('\Snscripts\MyCal\Integrations\Eloquent\Models\CalendarExtra');
-        $CalendarExtraModel->method('where')
-            ->willReturn('foobar');
+        $CalendarModel = $this->buildSuccessCalendarModel('calendarExtra');
 
         $CalendarIntegration = new CalendarIntegration;
         $Result = $CalendarIntegration->saveExtras(
             $CalendarModel,
-            $CalendarExtraModel,
             []
         );
 
@@ -260,20 +249,148 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             $Result->getCode()
         );
     }
-}
 
-class CalendarExtraRelationSuccess
-{
-    public function saveMany($calendarExtra)
+    public function testSaveExtrasReturnsFailSesultObject()
     {
-        return true;
+        $CalendarModel = $this->buildFailCalendarModel('calendarExtra');
+
+        $CalendarIntegration = new CalendarIntegration;
+        $Result = $CalendarIntegration->saveExtras(
+            $CalendarModel,
+            []
+        );
+
+        $this->assertTrue(
+            $Result->isFail()
+        );
+
+        $this->assertSame(
+            'Save failed',
+            $Result->getMessage()
+        );
     }
-}
 
-class CalendarExtraWhere
-{
-    public function delete()
+    public function testSaveOptionsReturnsSuccessResultObject()
     {
-        return true;
+        $CalendarModel = $this->buildSuccessCalendarModel('calendarOption');
+
+        $CalendarIntegration = new CalendarIntegration;
+        $Result = $CalendarIntegration->saveOptions(
+            $CalendarModel,
+            []
+        );
+
+        $this->assertTrue(
+            $Result->isSuccess()
+        );
+
+        $this->assertSame(
+            'saved',
+            $Result->getCode()
+        );
+    }
+
+    public function testSaveOptionsReturnsFailSesultObject()
+    {
+        $CalendarModel = $this->buildFailCalendarModel('calendarOption');
+
+        $CalendarIntegration = new CalendarIntegration;
+        $Result = $CalendarIntegration->saveOptions(
+            $CalendarModel,
+            []
+        );
+
+        $this->assertTrue(
+            $Result->isFail()
+        );
+
+        $this->assertSame(
+            'Save failed',
+            $Result->getMessage()
+        );
+    }
+
+    protected function buildSuccessCalendarModel($relation)
+    {
+        $whereMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['delete'])
+            ->getMock();
+
+        $whereMock->expects($this->once())
+            ->method('delete')
+            ->willReturn(true);
+
+        $relatedMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['where'])
+            ->getMock();
+
+        $relatedMock->expects($this->once())
+            ->method('where')
+            ->willReturn($whereMock);
+
+        $relationMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['saveMany', 'getRelated'])
+            ->getMock();
+
+        $relationMock->expects($this->once())
+             ->method('saveMany')
+             ->willReturn(true);
+
+        $relationMock->expects($this->once())
+            ->method('getRelated')
+            ->willReturn($relatedMock);
+
+
+        $CalendarModel = $this->getMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
+        $CalendarModel->method($relation)
+            ->willReturn($relationMock);
+
+        $CalendarModel->method('__get')
+            ->with('id')
+            ->willReturn(1);
+
+        return $CalendarModel;
+    }
+
+    protected function buildFailCalendarModel($relation)
+    {
+        $whereMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['delete'])
+            ->getMock();
+
+        $whereMock->expects($this->once())
+            ->method('delete')
+            ->willReturn(true);
+
+        $relatedMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['where'])
+            ->getMock();
+
+        $relatedMock->expects($this->once())
+            ->method('where')
+            ->willReturn($whereMock);
+
+        $relationMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['saveMany', 'getRelated'])
+            ->getMock();
+
+        $relationMock->expects($this->once())
+             ->method('saveMany')
+             ->will($this->throwException(new \Exception('Save failed')));
+
+        $relationMock->expects($this->once())
+            ->method('getRelated')
+            ->willReturn($relatedMock);
+
+
+        $CalendarModel = $this->getMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
+        $CalendarModel->method($relation)
+            ->willReturn($relationMock);
+
+        $CalendarModel->method('__get')
+            ->with('id')
+            ->willReturn(1);
+
+        return $CalendarModel;
     }
 }
