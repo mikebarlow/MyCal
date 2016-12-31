@@ -46,7 +46,6 @@ class Calendar extends BaseIntegration implements CalendarInterface
 
         $extrasResult = $this->saveExtras(
             $Calendar,
-            new $this->extraModel,
             $calendarExtras
         );
         if ($extrasResult->isFail()) {
@@ -55,7 +54,6 @@ class Calendar extends BaseIntegration implements CalendarInterface
 
         $optionsResults = $this->saveOptions(
             $Calendar,
-            new $this->optModel,
             $calendarOptions
         );
         if ($optionsResults->isFail()) {
@@ -181,18 +179,14 @@ class Calendar extends BaseIntegration implements CalendarInterface
      * Save the calendarExtra Model
      *
      * @param CalendarModel $Calendar
-     * @param CalendarExtraModel $CalendarExtra
      * @param array $extras
      * @return bool|string
      */
     public function saveExtras(
         CalendarModel $Calendar,
-        CalendarExtraModel $ExtraModel,
         $calendarExtras
     ) {
         try {
-            //$ExtraModel->where('calendar_id', '=', $Calendar->id)->delete();
-
             $Calendar->calendarExtra()->getRelated()
                 ->where('calendar_id', '=', $Calendar->id)->delete();
 
@@ -218,11 +212,12 @@ class Calendar extends BaseIntegration implements CalendarInterface
      */
     public function saveOptions(
         CalendarModel $Calendar,
-        OptionModel $OptionModel,
         $calendarOptions
     ) {
         try {
-            $OptionModel->where('calendar_id', '=', $Calendar->id)->delete();
+            $Calendar->calendarOption()->getRelated()
+                ->where('calendar_id', '=', $Calendar->id)->delete();
+
             $Calendar->calendarOption()->saveMany($calendarOptions);
         } catch (\Exception $e) {
             return Result::fail(
