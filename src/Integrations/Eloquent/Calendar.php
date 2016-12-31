@@ -222,7 +222,7 @@ class Calendar extends BaseIntegration implements CalendarInterface
         $calendarOptions
     ) {
         try {
-            $OptionModel->where('calendar_id', '=', $Model->id)->delete();
+            $OptionModel->where('calendar_id', '=', $Calendar->id)->delete();
             $Calendar->calendarOption()->saveMany($calendarOptions);
         } catch (\Exception $e) {
             return Result::fail(
