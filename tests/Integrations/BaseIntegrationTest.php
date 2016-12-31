@@ -151,4 +151,24 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
             $BaseIntegration->extractOptions($Calendar)
         );
     }
+
+    public function testUnserializeDataReturnsArrayOfData()
+    {
+        $BaseIntegration = new BaseIntegration;
+
+        $this->assertSame(
+            [
+                'author' => 'Mike Barlow',
+                'array_test' => [
+                    'foo',
+                    'bar',
+                    'foobar'
+                ]
+            ],
+            $BaseIntegration->unserializeData([
+                'author' => 'Mike Barlow',
+                'array_test' => 'a:3:{i:0;s:3:"foo";i:1;s:3:"bar";i:2;s:6:"foobar";}'
+            ])
+        );
+    }
 }
