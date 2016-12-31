@@ -191,7 +191,11 @@ class Calendar extends BaseIntegration implements CalendarInterface
         $calendarExtras
     ) {
         try {
-            $ExtraModel->where('calendar_id', '=', $Calendar->id)->delete();
+            //$ExtraModel->where('calendar_id', '=', $Calendar->id)->delete();
+
+            $Calendar->calendarExtra()->getRelated()
+                ->where('calendar_id', '=', $Calendar->id)->delete();
+
             $Calendar->calendarExtra()->saveMany($calendarExtras);
         } catch (\Exception $e) {
             return Result::fail(
@@ -218,7 +222,7 @@ class Calendar extends BaseIntegration implements CalendarInterface
         $calendarOptions
     ) {
         try {
-            $OptModel->where('calendar_id', '=', $Model->id)->delete();
+            $OptionModel->where('calendar_id', '=', $Model->id)->delete();
             $Calendar->calendarOption()->saveMany($calendarOptions);
         } catch (\Exception $e) {
             return Result::fail(

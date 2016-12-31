@@ -229,4 +229,51 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             $Result->getMessage()
         );
     }
+
+    public function testSaveExtrasReturnsSuccessResultObject()
+    {
+        $CalendarModel = $this->getMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
+        $CalendarModel->method('calendarExtra')
+            ->willReturn(new CalendarExtraRelationSuccess);
+
+        $CalendarModel->method('__get')
+            ->with('id')
+            ->willReturn(1);
+
+        $CalendarExtraModel = $this->getMock('\Snscripts\MyCal\Integrations\Eloquent\Models\CalendarExtra');
+        $CalendarExtraModel->method('where')
+            ->willReturn('foobar');
+
+        $CalendarIntegration = new CalendarIntegration;
+        $Result = $CalendarIntegration->saveExtras(
+            $CalendarModel,
+            $CalendarExtraModel,
+            []
+        );
+
+        $this->assertTrue(
+            $Result->isSuccess()
+        );
+
+        $this->assertSame(
+            'saved',
+            $Result->getCode()
+        );
+    }
+}
+
+class CalendarExtraRelationSuccess
+{
+    public function saveMany($calendarExtra)
+    {
+        return true;
+    }
+}
+
+class CalendarExtraWhere
+{
+    public function delete()
+    {
+        return true;
+    }
 }
