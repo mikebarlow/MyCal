@@ -307,4 +307,18 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             $Calendar->getTableWrapper('<tr><td>My Test Row</td></tr>')
         );
     }
+
+    public function testDisplayReturnsFullHtmlCalendarTable()
+    {
+        $Calendar = new Calendar(
+            $this->CalendarInterfaceMock,
+            new \Snscripts\MyCal\DateFactory,
+            \Snscripts\MyCal\Calendar\Options::set()
+        );
+
+        $this->assertSame(
+            '<table class="table mycal" id="MyCal"><thead><tr class="mycal-header-row"><td class="mycal-header">Mon</td><td class="mycal-header">Tue</td><td class="mycal-header">Wed</td><td class="mycal-header">Thu</td><td class="mycal-header">Fri</td><td class="mycal-header">Sat</td><td class="mycal-header">Sun</td></tr></thead><tbody><tr class="mycal-row"><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-date">1</td><td class="mycal-date">2</td><td class="mycal-date">3</td><td class="mycal-date">4</td></tr><tr class="mycal-row"><td class="mycal-date">5</td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td></tr></tbody></table>',
+            $Calendar->display('2016-12-01', '2016-12-05')
+        );
+    }
 }
