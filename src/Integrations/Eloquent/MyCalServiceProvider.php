@@ -14,7 +14,7 @@ class MyCalServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(
-            __DIR__.'/migrations'
+            __DIR__.'/Migrations'
         );
     }
 }
