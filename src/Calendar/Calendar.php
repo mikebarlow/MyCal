@@ -37,7 +37,16 @@ class Calendar
      */
     public function save()
     {
-        return $this->calendarIntegration->save($this);
+        $Result = $this->calendarIntegration->save($this);
+
+        if ($Result->isSuccess()) {
+            $id = $Result->getExtra('calendar_id');
+            if (! empty($id)) {
+                $this->id = $id;
+            }
+        }
+
+        return $Result;
     }
 
     /**

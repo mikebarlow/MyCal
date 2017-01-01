@@ -61,7 +61,8 @@ class Calendar extends BaseIntegration implements CalendarInterface
         }
 
         return Result::success()
-            ->setCode(Result::SAVED);
+            ->setCode(Result::SAVED)
+            ->setExtra('calendar_id', $Calendar->id);
     }
 
     /**
