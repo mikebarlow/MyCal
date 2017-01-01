@@ -321,4 +321,83 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             $Calendar->display('2016-12-01', '2016-12-05')
         );
     }
+
+    public function testSaveProcessesSuccessResult()
+    {
+        $Result = \Snscripts\Result\Result::success()
+            ->setExtra('calendar_id', 10);
+
+        $CalendarIntegration = $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+        $CalendarIntegration->method('save')
+            ->willReturn($Result);
+
+        $Calendar = new Calendar(
+            $CalendarIntegration,
+            $this->DateFactoryMock,
+            $this->OptionsMock
+        );
+        $Calendar->setAllData([
+            'id' => null,
+            'name' => 'Test Calendar',
+            'user_id' => 1,
+            'extras' => [
+                'test' => 'a:2:{s:3:"foo";s:3:"bar";s:6:"foobar";s:6:"barfoo";}'
+            ],
+            'options' => []
+        ]);
+
+        $SaveTest = $Calendar->save();
+
+        $this->assertInstanceOf(
+            '\Snscripts\Result\Result',
+            $SaveTest
+        );
+
+        $this->assertSame(
+            10,
+            $Calendar->id
+        );
+    }
+
+
+    public function testSaveProcessesFailResult()
+    {
+        $Result = \Snscripts\Result\Result::fail()
+            ->setCode(\Snscripts\Result\Result::ERROR)
+            ->setMessage('Save failed');
+
+        $CalendarIntegration = $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+        $CalendarIntegration->method('save')
+            ->willReturn($Result);
+
+        $Calendar = new Calendar(
+            $CalendarIntegration,
+            $this->DateFactoryMock,
+            $this->OptionsMock
+        );
+        $Calendar->setAllData([
+            'id' => null,
+            'name' => 'Test Calendar',
+            'user_id' => 1,
+            'extras' => [
+                'test' => 'a:2:{s:3:"foo";s:3:"bar";s:6:"foobar";s:6:"barfoo";}'
+            ],
+            'options' => []
+        ]);
+
+        $SaveTest = $Calendar->save();
+
+        $this->assertInstanceOf(
+            '\Snscripts\Result\Result',
+            $SaveTest
+        );
+
+        $this->assertNull(
+            $Calendar->id
+        );
+
+        $this->assertTrue(
+            $SaveTest->isFail()
+        );
+    }
 }
