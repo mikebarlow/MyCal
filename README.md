@@ -88,6 +88,47 @@ Each item in the collection of dates is an instance of a MyCal Date object, thes
         // If omitted a DateTimeZone object is created from the timezone option defined on the calendar
     }
 
+## Options
+
+Default options are as follows:
+
+	[
+        'weekStartsOn' => Date::MONDAY,
+        'defaultTimezone' => 'Europe/London',
+        'displayTable' => [
+            'tableClass' => 'table mycal',
+            'tableId' => 'MyCal',
+            'headerRowClass' => 'mycal-header-row',
+            'headerClass' => 'mycal-header',
+            'rowClass' => 'mycal-row',
+            'dateClass' => 'mycal-date',
+            'emptyClass' => 'mycal-empty'
+        ],
+        'days' => [
+            0 => 'Sun',
+            1 => 'Mon',
+            2 => 'Tue',
+            3 => 'Wed',
+            4 => 'Thu',
+            5 => 'Fri',
+            6 => 'Sat'
+        ]
+    ];
+    
+If you wish to load a calendar with any changes to the default options simply create a new instance of the Options class and define any options you wsh to overwrite. The passed options are merged with defaults to prevent having to define every single option.
+
+	$Option = \Snscripts\MyCal\Calendar\Options::set([
+		'defaultTimezone' => 'America/New_York',
+		'weekStartsOn' => Date::SUNDAY
+	]);
+	
+With this Option object stored in `$Option` variable, simply pass this into the `load()` method on the Calendar Factory as the second parameter.
+
+	$Calendar = $CalendarFactory->load(
+		null,
+		$Option
+	);
+
 ## Database Integrations
 
 ### Laravel / Eloquent
@@ -174,6 +215,15 @@ Once saved, should you wish to save it in a session or in some other database ta
 Assuming you have a calendar saved and have the ID number accessible, you can load up a calendar and all it's options by calling the load method on the Calendar Factory:
 
 	$Calendar = $CalendarFactory->load($id);
-	
-	
-	
+
+## Changelog
+
+You can view the changelog [HERE](https://github.com/mikebarlow/mycal/blob/master/CHANGELOG.md)
+
+## Contributing
+
+Please see [CONTRIBUTING](https://github.com/mikebarlow/mycal/blob/master/CONTRIBUTING.md) for details.
+
+## License
+
+The MIT License (MIT). Please see [License File](https://github.com/mikebarlow/mycal/blob/master/LICENSE) for more information.
