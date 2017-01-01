@@ -94,6 +94,58 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testSetupModelReturnsCalendarModel()
+    {
+        $data = [
+            'id' => 1,
+            'name' => 'Test Calendar',
+            'user_id' => 1,
+            'extras' => [
+                'test' => [
+                    'foo',
+                    'bar',
+                    'foobar',
+                    'barfoo'
+                ]
+            ],
+            'options' => []
+        ];
+
+        $Calendar = $this->getMockBuilder('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar')
+            ->setMethods(null)
+            ->getMock();
+        $Calendar->setRawAttributes($data);
+
+        $CalModel = $this->getMockBuilder('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar')
+            ->setMethods(['find'])
+            ->getMock();
+
+        $CalModel->expects($this->once())
+             ->method('find')
+             ->willReturn($Calendar);
+
+        $CalendarIntegration = new CalendarIntegration;
+        $Model = $CalendarIntegration->setupModel(
+            $CalModel,
+            $data
+        );
+
+        $this->assertInstanceOf(
+            '\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar',
+            $Model
+        );
+
+        $this->assertSame(
+            'Test Calendar',
+            $Model->name
+        );
+
+        $this->assertSame(
+            1,
+            $Model->id
+        );
+    }
+
     public function testSetupExtrasReturnsArrayOfExtras()
     {
         $data = [
