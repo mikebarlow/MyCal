@@ -52,13 +52,9 @@ To initiate the package setup the Calendar Factory along with the Date Factory a
 Currently only Laravel Eloquent integration is available, you can setup the Calendar Factory like so:
 
     $CalendarFactory = new \Snscripts\MyCal\CalendarFactory(
-        new \Snscripts\MyCal\Integrations\Eloquent\Calendar,
+        new \Snscripts\MyCal\Integrations\Nullable\Calendar,
         new \Snscripts\MyCal\DateFactory
     );
-
-### Laravel / Eloquent
-
-Stuff about service Provider
 
 ## Usage
 
@@ -91,3 +87,93 @@ Each item in the collection of dates is an instance of a MyCal Date object, thes
         // $DateTImeZone should be passed as a DateTimeZone object (http://php.net/datetimezone)
         // If omitted a DateTimeZone object is created from the timezone option defined on the calendar
     }
+
+## Database Integrations
+
+### Laravel / Eloquent
+
+Out of the box MyCal comes with Eloquent / Laravel integration. If you are using Laravel 5.x you can simply include the MyCal Service Provider in your `config/app.php` file.
+
+	'providers' => [
+	    /*
+	     * Laravel Framework Service Providers...
+	     */
+	
+	    // ...
+	
+	    /*
+	     * Application Service Providers...
+	     */    
+	     Snscripts\MyCal\Integrations\Eloquent\MyCalServiceProvider::class
+	 ]
+
+Then run `php artisan migrate` in your command line to run your applications migrations. The MyCal Service Provider makes MyCal migrations available to Laravel and will automatically setup the tables needed.
+
+If you are just using Eloquent outside of Laravel you can still use the Eloquent integration however you will need to manually create the database tables.
+
+    -- Create syntax for TABLE 'calendar_extras'
+    CREATE TABLE `calendar_extras` (
+      `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+      `value` text COLLATE utf8_unicode_ci NOT NULL,
+      `calendar_id` int(10) unsigned NOT NULL,
+      `created_at` timestamp NULL DEFAULT NULL,
+      `updated_at` timestamp NULL DEFAULT NULL,
+      PRIMARY KEY (`slug`,`calendar_id`),
+      KEY `calendar_extras_calendar_id_foreign` (`calendar_id`),
+      CONSTRAINT `calendar_extras_calendar_id_foreign` FOREIGN KEY (`calendar_id`) REFERENCES `calendars` (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+    -- Create syntax for TABLE 'calendars'
+    CREATE TABLE `calendars` (
+      `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+      `user_id` int(10) unsigned NOT NULL,
+      `created_at` timestamp NULL DEFAULT NULL,
+      `updated_at` timestamp NULL DEFAULT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+    -- Create syntax for TABLE 'options'
+    CREATE TABLE `options` (
+      `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+      `value` text COLLATE utf8_unicode_ci NOT NULL,
+      `calendar_id` int(10) unsigned NOT NULL,
+      `created_at` timestamp NULL DEFAULT NULL,
+      `updated_at` timestamp NULL DEFAULT NULL,
+      PRIMARY KEY (`slug`,`calendar_id`),
+      KEY `options_calendar_id_foreign` (`calendar_id`),
+      CONSTRAINT `options_calendar_id_foreign` FOREIGN KEY (`calendar_id`) REFERENCES `calendars` (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+Then when loading up the calendar factory make sure you use the Eloquent calendar integration.
+
+    $CalendarFactory = new \Snscripts\MyCal\CalendarFactory(
+        new \Snscripts\MyCal\Integrations\Eloquent\Calendar,
+        new \Snscripts\MyCal\DateFactory
+    );
+
+### Saving
+
+Once setup with the integration, when you have loaded a blank calendar you can simply call the `save()` method to save the calendar along with the defined options and any extra data stored on the calendar object.
+
+	$Calendar = $CalendarFactory->load();
+	
+	$Calendar->name = 'Mikes Calendar';
+	$Calendar->foo = 'bar';
+	
+	$Result = $Calendar->save();
+	
+$Result will contain the result object describing whether or not the calendar was saved. For documentation on the result object used see [https://github.com/mikebarlow/result](https://github.com/mikebarlow/result). 
+
+Once saved, should you wish to save it in a session or in some other database table you can extract the Calendar ID number like so:
+
+	$id = $Calendar->id;	
+	
+### Loading
+
+Assuming you have a calendar saved and have the ID number accessible, you can load up a calendar and all it's options by calling the load method on the Calendar Factory:
+
+	$Calendar = $CalendarFactory->load($id);
+	
+	
+	
