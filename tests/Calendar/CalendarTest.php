@@ -359,7 +359,6 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-
     public function testSaveProcessesFailResult()
     {
         $Result = \Snscripts\Result\Result::fail()
@@ -398,6 +397,75 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(
             $SaveTest->isFail()
+        );
+    }
+
+    public function testLoadSetsUpCalendarFromIntegration()
+    {
+        $Result = \Snscripts\Result\Result::success()
+            ->setExtra(
+                'calData',
+                [
+                    'id' => 10,
+                    'name' => 'Test Calendar',
+                    'user_id' => 1,
+                    'extras' => [
+                        'test' => [
+                            'foo', 'bar', 'foobar', 'barfoo'
+                        ]
+                    ],
+                    'options' => [
+                        'weekStartsOn' => 1,
+                        'defaultTimezone' => 'Europe/London',
+                        'displayTable' => [
+                            'tableClass' => 'table mycal',
+                            'tableId' => 'MyCal',
+                            'headerRowClass' => 'mycal-header-row',
+                            'headerClass' => 'mycal-header',
+                            'rowClass' => 'mycal-row',
+                            'dateClass' => 'mycal-date',
+                            'emptyClass' => 'mycal-empty'
+                        ],
+                        'days' => [
+                            0 => 'Sun',
+                            1 => 'Mon',
+                            2 => 'Tue',
+                            3 => 'Wed',
+                            4 => 'Thu',
+                            5 => 'Fri',
+                            6 => 'Sat'
+                        ]
+                    ]
+                ]
+            );
+
+        $CalendarIntegration = $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+        $CalendarIntegration->method('load')
+            ->willReturn($Result);
+
+        $Calendar = new Calendar(
+            $CalendarIntegration,
+            $this->DateFactoryMock,
+            $this->OptionsMock
+        );
+
+        $Cal = $Calendar->load(10);
+
+        $this->assertSame(
+            'Test Calendar',
+            $Cal->name
+        );
+
+        $this->assertSame(
+            [
+                'foo', 'bar', 'foobar', 'barfoo'
+            ],
+            $Cal->test
+        );
+
+        $this->assertSame(
+            'Europe/London',
+            $Cal->getOptions()->defaultTimezone
         );
     }
 }
