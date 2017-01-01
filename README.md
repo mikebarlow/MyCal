@@ -52,7 +52,7 @@ To initiate the package setup the Calendar Factory along with the Date Factory a
 Currently only Laravel Eloquent integration is available, you can setup the Calendar Factory like so:
 
     $CalendarFactory = new \Snscripts\MyCal\CalendarFactory(
-        new \Snscripts\MyCal\Integrations\Nullable\Calendar,
+        new \Snscripts\MyCal\Integrations\Null\Calendar,
         new \Snscripts\MyCal\DateFactory
     );
 

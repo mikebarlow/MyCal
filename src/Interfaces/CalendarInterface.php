@@ -12,4 +12,12 @@ interface CalendarInterface
      * @return Snscripts\Result\Result $Result
      */
     public function save(CalendarObj $Calendar);
+
+    /**
+     * load the calendar and options
+     *
+     * @param int $id
+     * @return Snscripts\Result\Result $Result
+     */
+    public function load($id);
 }
