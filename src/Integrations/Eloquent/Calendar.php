@@ -182,10 +182,8 @@ class Calendar extends BaseIntegration implements CalendarInterface
      * @param array $extras
      * @return bool|string
      */
-    public function saveExtras(
-        CalendarModel $Calendar,
-        $calendarExtras
-    ) {
+    public function saveExtras(CalendarModel $Calendar, $calendarExtras)
+    {
         try {
             $Calendar->calendarExtra()->getRelated()
                 ->where('calendar_id', '=', $Calendar->id)->delete();
@@ -210,10 +208,8 @@ class Calendar extends BaseIntegration implements CalendarInterface
      * @param array $extras
      * @return bool|string
      */
-    public function saveOptions(
-        CalendarModel $Calendar,
-        $calendarOptions
-    ) {
+    public function saveOptions(CalendarModel $Calendar, $calendarOptions)
+    {
         try {
             $Calendar->calendarOption()->getRelated()
                 ->where('calendar_id', '=', $Calendar->id)->delete();

@@ -55,4 +55,17 @@ Currently only Laravel Eloquent integration is available, you can setup the Cale
         new \Snscripts\MyCal\Integrations\Eloquent\Calendar,
         new \Snscripts\MyCal\DateFactory
     );
-    
+
+### Laravel / Eloquent
+
+Stuff about service Provider
+
+## Usage
+
+### Basics
+
+Once setup as above, load up a new calendar by using the Calendar Factory load method
+
+    $Calendar = $CalendarFactory->load();
+
+This creates a new Calendar object with default settings.
