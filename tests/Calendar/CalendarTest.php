@@ -9,9 +9,9 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->CalendarInterfaceMock = $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
-        $this->DateFactoryMock = $this->getMock('\Snscripts\MyCal\DateFactory');
-        $this->OptionsMock = $this->getMock('\Snscripts\MyCal\Calendar\Options');
+        $this->CalendarInterfaceMock = $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+        $this->DateFactoryMock = $this->createMock('\Snscripts\MyCal\DateFactory');
+        $this->OptionsMock = $this->createMock('\Snscripts\MyCal\Calendar\Options');
     }
 
     public function testCanCreateInstance()
@@ -327,7 +327,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
         $Result = \Snscripts\Result\Result::success()
             ->setExtra('calendar_id', 10);
 
-        $CalendarIntegration = $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+        $CalendarIntegration = $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
         $CalendarIntegration->method('save')
             ->willReturn($Result);
 
@@ -365,7 +365,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             ->setCode(\Snscripts\Result\Result::ERROR)
             ->setMessage('Save failed');
 
-        $CalendarIntegration = $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+        $CalendarIntegration = $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
         $CalendarIntegration->method('save')
             ->willReturn($Result);
 
@@ -439,7 +439,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
                 ]
             );
 
-        $CalendarIntegration = $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+        $CalendarIntegration = $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
         $CalendarIntegration->method('load')
             ->willReturn($Result);
 
@@ -467,5 +467,27 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             'Europe/London',
             $Cal->getOptions()->defaultTimezone
         );
+    }
+
+    public function testLoadThrowsExceptionOnError()
+    {
+        $this->expectException('\Snscripts\MyCal\Exceptions\NotFoundException');
+        $this->expectExceptionMessage('Not loaded');
+
+        $Result = \Snscripts\Result\Result::fail()
+            ->setCode(\Snscripts\Result\Result::NOT_FOUND)
+            ->setMessage('Not loaded');
+
+        $CalendarIntegration = $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+        $CalendarIntegration->method('load')
+            ->willReturn($Result);
+
+        $Calendar = new Calendar(
+            $CalendarIntegration,
+            $this->DateFactoryMock,
+            $this->OptionsMock
+        );
+
+        $Cal = $Calendar->load(10);
     }
 }

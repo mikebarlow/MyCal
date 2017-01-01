@@ -16,13 +16,13 @@ MyCal is a PSR-2 compliant package used for generating calendars and associated 
 
 MyCal requires the following:
 
-* "php": ">=5.5.0"
+* "php": ">=5.6.0"
 * "cartalyst/collections": "1.1.*",
 * "snscripts/result": "1.0.*"
 
 And the following if you wish to run in dev mode and run tests.
 
-* "phpunit/phpunit": "~4.0"
+* "phpunit/phpunit": "~5.7"
 * "squizlabs/php_codesniffer": "~2.0"
 
 MyCal suggests the following for database integrations.
@@ -92,7 +92,7 @@ Each item in the collection of dates is an instance of a MyCal Date object, thes
 
 Default options are as follows:
 
-	[
+    [
         'weekStartsOn' => Date::MONDAY,
         'defaultTimezone' => 'Europe/London',
         'displayTable' => [
@@ -114,20 +114,20 @@ Default options are as follows:
             6 => 'Sat'
         ]
     ];
-    
+
 If you wish to load a calendar with any changes to the default options simply create a new instance of the Options class and define any options you wsh to overwrite. The passed options are merged with defaults to prevent having to define every single option.
 
-	$Option = \Snscripts\MyCal\Calendar\Options::set([
-		'defaultTimezone' => 'America/New_York',
-		'weekStartsOn' => Date::SUNDAY
-	]);
-	
+    $Option = \Snscripts\MyCal\Calendar\Options::set([
+        'defaultTimezone' => 'America/New_York',
+        'weekStartsOn' => Date::SUNDAY
+    ]);
+
 With this Option object stored in `$Option` variable, simply pass this into the `load()` method on the Calendar Factory as the second parameter.
 
-	$Calendar = $CalendarFactory->load(
-		null,
-		$Option
-	);
+    $Calendar = $CalendarFactory->load(
+        null,
+        $Option
+    );
 
 ## Database Integrations
 
@@ -135,18 +135,18 @@ With this Option object stored in `$Option` variable, simply pass this into the 
 
 Out of the box MyCal comes with Eloquent / Laravel integration. If you are using Laravel 5.x you can simply include the MyCal Service Provider in your `config/app.php` file.
 
-	'providers' => [
-	    /*
-	     * Laravel Framework Service Providers...
-	     */
-	
-	    // ...
-	
-	    /*
-	     * Application Service Providers...
-	     */    
-	     Snscripts\MyCal\Integrations\Eloquent\MyCalServiceProvider::class
-	 ]
+    'providers' => [
+        /*
+         * Laravel Framework Service Providers...
+         */
+
+        // ...
+
+        /*
+         * Application Service Providers...
+         */    
+         Snscripts\MyCal\Integrations\Eloquent\MyCalServiceProvider::class
+     ]
 
 Then run `php artisan migrate` in your command line to run your applications migrations. The MyCal Service Provider makes MyCal migrations available to Laravel and will automatically setup the tables needed.
 
@@ -197,24 +197,24 @@ Then when loading up the calendar factory make sure you use the Eloquent calenda
 
 Once setup with the integration, when you have loaded a blank calendar you can simply call the `save()` method to save the calendar along with the defined options and any extra data stored on the calendar object.
 
-	$Calendar = $CalendarFactory->load();
-	
-	$Calendar->name = 'Mikes Calendar';
-	$Calendar->foo = 'bar';
-	
-	$Result = $Calendar->save();
-	
-$Result will contain the result object describing whether or not the calendar was saved. For documentation on the result object used see [https://github.com/mikebarlow/result](https://github.com/mikebarlow/result). 
+    $Calendar = $CalendarFactory->load();
+
+    $Calendar->name = 'Mikes Calendar';
+    $Calendar->foo = 'bar';
+
+    $Result = $Calendar->save();
+
+$Result will contain the result object describing whether or not the calendar was saved. For documentation on the result object used see [https://github.com/mikebarlow/result](https://github.com/mikebarlow/result).
 
 Once saved, should you wish to save it in a session or in some other database table you can extract the Calendar ID number like so:
 
-	$id = $Calendar->id;	
-	
+    $id = $Calendar->id;
+
 ### Loading
 
 Assuming you have a calendar saved and have the ID number accessible, you can load up a calendar and all it's options by calling the load method on the Calendar Factory:
 
-	$Calendar = $CalendarFactory->load($id);
+    $Calendar = $CalendarFactory->load($id);
 
 ## Changelog
 

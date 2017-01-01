@@ -10,9 +10,9 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 {
     public function testSaveReturnsFailedObject()
     {
-        $CalendarInterfaceMock = $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
-        $DateFactoryMock = $this->getMock('\Snscripts\MyCal\DateFactory');
-        $OptionsMock = $this->getMock('\Snscripts\MyCal\Calendar\Options');
+        $CalendarInterfaceMock = $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+        $DateFactoryMock = $this->createMock('\Snscripts\MyCal\DateFactory');
+        $OptionsMock = $this->createMock('\Snscripts\MyCal\Calendar\Options');
         $OptionsMock->method('toArray')
             ->willReturn([]);
 

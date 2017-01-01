@@ -9,9 +9,9 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->CalendarInterfaceMock = $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
-        $this->DateFactoryMock = $this->getMock('\Snscripts\MyCal\DateFactory');
-        $this->OptionsMock = $this->getMock('\Snscripts\MyCal\Calendar\Options');
+        $this->CalendarInterfaceMock = $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+        $this->DateFactoryMock = $this->createMock('\Snscripts\MyCal\DateFactory');
+        $this->OptionsMock = $this->createMock('\Snscripts\MyCal\Calendar\Options');
         $this->OptionsMock->method('toArray')
             ->willReturn([]);
 
@@ -246,7 +246,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveCalendarReturnsSuccessResultObject()
     {
-        $CalendarModel = $this->getMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
+        $CalendarModel = $this->createMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
         $CalendarModel->method('save')
             ->willReturn(true);
 
@@ -265,7 +265,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveCalendarReturnsFailResultObject()
     {
-        $CalendarModel = $this->getMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
+        $CalendarModel = $this->createMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
         $CalendarModel->method('save')
             ->will($this->throwException(new \Exception('Save failed')));
 
@@ -393,7 +393,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             ->willReturn($relatedMock);
 
 
-        $CalendarModel = $this->getMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
+        $CalendarModel = $this->createMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
         $CalendarModel->method($relation)
             ->willReturn($relationMock);
 
@@ -435,7 +435,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             ->willReturn($relatedMock);
 
 
-        $CalendarModel = $this->getMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
+        $CalendarModel = $this->createMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar');
         $CalendarModel->method($relation)
             ->willReturn($relationMock);
 

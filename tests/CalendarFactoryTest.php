@@ -8,8 +8,8 @@ class CalendarFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->CalendarInterfaceMock = $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
-        $this->DateFactoryMock = $this->getMock('\Snscripts\MyCal\DateFactory');
+        $this->CalendarInterfaceMock = $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+        $this->DateFactoryMock = $this->createMock('\Snscripts\MyCal\DateFactory');
     }
 
     public function testCanCreateInstance()
