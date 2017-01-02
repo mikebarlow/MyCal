@@ -8,7 +8,9 @@
 
 ## Introduction
 
-MyCal is a PSR-2 compliant package used for generating calendars and associated events easily. The calendar also comes with easy methods to generate a table based view for the calendar. Everything is also object orientated for easy use.
+MyCal is a PSR-2 compliant package used for generating calendars in an object orientated way. Built in are helpers for generating a HTML table for the requested dates.
+
+**This package is still a work in progress and the eventual goal is to add event support to provide an easy to use Calendar / Events Package.**
 
 ## Requirements
 
@@ -35,7 +37,7 @@ MyCal suggests the following for database integrations.
 
 Simplest installation is via composer.
 
-    composer require snscripts/mycal 1.*
+    composer require snscripts/mycal 0.*
 
 or adding to your projects `composer.json` file.
 
@@ -193,7 +195,7 @@ Then when loading up the calendar factory make sure you use the Eloquent calenda
         new \Snscripts\MyCal\DateFactory
     );
 
-### Saving
+## Saving a Calendar
 
 Once setup with the integration, when you have loaded a blank calendar you can simply call the `save()` method to save the calendar along with the defined options and any extra data stored on the calendar object.
 
@@ -210,7 +212,7 @@ Once saved, should you wish to save it in a session or in some other database ta
 
     $id = $Calendar->id;
 
-### Loading
+## Loading a Calendar
 
 Assuming you have a calendar saved and have the ID number accessible, you can load up a calendar and all it's options by calling the load method on the Calendar Factory:
 
