@@ -3,14 +3,13 @@ namespace Snscripts\MyCal\Tests;
 
 use Snscripts\MyCal\CalendarFactory;
 use Snscripts\MyCal\Interfaces\CalendarInterface;
-use Snscripts\MyCal\Interfaces\EventInterface;
 
 class CalendarFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->CalendarInterfaceMock = $this->getMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
-        $this->EventInterfaceMock = $this->getMock('\Snscripts\MyCal\Interfaces\EventInterface');
+        $this->CalendarInterfaceMock = $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+        $this->DateFactoryMock = $this->createMock('\Snscripts\MyCal\DateFactory');
     }
 
     public function testCanCreateInstance()
@@ -19,7 +18,7 @@ class CalendarFactoryTest extends \PHPUnit_Framework_TestCase
             'Snscripts\MyCal\CalendarFactory',
             new CalendarFactory(
                 $this->CalendarInterfaceMock,
-                $this->EventInterfaceMock
+                $this->DateFactoryMock
             )
         );
     }
@@ -28,12 +27,12 @@ class CalendarFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $Factory = new CalendarFactory(
             $this->CalendarInterfaceMock,
-            $this->EventInterfaceMock
+            $this->DateFactoryMock
         );
 
         $this->assertInstanceOf(
-            'Snscripts\MyCal\Calendar',
-            $Factory->newInstance()
+            'Snscripts\MyCal\Calendar\Calendar',
+            $Factory->load()
         );
     }
 }

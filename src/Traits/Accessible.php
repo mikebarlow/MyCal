@@ -1,7 +1,8 @@
 <?php
-namespace Snscripts\MyCal;
 
-class BaseObject
+namespace Snscripts\MyCal\Traits;
+
+trait Accessible
 {
     protected $data = [];
 
@@ -74,5 +75,17 @@ class BaseObject
         return json_encode(
             $this->toArray()
         );
+    }
+
+    /**
+     * set array of data
+     *
+     * @param array $data
+     * @return object $this
+     */
+    public function setAllData($data)
+    {
+        $this->data = $data;
+        return $this;
     }
 }

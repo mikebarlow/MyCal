@@ -1,39 +1,53 @@
 <?php
 namespace Snscripts\MyCal;
 
+use Snscripts\MyCal\DateFactory;
 use Snscripts\MyCal\Interfaces\CalendarInterface;
-use Snscripts\MyCal\Interfaces\EventInterface;
-use Snscripts\MyCal\Calendar;
+use Snscripts\MyCal\Calendar\Calendar;
+use Snscripts\MyCal\Calendar\Options;
 
 class CalendarFactory
 {
-    protected $calendarProvider;
-    protected $eventProvider;
+    protected $calendarIntegration;
+    protected $dateFactory;
 
     /**
-     * Setup a new calendar factory with these providers
+     * Setup a new calendar factory
      *
-     * @param CalendarInterface $calendarProvider
-     * @param EventInterface $eventProvider
+     * @param CalendarInterface $calendarIntegration
+     * @param DateFactory $dateFactory
      */
     public function __construct(
-        CalendarInterface $calendarProvider,
-        EventInterface $eventProvider
+        CalendarInterface $calendarIntegration,
+        DateFactory $dateFactory
     ) {
-        $this->calendarProvider = $calendarProvider;
-        $this->eventProvider = $eventProvider;
+        $this->calendarIntegration = $calendarIntegration;
+        $this->dateFactory = $dateFactory;
     }
 
     /**
      * create a new calendar instance
      *
+     * @param mixed $id Identifier to find calendar
+     * @param Options $Options
      * @return Calendar $Calendar
      */
-    public function newInstance()
+    public function load($id = '', Options $Options = null)
     {
-        return new Calendar(
-            $this->calendarProvider,
-            $this->eventProvider
+        if (empty($Options)) {
+            $Options = Options::set();
+        }
+
+        $Calendar = new Calendar(
+            $this->calendarIntegration,
+            $this->dateFactory,
+            $Options
         );
+
+        if (! empty($id)) {
+            $Calendar = $Calendar->load($id);
+        }
+
+        return $Calendar;
     }
 }
