@@ -4,7 +4,7 @@
 [![Source Code](http://img.shields.io/badge/source-mikebarlow/mycal-brightgreen.svg?style=flat-square)](https://github.com/mikebarlow/mycal)
 [![Latest Version](https://img.shields.io/github/release/mikebarlow/mycal.svg?style=flat-square)](https://github.com/mikebarlow/mycal/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/mikebarlow/mycal/blob/master/LICENSE)
-[![Build Status](https://img.shields.io/travis/mikebarlow/mycal/master.svg?style=flat-square)](https://travis-ci.org/mikebarlow/mycal)
+[![Build Status](https://img.shields.io/travis/mikebarlow/MyCal/master.svg?style=flat-square)](https://travis-ci.org/mikebarlow/MyCal)
 
 ## Introduction
 
