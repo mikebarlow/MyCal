@@ -362,6 +362,350 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testLoadModelLoadsCalendarData()
+    {
+        $returnModel = $this->getMockBuilder('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar')
+            ->setMethods(null)
+            ->getMock();
+        $returnModel->setRawAttributes([
+            'id' => 10,
+            'name' => 'Test Calendar',
+            'user_id' => 1,
+            'extras' => [
+                'test' => [
+                    'foo', 'bar', 'foobar', 'barfoo'
+                ]
+            ],
+            'options' => [
+                'weekStartsOn' => 1,
+                'defaultTimezone' => 'Europe/London',
+                'displayTable' => [
+                    'tableClass' => 'table mycal',
+                    'tableId' => 'MyCal',
+                    'headerRowClass' => 'mycal-header-row',
+                    'headerClass' => 'mycal-header',
+                    'rowClass' => 'mycal-row',
+                    'dateClass' => 'mycal-date',
+                    'emptyClass' => 'mycal-empty'
+                ],
+                'days' => [
+                    0 => 'Sun',
+                    1 => 'Mon',
+                    2 => 'Tue',
+                    3 => 'Wed',
+                    4 => 'Thu',
+                    5 => 'Fri',
+                    6 => 'Sat'
+                ]
+            ]
+        ]);
+
+        $whereMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['with', 'first'])
+            ->getMock();
+
+        $whereMock->expects($this->once())
+            ->method('with')
+            ->will($this->returnSelf());
+
+        $whereMock->expects($this->once())
+            ->method('first')
+            ->willReturn($returnModel);
+
+        $CalendarModel = $this->getMockBuilder('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar')
+            ->setMethods(['where'])
+            ->getMock();
+
+        $CalendarModel->expects($this->once())
+            ->method('where')
+            ->willReturn($whereMock);
+
+        $CalendarIntegration = new CalendarIntegration;
+
+        $this->assertSame(
+            [
+                'id' => 10,
+                'name' => 'Test Calendar',
+                'user_id' => 1,
+                'extras' => [
+                    'test' => [
+                        'foo', 'bar', 'foobar', 'barfoo'
+                    ]
+                ],
+                'options' => [
+                    'weekStartsOn' => 1,
+                    'defaultTimezone' => 'Europe/London',
+                    'displayTable' => [
+                        'tableClass' => 'table mycal',
+                        'tableId' => 'MyCal',
+                        'headerRowClass' => 'mycal-header-row',
+                        'headerClass' => 'mycal-header',
+                        'rowClass' => 'mycal-row',
+                        'dateClass' => 'mycal-date',
+                        'emptyClass' => 'mycal-empty'
+                    ],
+                    'days' => [
+                        0 => 'Sun',
+                        1 => 'Mon',
+                        2 => 'Tue',
+                        3 => 'Wed',
+                        4 => 'Thu',
+                        5 => 'Fri',
+                        6 => 'Sat'
+                    ]
+                ]
+            ],
+            $CalendarIntegration->loadModel(
+                $CalendarModel,
+                10
+            )
+        );
+    }
+
+    public function testLoadModelReturnsEmptyArrayWhenNoRowFound()
+    {
+        $whereMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['with', 'first'])
+            ->getMock();
+
+        $whereMock->expects($this->once())
+            ->method('with')
+            ->will($this->returnSelf());
+
+        $whereMock->expects($this->once())
+            ->method('first')
+            ->will($this->throwException(new \Exception('No record found')));
+
+        $CalendarModel = $this->getMockBuilder('\Snscripts\MyCal\Integrations\Eloquent\Models\Calendar')
+            ->setMethods(['where'])
+            ->getMock();
+
+        $CalendarModel->expects($this->once())
+            ->method('where')
+            ->willReturn($whereMock);
+
+        $CalendarIntegration = new CalendarIntegration;
+
+        $loadResult = $CalendarIntegration->loadModel(
+            $CalendarModel,
+            10
+        );
+
+        $this->assertEmpty($loadResult);
+        $this->assertSame(
+            [],
+            $loadResult
+        );
+    }
+
+    public function testFormatExtrasFormatsCorrectly()
+    {
+        $CalendarIntegration = new CalendarIntegration;
+        $fromDb = [
+            'id' => 1,
+            'name' => 'mikes cal',
+            'user_id' => 1,
+            'created_at' => '2016-12-28 11:40:24',
+            'updated_at' => '2016-12-28 11:40:24',
+            'calendar_extra' => [
+                [
+                    'slug' => 'author',
+                    'value' => 'mike',
+                    'calendar_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24'
+                ],
+                [
+                    'slug' => 'foo',
+                    'value' => 'bar',
+                    'calendar_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24'
+                ],
+                [
+                    'slug' => 'stuff',
+                    'value' => 'a:3:{i:0;s:3:"foo";i:1;s:3:"bar";i:2;s:7:"barfoo1";}',
+                    'calendar_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24'
+                ]
+            ],
+            'calendar_option' => [
+                [
+                    'slug' => 'days',
+                    'value' => 'a:7:{i:0;s:3:"Sun";i:1;s:3:"Mon";i:2;s:3:"Tue";i:3;s:3:"Wed";i:4;s:3:"Thu";i:5;s:3:"Fri";i:6;s:3:"Sat";}',
+                    'calendar_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24',
+                ],
+                [
+                    'slug' => 'defaultTimezone',
+                    'value' => 'America/New_York',
+                    'calendar_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24'
+                ],
+                [
+                    'slug' => 'displayTable',
+                    'value' => 'a:7:{s:10:"tableClass";s:11:"table mycal";s:7:"tableId";s:5:"MyCal";s:14:"headerRowClass";s:16:"mycal-header-row";s:11:"headerClass";s:12:"mycal-header";s:8:"rowClass";s:9:"mycal-row";s:9:"dateClass";s:10:"mycal-date";s:10:"emptyClass";s:11:"mycal-empty";}',
+                    'calendar_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24'
+                ],
+                [
+                    'slug' => 'weekStartsOn',
+                    'value' => 0,
+                    'calendar_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24'
+                ]
+            ]
+        ];
+
+        $this->assertSame(
+            [
+                'id' => 1,
+                'name' => 'mikes cal',
+                'user_id' => 1,
+                'created_at' => '2016-12-28 11:40:24',
+                'updated_at' => '2016-12-28 11:40:24',
+                'calendar_option' => [
+                    [
+                        'slug' => 'days',
+                        'value' => 'a:7:{i:0;s:3:"Sun";i:1;s:3:"Mon";i:2;s:3:"Tue";i:3;s:3:"Wed";i:4;s:3:"Thu";i:5;s:3:"Fri";i:6;s:3:"Sat";}',
+                        'calendar_id' => 1,
+                        'created_at' => '2016-12-28 11:40:24',
+                        'updated_at' => '2016-12-28 11:40:24',
+                    ],
+                    [
+                        'slug' => 'defaultTimezone',
+                        'value' => 'America/New_York',
+                        'calendar_id' => 1,
+                        'created_at' => '2016-12-28 11:40:24',
+                        'updated_at' => '2016-12-28 11:40:24'
+                    ],
+                    [
+                        'slug' => 'displayTable',
+                        'value' => 'a:7:{s:10:"tableClass";s:11:"table mycal";s:7:"tableId";s:5:"MyCal";s:14:"headerRowClass";s:16:"mycal-header-row";s:11:"headerClass";s:12:"mycal-header";s:8:"rowClass";s:9:"mycal-row";s:9:"dateClass";s:10:"mycal-date";s:10:"emptyClass";s:11:"mycal-empty";}',
+                        'calendar_id' => 1,
+                        'created_at' => '2016-12-28 11:40:24',
+                        'updated_at' => '2016-12-28 11:40:24'
+                    ],
+                    [
+                        'slug' => 'weekStartsOn',
+                        'value' => 0,
+                        'calendar_id' => 1,
+                        'created_at' => '2016-12-28 11:40:24',
+                        'updated_at' => '2016-12-28 11:40:24'
+                    ]
+                ],
+                'extras' => [
+                    'author' => 'mike',
+                    'foo' => 'bar',
+                    'stuff' => [
+                        'foo',
+                        'bar',
+                        'barfoo1'
+                    ]
+                ]
+            ],
+            $CalendarIntegration->formatExtras($fromDb)
+        );
+    }
+
+    public function testFormatOptionsFormatsCorrecctly()
+    {
+        $CalendarIntegration = new CalendarIntegration;
+        $fromDb = [
+            'id' => 1,
+            'name' => 'mikes cal',
+            'user_id' => 1,
+            'created_at' => '2016-12-28 11:40:24',
+            'updated_at' => '2016-12-28 11:40:24',
+            'calendar_option' => [
+                [
+                    'slug' => 'days',
+                    'value' => 'a:7:{i:0;s:3:"Sun";i:1;s:3:"Mon";i:2;s:3:"Tue";i:3;s:3:"Wed";i:4;s:3:"Thu";i:5;s:3:"Fri";i:6;s:3:"Sat";}',
+                    'calendar_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24',
+                ],
+                [
+                    'slug' => 'defaultTimezone',
+                    'value' => 'America/New_York',
+                    'calendar_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24'
+                ],
+                [
+                    'slug' => 'displayTable',
+                    'value' => 'a:7:{s:10:"tableClass";s:11:"table mycal";s:7:"tableId";s:5:"MyCal";s:14:"headerRowClass";s:16:"mycal-header-row";s:11:"headerClass";s:12:"mycal-header";s:8:"rowClass";s:9:"mycal-row";s:9:"dateClass";s:10:"mycal-date";s:10:"emptyClass";s:11:"mycal-empty";}',
+                    'calendar_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24'
+                ],
+                [
+                    'slug' => 'weekStartsOn',
+                    'value' => 0,
+                    'calendar_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24'
+                ]
+            ],
+            'extras' => [
+                'author' => 'mike',
+                'foo' => 'bar',
+                'stuff' => [
+                    'foo',
+                    'bar',
+                    'barfoo1'
+                ]
+            ]
+        ];
+
+        $this->assertSame(
+            [
+                'id' => 1,
+                'name' => 'mikes cal',
+                'user_id' => 1,
+                'created_at' => '2016-12-28 11:40:24',
+                'updated_at' => '2016-12-28 11:40:24',
+                'extras' => [
+                    'author' => 'mike',
+                    'foo' => 'bar',
+                    'stuff' => [
+                        'foo',
+                        'bar',
+                        'barfoo1'
+                    ]
+                ],
+                'options' => [
+                    'days' => [
+                        'Sun',
+                        'Mon',
+                        'Tue',
+                        'Wed',
+                        'Thu',
+                        'Fri',
+                        'Sat'
+                    ],
+                    'defaultTimezone' => 'America/New_York',
+                    'displayTable' => [
+                        'tableClass' => 'table mycal',
+                        'tableId' => 'MyCal',
+                        'headerRowClass' => 'mycal-header-row',
+                        'headerClass' => 'mycal-header',
+                        'rowClass' => 'mycal-row',
+                        'dateClass' => 'mycal-date',
+                        'emptyClass' => 'mycal-empty'
+                    ],
+                    'weekStartsOn' => 0
+                ]
+            ],
+            $CalendarIntegration->formatOptions($fromDb)
+        );
+    }
+
     protected function buildSuccessCalendarModel($relation)
     {
         $whereMock = $this->getMockBuilder(\stdClass::class)

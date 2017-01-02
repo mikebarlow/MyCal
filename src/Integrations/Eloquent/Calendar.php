@@ -5,9 +5,9 @@ use Snscripts\Result\Result;
 use Snscripts\MyCal\Interfaces\CalendarInterface;
 use Snscripts\MyCal\Integrations\BaseIntegration;
 use Snscripts\MyCal\Calendar\Calendar as CalendarObj;
+use Snscripts\MyCal\Integrations\Eloquent\Models\Option as OptionModel;
 use Snscripts\MyCal\Integrations\Eloquent\Models\Calendar as CalendarModel;
 use Snscripts\MyCal\Integrations\Eloquent\Models\CalendarExtra as CalendarExtraModel;
-use Snscripts\MyCal\Integrations\Eloquent\Models\Option as OptionModel;
 
 class Calendar extends BaseIntegration implements CalendarInterface
 {
@@ -236,22 +236,54 @@ class Calendar extends BaseIntegration implements CalendarInterface
      */
     public function load($id)
     {
-        $Model = new $this->calModel;
-        $Model = $Model
-            ->where('id', '=', $id)
-            ->with([
-                'calendarExtra',
-                'calendarOption'
-            ])
-            ->first();
+        $calData = $this->loadModel(new $this->calModel, $id);
 
-        if (empty($Model)) {
+        if (empty($calData)) {
             return Result::fail()
                 ->setCode(Result::NOT_FOUND)
                 ->setMessage('Could not load calendar #' . $id);
         }
 
-        $calData = $Model->toArray();
+        $calData = $this->formatExtras($calData);
+        $calData = $this->formatOptions($calData);
+
+        return Result::success()
+            ->setCode(Result::FOUND)
+            ->setExtra('calData', $calData);
+    }
+
+    /**
+     * load the calendar model and data
+     *
+     * @param CalendarModel $CalModel
+     * @param int $id
+     * @return array
+     */
+    public function loadModel($CalModel, $id)
+    {
+        try {
+            $CalModel = $CalModel
+                ->where('id', '=', $id)
+                ->with([
+                    'calendarExtra',
+                    'calendarOption'
+                ])
+                ->first();
+        } catch (\Exception $e) {
+            return [];
+        }
+
+        return $CalModel->toArray();
+    }
+
+    /**
+     * format the extra data
+     *
+     * @param array $calData
+     * @return array $formattedCalData
+     */
+    public function formatExtras($calData)
+    {
         $calData['extras'] = [];
         foreach ($calData['calendar_extra'] as $extras) {
             $calData['extras'][$extras['slug']] = $extras['value'];
@@ -262,7 +294,19 @@ class Calendar extends BaseIntegration implements CalendarInterface
                 $calData['extras']
             );
         }
+        unset($calData['calendar_extra']);
 
+        return $calData;
+    }
+
+    /**
+     * format the calendar options
+     *
+     * @param array $calData
+     * @return array $formattedCalData
+     */
+    public function formatOptions($calData)
+    {
         $calData['options'] = [];
         foreach ($calData['calendar_option'] as $options) {
             $calData['options'][$options['slug']] = $options['value'];
@@ -273,10 +317,8 @@ class Calendar extends BaseIntegration implements CalendarInterface
                 $calData['options']
             );
         }
-        unset($calData['calendar_extra'], $calData['calendar_option']);
+        unset($calData['calendar_option']);
 
-        return Result::success()
-            ->setCode(Result::FOUND)
-            ->setExtra('calData', $calData);
+        return $calData;
     }
 }
