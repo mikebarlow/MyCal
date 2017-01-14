@@ -43,7 +43,7 @@ or adding to your projects `composer.json` file.
 
     {
         "require": {
-            "snscripts/mycal": "1.*"
+            "snscripts/mycal": "0.*"
         }
     }
 
