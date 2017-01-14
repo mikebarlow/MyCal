@@ -134,12 +134,12 @@ class Calendar
 
         return new \DatePeriod(
             new \DateTime(
-                $start,
+                $start . '12:00:00',
                 $utcTime
             ),
             new \DateInterval('P1D'),
             (new \DateTime(
-                $end,
+                $end . '12:00:00',
                 $utcTime
             ))->modify("+1 Day")
         );
@@ -222,7 +222,7 @@ class Calendar
     {
         $body = '<tbody><tr class="' . $this->Options->displayTable['rowClass'] . '">';
 
-        $day = $startOn = $this->Options->weekStartsOn;
+        $day = $startOn = intval($this->Options->weekStartsOn);
         $first = true;
 
         foreach ($dates as $Date) {

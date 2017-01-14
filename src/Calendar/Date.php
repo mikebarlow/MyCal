@@ -94,6 +94,7 @@ class Date
             new DateTimeZone('UTC')
         );
         $DateTime->setTimezone($Timezone);
+        $weekStart = intval($weekStart);
 
         return (intval($DateTime->format('w')) === $weekStart);
     }
