@@ -11,7 +11,15 @@ class MyCalServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        //
+        $this->app->bind(
+            'Snscripts\MyCal\CalendarFactory',
+            function ($app) {
+                return new \Snscripts\MyCal\CalendarFactory(
+                    new \Snscripts\MyCal\Integrations\Eloquent\Calendar,
+                    new \Snscripts\MyCal\DateFactory
+                );
+            }
+        );
     }
 
     public function boot()
