@@ -160,7 +160,7 @@ class Calendar
 
         $dates = [];
         foreach ($range as $date) {
-            $dates[] = $this->dateFactory->newInstance(
+            $dates[$date->format('Y-m-d')] = $this->dateFactory->newInstance(
                 $date->getTimestamp(),
                 $DateTimeZone,
                 $this->Options->weekStartsOn
