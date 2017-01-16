@@ -130,17 +130,19 @@ class Calendar
      */
     public function getRange($start, $end)
     {
-        $utcTime = new \DateTimeZone('UTC');
+        $calTime = new \DateTimeZone(
+            $this->Options->defaultTimezone
+        );
 
         return new \DatePeriod(
             new \DateTime(
-                $start . '12:00:00',
-                $utcTime
+                $start,
+                $calTime
             ),
             new \DateInterval('P1D'),
             (new \DateTime(
-                $end . '12:00:00',
-                $utcTime
+                $end,
+                $calTime
             ))->modify("+1 Day")
         );
     }
@@ -154,12 +156,15 @@ class Calendar
      */
     public function processDateRange($range)
     {
+        $UTCTime = new \DateTimeZone('UTC');
         $DateTimeZone = new \DateTimeZone(
             $this->Options->defaultTimezone
         );
 
         $dates = [];
         foreach ($range as $date) {
+            $date->setTimezone($UTCTime);
+
             $dates[$date->format('Y-m-d')] = $this->dateFactory->newInstance(
                 $date->getTimestamp(),
                 $DateTimeZone,
