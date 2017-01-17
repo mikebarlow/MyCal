@@ -17,4 +17,18 @@ class EventFactory
     {
         $this->eventIntegration = $eventIntegration;
     }
+
+    /**
+     * create a new calendar instance
+     *
+     * @param mixed $id Identifier to find calendar
+     * @param Options $Options
+     * @return Calendar $Calendar
+     */
+    public function load()
+    {
+        $Event = new Event($this->eventIntegration);
+
+        return $Event;
+    }
 }

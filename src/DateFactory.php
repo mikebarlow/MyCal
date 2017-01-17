@@ -1,11 +1,24 @@
 <?php
 namespace Snscripts\MyCal;
 
+use Snscripts\MyCal\EventFactory;
 use Snscripts\MyCal\Calendar\Date;
 use DateTimeZone;
 
 class DateFactory
 {
+    protected $eventFactory;
+
+    /**
+     * Setup a new date factory
+     *
+     * @param EventFactory $eventFactory
+     */
+    public function __construct(EventFactory $eventFactory)
+    {
+        $this->eventFactory = $eventFactory;
+    }
+
     /**
      * create a new date instance
      *

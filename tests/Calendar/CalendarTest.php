@@ -11,6 +11,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
     {
         $this->CalendarInterfaceMock = $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
         $this->DateFactoryMock = $this->createMock('\Snscripts\MyCal\DateFactory');
+        $this->EventFactoryMock = $this->createMock('\Snscripts\MyCal\EventFactory');
         $this->OptionsMock = $this->createMock('\Snscripts\MyCal\Calendar\Options');
     }
 
@@ -183,7 +184,9 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
     {
         $Calendar = new Calendar(
             $this->CalendarInterfaceMock,
-            new \Snscripts\MyCal\DateFactory,
+            new \Snscripts\MyCal\DateFactory(
+                $this->EventFactoryMock
+            ),
             \Snscripts\MyCal\Calendar\Options::set()
         );
 
@@ -213,7 +216,9 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
     {
         $Calendar = new Calendar(
             $this->CalendarInterfaceMock,
-            new \Snscripts\MyCal\DateFactory,
+            new \Snscripts\MyCal\DateFactory(
+                $this->EventFactoryMock
+            ),
             \Snscripts\MyCal\Calendar\Options::set()
         );
 
@@ -234,7 +239,9 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
     {
         $Calendar = new Calendar(
             $this->CalendarInterfaceMock,
-            new \Snscripts\MyCal\DateFactory,
+            new \Snscripts\MyCal\DateFactory(
+                $this->EventFactoryMock
+            ),
             \Snscripts\MyCal\Calendar\Options::set()
         );
 
@@ -250,7 +257,9 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
     {
         $Calendar = new Calendar(
             $this->CalendarInterfaceMock,
-            new \Snscripts\MyCal\DateFactory,
+            new \Snscripts\MyCal\DateFactory(
+                $this->EventFactoryMock
+            ),
             \Snscripts\MyCal\Calendar\Options::set(['weekStartsOn' => Date::SUNDAY])
         );
 
@@ -266,7 +275,9 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
     {
         $Calendar = new Calendar(
             $this->CalendarInterfaceMock,
-            new \Snscripts\MyCal\DateFactory,
+            new \Snscripts\MyCal\DateFactory(
+                $this->EventFactoryMock
+            ),
             \Snscripts\MyCal\Calendar\Options::set()
         );
 
@@ -282,7 +293,9 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
     {
         $Calendar = new Calendar(
             $this->CalendarInterfaceMock,
-            new \Snscripts\MyCal\DateFactory,
+            new \Snscripts\MyCal\DateFactory(
+                $this->EventFactoryMock
+            ),
             \Snscripts\MyCal\Calendar\Options::set(['weekStartsOn' => Date::SUNDAY])
         );
 
@@ -298,7 +311,9 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
     {
         $Calendar = new Calendar(
             $this->CalendarInterfaceMock,
-            new \Snscripts\MyCal\DateFactory,
+            new \Snscripts\MyCal\DateFactory(
+                $this->EventFactoryMock
+            ),
             \Snscripts\MyCal\Calendar\Options::set(['weekStartsOn' => Date::SUNDAY])
         );
 
@@ -312,7 +327,9 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
     {
         $Calendar = new Calendar(
             $this->CalendarInterfaceMock,
-            new \Snscripts\MyCal\DateFactory,
+            new \Snscripts\MyCal\DateFactory(
+                $this->EventFactoryMock
+            ),
             \Snscripts\MyCal\Calendar\Options::set()
         );
 

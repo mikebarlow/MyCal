@@ -10,8 +10,7 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $Factory = new CalendarFactory(
             $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
-            $this->createMock('\Snscripts\MyCal\DateFactory'),
-            $this->createMock('\Snscripts\MyCal\EventFactory')
+            $this->createMock('\Snscripts\MyCal\DateFactory')
         );
         $Calendar = $Factory->load();
         $Calendar->id = 22;
@@ -28,8 +27,7 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $Factory = new CalendarFactory(
             $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
-            $this->createMock('\Snscripts\MyCal\DateFactory'),
-            $this->createMock('\Snscripts\MyCal\EventFactory')
+            $this->createMock('\Snscripts\MyCal\DateFactory')
         );
         $Calendar = $Factory->load();
 
@@ -44,8 +42,7 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $Factory = new CalendarFactory(
             $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
-            $this->createMock('\Snscripts\MyCal\DateFactory'),
-            $this->createMock('\Snscripts\MyCal\EventFactory')
+            $this->createMock('\Snscripts\MyCal\DateFactory')
         );
         $Calendar = $Factory->load();
         $Calendar->name = 'MyCal Tests';
@@ -70,8 +67,7 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
 
         $Factory = new CalendarFactory(
             $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
-            $this->createMock('\Snscripts\MyCal\DateFactory'),
-            $this->createMock('\Snscripts\MyCal\EventFactory')
+            $this->createMock('\Snscripts\MyCal\DateFactory')
         );
         $Calendar = $Factory->load();
 
@@ -83,8 +79,7 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $Factory = new CalendarFactory(
             $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
-            $this->createMock('\Snscripts\MyCal\DateFactory'),
-            $this->createMock('\Snscripts\MyCal\EventFactory')
+            $this->createMock('\Snscripts\MyCal\DateFactory')
         );
         $Calendar = $Factory->load();
         $Calendar->user_id = 69;
@@ -101,8 +96,7 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $Factory = new CalendarFactory(
             $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
-            $this->createMock('\Snscripts\MyCal\DateFactory'),
-            $this->createMock('\Snscripts\MyCal\EventFactory')
+            $this->createMock('\Snscripts\MyCal\DateFactory')
         );
         $Calendar = $Factory->load();
 
@@ -117,8 +111,7 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $Factory = new CalendarFactory(
             $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
-            $this->createMock('\Snscripts\MyCal\DateFactory'),
-            $this->createMock('\Snscripts\MyCal\EventFactory')
+            $this->createMock('\Snscripts\MyCal\DateFactory')
         );
         $Calendar = $Factory->load();
         $Calendar->name = 'MyCal Tests';
@@ -142,8 +135,7 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $Factory = new CalendarFactory(
             $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
-            $this->createMock('\Snscripts\MyCal\DateFactory'),
-            $this->createMock('\Snscripts\MyCal\EventFactory')
+            $this->createMock('\Snscripts\MyCal\DateFactory')
         );
         $Calendar = $Factory->load();
 
