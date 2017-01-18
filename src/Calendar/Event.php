@@ -3,18 +3,23 @@ namespace Snscripts\MyCal\Calendar;
 
 use Snscripts\MyCal\Interfaces\EventInterface;
 use Snscripts\MyCal\Traits;
+use DateTimeZone;
 
 class Event
 {
     use Traits\Accessible;
 
-    protected $eventIntegration;
-
     /**
      * The timezone object
      * @var \DateTimeZone
      */
-    protected $Timezone;
+    public $Timezone;
+
+    /**
+     * DB Event integration object
+     * @var \Snscripts\MyCal\Interfaces\EventInterface
+     */
+    protected $eventIntegration;
 
     /**
      * unix timestamp of the start date & time
@@ -49,13 +54,15 @@ class Event
     /**
      * Setup a new Event object
      *
-     * @param EventIntegration $eventIntegration
-     * @param string $timezone
+     * @param EventInterface $eventIntegration
+     * @param \DateTimeZone $Timezone
      */
-    public function __construct(EventIntegration $eventIntegration, $timezone)
-    {
+    public function __construct(
+        EventInterface $eventIntegration,
+        DateTimeZone $Timezone
+    ) {
         $this->eventIntegration = $eventIntegration;
-        $this->setTimezone($timezone);
+        $this->Timezone = $Timezone;
     }
 
     /**
@@ -124,29 +131,6 @@ class Event
         );
 
         return $this;
-    }
-
-    /**
-     * Set the timezone in use
-     *
-     * @param string $timezone
-     * @return Event $this
-     */
-    public function setTimezone($timezone)
-    {
-        $this->$Timezone = new \DateTimeZone($timezone);
-
-        return $this;
-    }
-
-    /**
-     * return the timezone object in use
-     *
-     * @return \DateTimeZone
-     */
-    public function getTimezone()
-    {
-        return $this->Timezone;
     }
 
     /**

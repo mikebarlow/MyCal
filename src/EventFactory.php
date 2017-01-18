@@ -25,7 +25,10 @@ class EventFactory
      */
     public function load()
     {
-        $Event = new Event($this->eventIntegration);
+        $Event = new Event(
+            $this->eventIntegration,
+            new \DateTimeZone('Europe/London') // temp hardcoded
+        );
 
         return $Event;
     }
