@@ -21,9 +21,7 @@ class EventFactory
     /**
      * create a new calendar instance
      *
-     * @param mixed $id Identifier to find calendar
-     * @param Options $Options
-     * @return Calendar $Calendar
+     * @return Event $Event
      */
     public function load()
     {
