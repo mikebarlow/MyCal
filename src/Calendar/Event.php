@@ -66,6 +66,56 @@ class Event
     }
 
     /**
+     * return the formatted start date
+     *
+     * @param string $format The date format to use
+     * @return string $dateTime
+     */
+    public function displayStart($format)
+    {
+        return $this->displayDate(
+            $format,
+            $this->unixStart,
+            $this->Timezone
+        );
+    }
+
+    /**
+     * return the formatted end date
+     *
+     * @param string $format The date format to use
+     * @return string $dateTime
+     */
+    public function displayEnd($format)
+    {
+        return $this->displayDate(
+            $format,
+            $this->unixEnd,
+            $this->Timezone
+        );
+    }
+
+    /**
+     * covert the given timestamp into formatted date / time
+     *
+     * @param string $format The date format to use
+     * @param int $timestamp Unix Timestamp
+     * @param \DateTimeZone $Timezone
+     * @return string $dateTime
+     */
+    public function displayDate($format, $timestamp, $Timezone)
+    {
+        $DateTime = new \DateTime(
+            'now',
+            new \DateTimeZone('UTC')
+        );
+        $DateTime->setTimestamp($timestamp);
+        $DateTime->setTimezone($Timezone);
+
+        return $DateTime->format($format);
+    }
+
+    /**
      * set the start date
      *
      * @param string $date date in YYYY-MM-DD format
@@ -102,6 +152,7 @@ class Event
     /**
      * set the end date
      *
+     * @todo compare against start to make sure time travel
      * @param string $date
      * @return object $this
      */
@@ -119,6 +170,7 @@ class Event
     /**
      * set the end time
      *
+     * @todo compare against start to make sure time travel
      * @param string $time
      * @return object $this
      */
