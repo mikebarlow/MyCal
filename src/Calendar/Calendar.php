@@ -165,11 +165,13 @@ class Calendar
         foreach ($range as $date) {
             $date->setTimezone($UTCTime);
 
-            $dates[$date->format('Y-m-d')] = $this->dateFactory->newInstance(
+            $DateObj = $this->dateFactory->newInstance(
                 $date->getTimestamp(),
                 $DateTimeZone,
                 $this->Options->weekStartsOn
             );
+            $DateObj->setCalendar($this);
+            $dates[$date->format('Y-m-d')] = $DateObj;
         }
 
         return $dates;

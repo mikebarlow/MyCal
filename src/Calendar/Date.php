@@ -4,17 +4,19 @@ namespace Snscripts\MyCal\Calendar;
 use DateTimeZone;
 use Snscripts\MyCal\Traits;
 use Snscripts\MyCal\EventFactory;
+use Snscripts\MyCal\Calendar\Calendar;
 
 class Date
 {
     use Traits\Accessible;
 
-    protected $EventFactory;
-    protected $timestamp;
+    protected $Calendar;
     protected $datetime;
-    protected $Timezone;
+    protected $EventFactory;
     protected $isWeekend;
     protected $isWeekStart;
+    protected $timestamp;
+    protected $Timezone;
 
     const
         MONDAY    = 1,
@@ -24,7 +26,6 @@ class Date
         FRIDAY    = 5,
         SATURDAY  = 6,
         SUNDAY    = 0;
-
 
     /**
      * setup the date object
@@ -145,6 +146,23 @@ class Date
         list($date, $time) = explode(' ', $this->datetime);
         $Event->startsOn($date);
 
+        if (is_a($this->Calendar, Calendar::class)) {
+            $Event->setCalendar($this->Calendar);
+        }
+
         return $Event;
+    }
+
+    /**
+     * Set the parent Calendar to the Date
+     * required when using Events
+     *
+     * @param Snscripts\MyCal\Calendar\Calendar $Calendar
+     * @return Date $this
+     */
+    public function setCalendar(Calendar $Calendar)
+    {
+        $this->Calendar = $Calendar;
+        return $this;
     }
 }

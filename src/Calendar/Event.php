@@ -10,6 +10,12 @@ class Event
     use Traits\Accessible;
 
     /**
+     * Parent Calendar object, used when saving events
+     * @var \Snscripts\MyCal\Calendar\Event
+     */
+    protected $Calendar;
+
+    /**
      * The timezone object
      * @var \DateTimeZone
      */
@@ -230,5 +236,18 @@ class Event
         );
 
         return $DateTime->getTimestamp();
+    }
+
+    /**
+     * Set the parent Calendar to the Event
+     * required when saving
+     *
+     * @param Snscripts\MyCal\Calendar\Calendar $Calendar
+     * @return Event $this
+     */
+    public function setCalendar(Calendar $Calendar)
+    {
+        $this->Calendar = $Calendar;
+        return $this;
     }
 }
