@@ -52,6 +52,12 @@ class Event
     ];
 
     /**
+     * repeat event, hold the config for when / how long etc..
+     * @var array|null
+     */
+    protected $repeat;
+
+    /**
      * Setup a new Event object
      *
      * @param EventInterface $eventIntegration
