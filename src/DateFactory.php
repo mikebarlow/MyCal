@@ -14,7 +14,7 @@ class DateFactory
      *
      * @param EventFactory $eventFactory
      */
-    public function __construct(EventFactory $eventFactory)
+    public function __construct(EventFactory $eventFactory = null)
     {
         $this->eventFactory = $eventFactory;
     }

@@ -12,7 +12,7 @@ class Date
     protected $EventFactory;
     protected $timestamp;
     protected $datetime;
-    protected $timezone;
+    protected $Timezone;
     protected $isWeekend;
     protected $isWeekStart;
 
@@ -45,7 +45,7 @@ class Date
         $this->isWeekStart = $this->setWeekStart($this->datetime, $Timezone, $weekStart);
 
         $this->timestamp = $timestamp;
-        $this->timezone = $Timezone;
+        $this->Timezone = $Timezone;
 
         if (is_a($EventFactory, EventFactory::class)) {
             $this->EventFactory = $EventFactory;
@@ -127,7 +127,7 @@ class Date
         if (! empty($Timezone) && is_a($Timezone, 'DateTimeZone')) {
             $DateTime->setTimezone($Timezone);
         } else {
-            $DateTime->setTimezone($this->timezone);
+            $DateTime->setTimezone($this->Timezone);
         }
 
         return $DateTime->format($format);
