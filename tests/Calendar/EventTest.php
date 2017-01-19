@@ -101,4 +101,30 @@ class EventTest extends \PHPUnit_Framework_TestCase
             new \DateTimeZone('America/New_York')
         );
     }
+
+    public function testDisplayDateReturnsCorrectDateGivenUnixTimestamp()
+    {
+        $Event = new Event(
+            $this->EventInterfaceMock,
+            new \DateTimeZone('America/New_York')
+        );
+
+        $this->assertSame(
+            '2017-01-19 13:48:00',
+            $Event->displayDate(
+                'Y-m-d H:i:s',
+                1484851680,
+                new \DateTimeZone('America/New_York')
+            )
+        );
+
+        $this->assertSame(
+            '2017-01-19 19:48:00',
+            $Event->displayDate(
+                'Y-m-d H:i:s',
+                1484851680,
+                new \DateTimeZone('Europe/Berlin')
+            )
+        );
+    }
 }

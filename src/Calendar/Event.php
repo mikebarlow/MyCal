@@ -198,15 +198,24 @@ class Event
     public function generateTimestamp($date, $Timezone)
     {
         if (empty($date['date']) || empty($date['time'])) {
-            throw new \BadMethodCallException('Event::generateTimestamp - Both date and time elements are required to generate the timestamp');
+            throw new \BadMethodCallException(
+                'Event::generateTimestamp - Both date and time elements
+                are required to generate the timestamp'
+            );
         }
 
         if (preg_match('/([0-9]{4})-([0-9]{2})-([0-9]{2})/', $date['date']) !== 1) {
-            throw new \InvalidArgumentException('Event::generateTimestamp - The date element of the $date variable should be in the format YYYY-MM-DD');
+            throw new \InvalidArgumentException(
+                'Event::generateTimestamp - The date element of the $date
+                variable should be in the format YYYY-MM-DD'
+            );
         }
 
         if (preg_match('/([0-9]{2}):([0-9]{2}):([0-9]{2})/', $date['time']) !== 1) {
-            throw new \InvalidArgumentException('Event::generateTimestamp - The time element of the $date variable should be in the format HH:MM:SS');
+            throw new \InvalidArgumentException(
+                'Event::generateTimestamp - The time element of the $date
+                variable should be in the format HH:MM:SS'
+            );
         }
 
         $DateTime = new \DateTime(
