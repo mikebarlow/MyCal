@@ -1,13 +1,15 @@
 <?php
 namespace Snscripts\MyCal\Calendar;
 
-use Snscripts\MyCal\Traits;
 use DateTimeZone;
+use Snscripts\MyCal\Traits;
+use Snscripts\MyCal\EventFactory;
 
 class Date
 {
     use Traits\Accessible;
 
+    protected $EventFactory;
     protected $timestamp;
     protected $datetime;
     protected $timezone;
@@ -30,15 +32,24 @@ class Date
      * @param int $timestamp UTC timestamp
      * @param DateTimeZone $timezone
      * @param int $weekStart int corresponding to date of week - equivilant of 'w' format in php.net/date
+     * @param EventFactory $eventFactory
      */
-    public function __construct($timestamp, \DateTimeZone $Timezone, $weekStart)
-    {
+    public function __construct(
+        $timestamp,
+        \DateTimeZone $Timezone,
+        $weekStart,
+        EventFactory $EventFactory = null
+    ) {
         $this->datetime = date('Y-m-d H:i:s', $timestamp);
         $this->isWeekend = $this->setWeekend($this->datetime, $Timezone);
         $this->isWeekStart = $this->setWeekStart($this->datetime, $Timezone, $weekStart);
 
         $this->timestamp = $timestamp;
         $this->timezone = $Timezone;
+
+        if (is_a($EventFactory, EventFactory::class)) {
+            $this->EventFactory = $EventFactory;
+        }
     }
 
     /**
@@ -120,5 +131,20 @@ class Date
         }
 
         return $DateTime->format($format);
+    }
+
+    /**
+     * start a new event on this date
+     *
+     * @todo look into passing the calendar object to the date so we can set calendar id here
+     * @return Snscripts\MyCal\Calendar\Event
+     */
+    public function newEvent()
+    {
+        $Event = $this->EventFactory->load($this->Timezone);
+        list($date, $time) = explode(' ', $this->datetime);
+        $Event->startsOn($date);
+
+        return $Event;
     }
 }

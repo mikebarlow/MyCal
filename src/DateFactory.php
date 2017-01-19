@@ -32,7 +32,8 @@ class DateFactory
         return new Date(
             $timestamp,
             $Timezone,
-            $weekStart
+            $weekStart,
+            $this->eventFactory
         );
     }
 }

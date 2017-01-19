@@ -21,13 +21,14 @@ class EventFactory
     /**
      * create a new calendar instance
      *
+     * @param \DateTimeZone $Timezone
      * @return Event $Event
      */
-    public function load()
+    public function load(\DateTimeZone $Timezone)
     {
         $Event = new Event(
             $this->eventIntegration,
-            new \DateTimeZone('Europe/London') // temp hardcoded
+            $Timezone
         );
 
         return $Event;
