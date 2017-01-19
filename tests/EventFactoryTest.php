@@ -29,7 +29,9 @@ class EventFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(
             'Snscripts\MyCal\Calendar\Event',
-            $Factory->load()
+            $Factory->load(
+                new \DateTimeZone('Europe/London')
+            )
         );
     }
 }
