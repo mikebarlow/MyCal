@@ -127,4 +127,33 @@ class EventTest extends \PHPUnit_Framework_TestCase
             )
         );
     }
+
+    public function testIsStartBeforeEnd()
+    {
+        $Event = new Event(
+            $this->EventInterfaceMock,
+            new \DateTimeZone('America/New_York')
+        );
+
+        $this->assertTrue(
+            $Event->isStartBeforeEnd(
+                1484851680,
+                1484938080
+            )
+        );
+
+        $this->assertFalse(
+            $Event->isStartBeforeEnd(
+                1484938080,
+                1484851680
+            )
+        );
+
+        $this->assertTrue(
+            $Event->isStartBeforeEnd(
+                1484938080,
+                null
+            )
+        );
+    }
 }

@@ -1,9 +1,9 @@
 <?php
 namespace Snscripts\MyCal\Calendar;
 
-use Snscripts\MyCal\Interfaces\EventInterface;
-use Snscripts\MyCal\Traits;
 use DateTimeZone;
+use Snscripts\MyCal\Traits;
+use Snscripts\MyCal\Interfaces\EventInterface;
 
 class Event
 {
@@ -164,7 +164,6 @@ class Event
     /**
      * set the end date
      *
-     * @todo compare against start to make sure time travel
      * @param string $date
      * @return object $this
      */
@@ -182,7 +181,6 @@ class Event
     /**
      * set the end time
      *
-     * @todo compare against start to make sure time travel
      * @param string $time
      * @return object $this
      */
@@ -216,14 +214,14 @@ class Event
             );
         }
 
-        if (preg_match('/([0-9]{4})-([0-9]{2})-([0-9]{2})/', $date['date']) !== 1) {
+        if (! $this->isValidDate($date['date'])) {
             throw new \InvalidArgumentException(
                 'Event::generateTimestamp - The date element of the $date
                 variable should be in the format YYYY-MM-DD'
             );
         }
 
-        if (preg_match('/([0-9]{2}):([0-9]{2}):([0-9]{2})/', $date['time']) !== 1) {
+        if (! $this->isValidTime($date['time'])) {
             throw new \InvalidArgumentException(
                 'Event::generateTimestamp - The time element of the $date
                 variable should be in the format HH:MM:SS'
@@ -236,6 +234,45 @@ class Event
         );
 
         return $DateTime->getTimestamp();
+    }
+
+    /**
+     * compare the start / end times
+     * make sure we aren't time travelling
+     *
+     * @param int $unixStart start timestamp
+     * @param int $unixEnd end timestamp
+     * @return bool
+     */
+    public function isStartBeforeEnd($unixStart, $unixEnd)
+    {
+        if (! is_int($unixEnd)) {
+            return true;
+        }
+
+        return ($unixStart <= $unixEnd);
+    }
+
+    /**
+     * check for a valid date format
+     *
+     * @param string $date Dates should be in YYYY-MM-DD format
+     * @return bool
+     */
+    public function isValidDate($date)
+    {
+        return (preg_match('/([0-9]{4})-([0-9]{2})-([0-9]{2})/', $date) === 1);
+    }
+
+    /**
+     * check for a valid time format
+     *
+     * @param string $time Times should be in HH:MM:SS format
+     * @return bool
+     */
+    public function isValidTime($time)
+    {
+        return (preg_match('/([0-9]{2}):([0-9]{2}):([0-9]{2})/', $time) === 1);
     }
 
     /**
