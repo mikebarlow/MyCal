@@ -59,6 +59,7 @@ class Event
 
     /**
      * repeat event, hold the config for when / how long etc..
+     * @todo Complete repeatable events - On Hold
      * @var array|null
      */
     protected $repeat;
@@ -196,8 +197,10 @@ class Event
     }
 
     /**
+     * @codeCoverageIgnore
      * setup the event to be repeatable
      *
+     * @todo Complete repeatable events - On Hold
      * @return Event $this
      */
     public function repeatable()
@@ -211,8 +214,10 @@ class Event
     }
 
     /**
+     * @codeCoverageIgnore
      * end date for the repeatable event
      *
+     * @todo Complete repeatable events - On Hold
      * @param string $dateTime date time in YYYY-MM-DD HH:MM:SS format
      * @return Event $this
      * @throws \InvalidArgumentException
