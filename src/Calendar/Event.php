@@ -196,6 +196,44 @@ class Event
     }
 
     /**
+     * setup the event to be repeatable
+     *
+     * @return Event $this
+     */
+    public function repeatable()
+    {
+        $this->repeatable = [
+            'frequency' => '',
+            'until' => ''
+        ];
+
+        return $this;
+    }
+
+    /**
+     * end date for the repeatable event
+     *
+     * @param string $dateTime date time in YYYY-MM-DD HH:MM:SS format
+     * @return Event $this
+     * @throws \InvalidArgumentException
+     */
+    public function until($dateTime)
+    {
+        list($date, $time) = explode(' ', $dateTime);
+
+        if (! $this->isValidDate($date) || ! $this->isValidTime($time)) {
+            throw new \InvalidArgumentException(
+                'Event::until - The date time passed should be in the format of
+                "YYYY-MM-DD HH:MM:SS"'
+            );
+        }
+
+        $this->repeatable['until'] = $dateTime;
+
+        return $this;
+    }
+
+    /**
      * given an array of date and time, and a Timezone
      * generate the unix timestamp of that timezone
      *
