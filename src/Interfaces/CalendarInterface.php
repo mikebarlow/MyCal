@@ -8,7 +8,7 @@ interface CalendarInterface
     /**
      * Save a calendar and it's options
      *
-     * @param Snscripts\MyCal\Calendar $Calendar
+     * @param Snscripts\MyCal\Calendar\Calendar $Calendar
      * @return Snscripts\Result\Result $Result
      */
     public function save(CalendarObj $Calendar);
