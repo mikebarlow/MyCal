@@ -249,6 +249,12 @@ class Event
      */
     public function prepareEvent($start, $end)
     {
+        if (! $this->isStartBeforeEnd($this->unixStart, $this->unixEnd)) {
+            throw new \UnexpectedValueException(
+                'The event end date can not occur before event start date'
+            );
+        }
+
         $events = [];
 
         if ($start === $end) {
@@ -282,7 +288,7 @@ class Event
                     $Event->startsOn($curDate)
                         ->startsAt('00:00:00');
                 }
-                
+
                 $events[$curDate] = $Event;
             }
         }
