@@ -156,4 +156,68 @@ class EventTest extends \PHPUnit_Framework_TestCase
             )
         );
     }
+
+    public function testPrepareEventGeneratesCollectionWithOneItemForSingleDayEvent()
+    {
+        $Event = new Event(
+            $this->EventInterfaceMock,
+            new \DateTimeZone('Europe/London')
+        );
+
+        $Event->startsOn('2017-01-23')
+            ->startsAt('21:55:00')
+            ->endsOn('2017-01-23')
+            ->endsAt('22:55:00');
+        $Event->name = 'Test Event';
+
+        $Events = $Event->prepareEvent(
+            '2017-01-23',
+            '2017-01-23'
+        );
+
+        $this->assertSame(
+            1,
+            $Events->count()
+        );
+    }
+
+    public function testPrepareEventGeneratesCollectionWithMultipleItemsForMultieDayEvent()
+    {
+        $Event = new Event(
+            $this->EventInterfaceMock,
+            new \DateTimeZone('Europe/London')
+        );
+
+        $Event->startsOn('2017-01-23')
+            ->startsAt('09:00:00')
+            ->endsOn('2017-01-24')
+            ->endsAt('17:00:00');
+        $Event->name = 'Test Event';
+
+        $Events = $Event->prepareEvent(
+            '2017-01-23',
+            '2017-01-24'
+        );
+
+        $this->assertSame(
+            2,
+            $Events->count()
+        );
+
+        $Event->startsOn('2017-01-23')
+            ->startsAt('09:00:00')
+            ->endsOn('2017-01-25')
+            ->endsAt('17:00:00');
+        $Event->name = 'Test Event';
+
+        $Events = $Event->prepareEvent(
+            '2017-01-23',
+            '2017-01-25'
+        );
+
+        $this->assertSame(
+            3,
+            $Events->count()
+        );
+    }
 }
