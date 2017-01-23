@@ -157,6 +157,50 @@ class EventTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testPrepareEventThrowsExceptionWhenEndDateIsBeforeStartDate()
+    {
+        $Event = new Event(
+            $this->EventInterfaceMock,
+            new \DateTimeZone('Europe/London')
+        );
+
+        $Event->startsOn('2017-01-23')
+            ->startsAt('21:55:00')
+            ->endsOn('2017-01-23')
+            ->endsAt('19:55:00');
+        $Event->name = 'Test Event';
+
+        try {
+            $Events = $Event->prepareEvent(
+                '2017-01-23',
+                '2017-01-23'
+            );
+        } catch (\UnexpectedValueException $e) {
+            $this->assertSame(
+                'The event end date can not occur before event start date',
+                $e->getMessage()
+            );
+        }
+
+        $Event->startsOn('2017-01-23')
+            ->startsAt('21:55:00')
+            ->endsOn('2017-01-20')
+            ->endsAt('19:55:00');
+        $Event->name = 'Test Event';
+
+        try {
+            $Events = $Event->prepareEvent(
+                '2017-01-23',
+                '2017-01-20'
+            );
+        } catch (\UnexpectedValueException $e) {
+            $this->assertSame(
+                'The event end date can not occur before event start date',
+                $e->getMessage()
+            );
+        }
+    }
+
     public function testPrepareEventGeneratesCollectionWithOneItemForSingleDayEvent()
     {
         $Event = new Event(
