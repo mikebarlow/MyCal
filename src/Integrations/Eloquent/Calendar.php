@@ -74,10 +74,19 @@ class Calendar extends BaseIntegration implements CalendarInterface
     public function getCalendarData(CalendarObj $Calendar)
     {
         return [
-            'id' => $this->extractId($Calendar),
-            'name' => $this->extractName($Calendar),
-            'user_id' => $this->extractUserId($Calendar),
-            'extras' => $this->extractData($Calendar),
+            'id' => $this->extractVar($Calendar, 'id'),
+            'name' => $this->extractVar(
+                $Calendar,
+                'name',
+                function ($Object) {
+                    throw new \DomainException('No name set on the calendar');
+                }
+            ),
+            'user_id' => $this->extractVar($Calendar, 'user_id'),
+            'extras' => $this->extractData(
+                $Calendar,
+                ['id', 'name', 'user_id']
+            ),
             'options' => $this->extractOptions($Calendar)
         ];
     }
