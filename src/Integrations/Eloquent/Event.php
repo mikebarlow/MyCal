@@ -3,12 +3,15 @@ namespace Snscripts\MyCal\Integrations\Eloquent;
 
 use Snscripts\Result\Result;
 use Snscripts\MyCal\Interfaces\EventInterface;
-use Snscripts\MyCal\Integrations\BaseIntegration;
 use Snscripts\MyCal\Calendar\Event as EventObj;
+use Snscripts\MyCal\Integrations\BaseIntegration;
+use Snscripts\MyCal\Integrations\Eloquent\Models\Event as EventModel;
+use Snscripts\MyCal\Integrations\Eloquent\Models\EventExtra as EventExtraModel;
 
 class Event extends BaseIntegration implements EventInterface
 {
     protected $eventModel = 'Snscripts\MyCal\Integrations\Eloquent\Models\Event';
+    protected $extraModel = 'Snscripts\MyCal\Integrations\Eloquent\Models\EventExtra';
 
     /**
      * Save an event
@@ -16,8 +19,23 @@ class Event extends BaseIntegration implements EventInterface
      * @param Snscripts\MyCal\Calendar\Event $Event
      * @return Snscripts\Result\Result $Result
      */
-    public function save(EventObj $Event)
+    public function save(EventObj $EventObj)
     {
+        $data = $this->getEventData($EventObj);
+
+        $Event = $this->setupModel(
+            new $this->eventModel,
+            $data
+        );
+        $eventExtras = $this->setupExtras(
+            new $this->extraModel,
+            $data
+        );
+
+
+
+
+
         return Result::success();
     }
 
@@ -77,4 +95,54 @@ class Event extends BaseIntegration implements EventInterface
             )
         ];
     }
+
+    /**
+     * setup new modal
+     *
+     * @param EventModel $Event
+     * @param array $data array of modal data
+     * @return EventModel
+     */
+    public function setupModel(EventModel $Event, $data)
+    {
+        if (! empty($data['id'])) {
+            $Event = $Event->find($data['id']);
+        } else {
+            $Event->id = $data['id'];
+        }
+
+        $Event->name = $data['name'];
+        $Event->start_date = $data['start_date'];
+        $Event->end_date = $data['end_date'];
+        $Event->calendar_id = $data['calendar_id'];
+
+        return $Event;
+    }
+
+    /**
+     * setup any model extras
+     *
+     * @param EventExtraModel $ExtraModel
+     * @param array $data array of modal data
+     * @return array $ExtraModel
+     */
+    public function setupExtras(EventExtraModel $ExtraModel, $data)
+    {
+        if (empty($data['extras'])) {
+            return [];
+        }
+
+        return array_map(
+            function ($value, $key) use ($ExtraModel) {
+                $Extra = $ExtraModel->newInstance();
+                $Extra->slug = $key;
+                $Extra->value = $value;
+
+                return $Extra;
+            },
+            $data['extras'],
+            array_keys($data['extras'])
+        );
+    }
+
 }

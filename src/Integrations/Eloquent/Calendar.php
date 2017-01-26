@@ -22,9 +22,9 @@ class Calendar extends BaseIntegration implements CalendarInterface
      * @param Snscripts\MyCal\Calendar $Calendar
      * @return Snscripts\Result\Result $Result
      */
-    public function save(CalendarObj $Calendar)
+    public function save(CalendarObj $CalendarObj)
     {
-        $data = $this->getCalendarData($Calendar);
+        $data = $this->getCalendarData($CalendarObj);
 
         $Calendar = $this->setupModel(
             new $this->calModel,

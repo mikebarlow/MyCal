@@ -6,9 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @codeCoverageIgnore
  */
-class CalendarExtra extends Model
+class Event extends Model
 {
-    public $incrementing = false;
+    public function eventExtra()
+    {
+        return $this->hasMany(
+            'Snscripts\MyCal\Integrations\Eloquent\Models\EventExtra',
+            'event_id'
+        );
+    }
 
     public function calendar()
     {
