@@ -23,14 +23,14 @@ class EventTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGenerateTimestampReturnsCorrectTime()
+    public function testGenerateDateTimeReturnsCorrectTime()
     {
         $Event = new Event(
             $this->EventInterfaceMock,
             new \DateTimeZone('America/New_York')
         );
 
-        $timestamp = $Event->generateTimestamp(
+        $utcDate = $Event->generateDateTime(
             [
                 'date' => '2017-01-19',
                 'time' => '06:50:00'
@@ -39,17 +39,12 @@ class EventTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertSame(
-            1484826600,
-            $timestamp
-        );
-
-        $this->assertSame(
             '2017-01-19 11:50:00',
-            date('Y-m-d H:i:s', $timestamp)
+            $utcDate
         );
     }
 
-    public function testGenerateTimestampThrowsBadMethodExceptions()
+    public function testGenerateDateTimeThrowsBadMethodExceptions()
     {
         $this->expectException(\BadMethodCallException::class);
 
@@ -58,7 +53,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
             new \DateTimeZone('America/New_York')
         );
 
-        $Event->generateTimestamp(
+        $Event->generateDateTime(
             [
                 'date' => ''
             ],
@@ -66,7 +61,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGenerateTimestampThrowsInvalidArgumentExceptionsForInvalidDates()
+    public function testGenerateDateTimeThrowsInvalidArgumentExceptionsForInvalidDates()
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -75,7 +70,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
             new \DateTimeZone('America/New_York')
         );
 
-        $Event->generateTimestamp(
+        $Event->generateDateTime(
             [
                 'date' => '01-02-2017',
                 'time' => '00:00:00'
@@ -84,7 +79,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGenerateTimestampThrowsInvalidArgumentExceptionsForInvalidTimes()
+    public function testGenerateDateTimeThrowsInvalidArgumentExceptionsForInvalidTimes()
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -93,7 +88,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
             new \DateTimeZone('America/New_York')
         );
 
-        $Event->generateTimestamp(
+        $Event->generateDateTime(
             [
                 'date' => '2017-01-01',
                 'time' => '7am'
@@ -113,7 +108,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
             '2017-01-19 13:48:00',
             $Event->displayDate(
                 'Y-m-d H:i:s',
-                1484851680,
+                '2017-01-19 18:48:00',
                 new \DateTimeZone('America/New_York')
             )
         );
@@ -122,7 +117,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
             '2017-01-19 19:48:00',
             $Event->displayDate(
                 'Y-m-d H:i:s',
-                1484851680,
+                '2017-01-19 18:48:00',
                 new \DateTimeZone('Europe/Berlin')
             )
         );
@@ -137,21 +132,21 @@ class EventTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(
             $Event->isStartBeforeEnd(
-                1484851680,
-                1484938080
+                '2017-01-19 13:48:00',
+                '2017-01-20 13:48:00'
             )
         );
 
         $this->assertFalse(
             $Event->isStartBeforeEnd(
-                1484938080,
-                1484851680
+                '2017-01-19 13:48:00',
+                '2017-01-17 13:48:00'
             )
         );
 
         $this->assertTrue(
             $Event->isStartBeforeEnd(
-                1484938080,
+                '2017-01-19 13:48:00',
                 null
             )
         );

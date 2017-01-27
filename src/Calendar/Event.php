@@ -28,31 +28,19 @@ class Event
     protected $eventIntegration;
 
     /**
-     * unix timestamp of the start date & time
-     * @var int
-     */
-    protected $unixStart;
-
-    /**
      * array of the start date and the time of the event in $this->Timezone time
      * @var array
      */
-    protected $startDate = [
+    protected $start = [
         'date' => '',
         'time' => '00:00:00'
     ];
 
     /**
-     * unix timestamp of the end date & time
-     * @var int
-     */
-    protected $unixEnd;
-
-    /**
      * array of the end date and the time of the event in $this->Timezone time
      * @var array
      */
-    protected $endDate = [
+    protected $end = [
         'date' => '',
         'time' => '00:00:00'
     ];
@@ -79,6 +67,25 @@ class Event
     }
 
     /**
+     * Save the current calendar
+     *
+     * @return Snscripts\Result\Result
+     */
+    public function save()
+    {
+        $Result = $this->eventIntegration->save($this);
+
+        if ($Result->isSuccess()) {
+            $id = $Result->getExtra('event_id');
+            if (! empty($id)) {
+                $this->id = $id;
+            }
+        }
+
+        return $Result;
+    }
+
+    /**
      * return the formatted start date
      *
      * @param string $format The date format to use
@@ -88,7 +95,7 @@ class Event
     {
         return $this->displayDate(
             $format,
-            $this->unixStart,
+            $this->start_date,
             $this->Timezone
         );
     }
@@ -103,7 +110,7 @@ class Event
     {
         return $this->displayDate(
             $format,
-            $this->unixEnd,
+            $this->end_date,
             $this->Timezone
         );
     }
@@ -112,17 +119,16 @@ class Event
      * covert the given timestamp into formatted date / time
      *
      * @param string $format The date format to use
-     * @param int $timestamp Unix Timestamp
+     * @param string $date UTC date time to convert / display
      * @param \DateTimeZone $Timezone
      * @return string $dateTime
      */
-    public function displayDate($format, $timestamp, $Timezone)
+    public function displayDate($format, $date, $Timezone)
     {
         $DateTime = new \DateTime(
-            'now',
+            $date,
             new \DateTimeZone('UTC')
         );
-        $DateTime->setTimestamp($timestamp);
         $DateTime->setTimezone($Timezone);
 
         return $DateTime->format($format);
@@ -136,9 +142,9 @@ class Event
      */
     public function startsOn($date)
     {
-        $this->startDate['date'] = $date;
-        $this->unixStart = $this->generateTimestamp(
-            $this->startDate,
+        $this->start['date'] = $date;
+        $this->start_date = $this->generateDateTime(
+            $this->start,
             $this->Timezone
         );
 
@@ -153,9 +159,9 @@ class Event
      */
     public function startsAt($time)
     {
-        $this->startDate['time'] = $time;
-        $this->unixStart = $this->generateTimestamp(
-            $this->startDate,
+        $this->start['time'] = $time;
+        $this->start_date = $this->generateDateTime(
+            $this->start,
             $this->Timezone
         );
 
@@ -170,9 +176,9 @@ class Event
      */
     public function endsOn($date)
     {
-        $this->endDate['date'] = $date;
-        $this->unixEnd = $this->generateTimestamp(
-            $this->endDate,
+        $this->end['date'] = $date;
+        $this->end_date = $this->generateDateTime(
+            $this->end,
             $this->Timezone
         );
 
@@ -187,9 +193,9 @@ class Event
      */
     public function endsAt($time)
     {
-        $this->endDate['time'] = $time;
-        $this->unixEnd = $this->generateTimestamp(
-            $this->endDate,
+        $this->end['time'] = $time;
+        $this->end_date = $this->generateDateTime(
+            $this->end,
             $this->Timezone
         );
 
@@ -249,7 +255,7 @@ class Event
      */
     public function prepareEvent($start, $end)
     {
-        if (! $this->isStartBeforeEnd($this->unixStart, $this->unixEnd)) {
+        if (! $this->isStartBeforeEnd($this->start_date, $this->end_date)) {
             throw new \UnexpectedValueException(
                 'The event end date can not occur before event start date'
             );
@@ -298,15 +304,15 @@ class Event
 
     /**
      * given an array of date and time, and a Timezone
-     * generate the unix timestamp of that timezone
+     * generate the UTC date / time
      *
      * @param array $date array with 'date' element and 'time' element
      * @param \DateTImeZone $Timezone
-     * @return int $unixTimestamp
+     * @return string
      * @throws \BadMethodCallException
      * @throws \InvalidArgumentException
      */
-    public function generateTimestamp($date, $Timezone)
+    public function generateDateTime($date, $Timezone)
     {
         if (empty($date['date']) || empty($date['time'])) {
             throw new \BadMethodCallException(
@@ -333,25 +339,28 @@ class Event
             $date['date'] . ' ' . $date['time'],
             $Timezone
         );
+        $DateTime->setTimezone(
+            new \DateTimeZone('UTC')
+        );
 
-        return $DateTime->getTimestamp();
+        return $DateTime->format('Y-m-d H:i:s');
     }
 
     /**
      * compare the start / end times
      * make sure we aren't time travelling
      *
-     * @param int $unixStart start timestamp
-     * @param int $unixEnd end timestamp
+     * @param string $utcStart start date time
+     * @param string $utcEnd start date time
      * @return bool
      */
-    public function isStartBeforeEnd($unixStart, $unixEnd)
+    public function isStartBeforeEnd($utcStart, $utcEnd)
     {
-        if (! is_int($unixEnd)) {
+        if ($utcEnd === null) {
             return true;
         }
 
-        return ($unixStart <= $unixEnd);
+        return ($utcStart <= $utcEnd);
     }
 
     /**
