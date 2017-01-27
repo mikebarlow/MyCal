@@ -144,6 +144,59 @@ class EventTest extends \PHPUnit_Framework_TestCase
          );
     }
 
+    public function testSetupExtrasReturnsArrayOfExtras()
+    {
+        $data = [
+            'id' => null,
+            'name' => 'Test Event',
+            'start_date' => 1484851680,
+            'end_date' => 1484938080,
+            'calendar_id' => 1,
+            'extras' => [
+                'test' => 'a:2:{s:3:"foo";s:3:"bar";s:6:"foobar";s:6:"barfoo";}',
+                'foo' => 'bar',
+                'bar' => 'foo'
+            ]
+        ];
+
+        $EventIntegration = new EventIntegration;
+
+        $eventExtras = $EventIntegration->setupExtras(
+            new \Snscripts\MyCal\Integrations\Eloquent\Models\EventExtra,
+            $data
+        );
+
+        $this->assertSame(
+            3,
+            count($eventExtras)
+        );
+    }
+
+    public function testSetupExtrasReturnBlankArrayWhenNoExtrasSet()
+    {
+        $data = [
+            'id' => null,
+            'name' => 'Test Event',
+            'start_date' => 1484851680,
+            'end_date' => 1484938080,
+            'calendar_id' => 1,
+            'extras' => []
+        ];
+
+        $EventIntegration = new EventIntegration;
+
+        $eventExtras = $EventIntegration->setupExtras(
+            new \Snscripts\MyCal\Integrations\Eloquent\Models\EventExtra,
+            $data
+        );
+
+        $this->assertSame(
+            0,
+            count($eventExtras)
+        );
+    }
+
+
     public function testSaveEventReturnsSuccessResultObject()
     {
         $EventModel = $this->createMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Event');
@@ -180,5 +233,127 @@ class EventTest extends \PHPUnit_Framework_TestCase
             'Save failed',
             $Result->getMessage()
         );
+    }
+
+    public function testSaveExtrasReturnsSuccessResultObject()
+    {
+        $EventModel = $this->buildSuccessEventModel('eventExtra');
+
+        $EventIntegration = new EventIntegration;
+        $Result = $EventIntegration->saveExtras(
+            $EventModel,
+            []
+        );
+
+        $this->assertTrue(
+            $Result->isSuccess()
+        );
+
+        $this->assertSame(
+            'saved',
+            $Result->getCode()
+        );
+    }
+
+    public function testSaveExtrasReturnsFailSesultObject()
+    {
+        $EventModel = $this->buildFailEventModel('eventExtra');
+
+        $EventIntegration = new EventIntegration;
+        $Result = $EventIntegration->saveExtras(
+            $EventModel,
+            []
+        );
+
+        $this->assertTrue(
+            $Result->isFail()
+        );
+
+        $this->assertSame(
+            'Save failed',
+            $Result->getMessage()
+        );
+    }
+
+    protected function buildSuccessEventModel($relation)
+    {
+        $whereMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['delete'])
+            ->getMock();
+
+        $whereMock->expects($this->once())
+            ->method('delete')
+            ->willReturn(true);
+
+        $relatedMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['where'])
+            ->getMock();
+
+        $relatedMock->expects($this->once())
+            ->method('where')
+            ->willReturn($whereMock);
+
+        $relationMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['saveMany', 'getRelated'])
+            ->getMock();
+
+        $relationMock->expects($this->once())
+             ->method('saveMany')
+             ->willReturn(true);
+
+        $relationMock->expects($this->once())
+            ->method('getRelated')
+            ->willReturn($relatedMock);
+
+            $EventModel = $this->createMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Event');
+            $EventModel->method($relation)
+                ->willReturn($relationMock);
+
+            $EventModel->method('__get')
+                ->with('id')
+                ->willReturn(1);
+
+            return $EventModel;
+    }
+
+    protected function buildFailEventModel($relation)
+    {
+        $whereMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['delete'])
+            ->getMock();
+
+        $whereMock->expects($this->once())
+            ->method('delete')
+            ->willReturn(true);
+
+        $relatedMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['where'])
+            ->getMock();
+
+        $relatedMock->expects($this->once())
+            ->method('where')
+            ->willReturn($whereMock);
+
+        $relationMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['saveMany', 'getRelated'])
+            ->getMock();
+
+        $relationMock->expects($this->once())
+             ->method('saveMany')
+             ->will($this->throwException(new \Exception('Save failed')));
+
+        $relationMock->expects($this->once())
+            ->method('getRelated')
+            ->willReturn($relatedMock);
+
+        $EventModel = $this->createMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Event');
+        $EventModel->method($relation)
+            ->willReturn($relationMock);
+
+        $EventModel->method('__get')
+            ->with('id')
+            ->willReturn(1);
+
+        return $EventModel;
     }
 }
