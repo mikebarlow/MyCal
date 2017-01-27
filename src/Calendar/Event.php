@@ -73,6 +73,10 @@ class Event
      */
     public function save()
     {
+        if (is_a($this->Calendar, Calendar::class) && ! empty($this->Calendar->id)) {
+            $this->calendar_id = $this->Calendar->id;
+        }
+
         $Result = $this->eventIntegration->save($this);
 
         if ($Result->isSuccess()) {
