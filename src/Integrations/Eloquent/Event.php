@@ -32,11 +32,22 @@ class Event extends BaseIntegration implements EventInterface
             $data
         );
 
+        $eventResults = $this->saveEvent($Event);
+        if ($eventResults->isFail()) {
+            return $eventResults;
+        }
 
+        $extrasResult = $this->saveExtras(
+            $Event,
+            $eventResults
+        );
+        if ($extrasResult->isFail()) {
+            return $extrasResult;
+        }
 
-
-
-        return Result::success();
+        return Result::success()
+            ->setCode(Result::SAVED)
+            ->setExtra('event_id', $Event->id);
     }
 
     /**
@@ -144,5 +155,52 @@ class Event extends BaseIntegration implements EventInterface
             array_keys($data['extras'])
         );
     }
+
+    /**
+     * Save the event Model
+     *
+     * @param EventModel $Calendar
+     * @return bool|string
+     */
+    public function saveEvent(EventModel $Event)
+    {
+        try {
+            $Event->save();
+        } catch (\Exception $e) {
+            return Result::fail(
+                Result::ERROR,
+                $e->getMessage()
+            );
+        }
+
+        return Result::success()
+            ->setCode(Result::SAVED);
+    }
+
+    /**
+     * Save the EventModel Model
+     *
+     * @param EventModel $Event
+     * @param array $eventExtras
+     * @return bool|string
+     */
+    public function saveExtras(EventModel $Event, $eventExtras)
+    {
+        try {
+            $Event->eventExtra()->getRelated()
+                ->where('event_id', '=', $Event->id)->delete();
+
+            $Event->eventExtra()->saveMany($eventExtras);
+        } catch (\Exception $e) {
+            return Result::fail(
+                Result::ERROR,
+                $e->getMessage()
+            );
+        }
+
+        return Result::success()
+            ->setCode(Result::SAVED);
+    }
+
 
 }

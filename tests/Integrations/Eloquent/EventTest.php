@@ -144,8 +144,41 @@ class EventTest extends \PHPUnit_Framework_TestCase
          );
     }
 
+    public function testSaveEventReturnsSuccessResultObject()
+    {
+        $EventModel = $this->createMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Event');
+        $EventModel->method('save')
+            ->willReturn(true);
 
+        $EventIntegration = new EventIntegration;
+        $Result = $EventIntegration->saveEvent($EventModel);
 
+        $this->assertTrue(
+            $Result->isSuccess()
+        );
 
+        $this->assertSame(
+            'saved',
+            $Result->getCode()
+        );
+    }
 
+    public function testSaveEventReturnsFailResultObject()
+    {
+        $EventModel = $this->createMock('\Snscripts\MyCal\Integrations\Eloquent\Models\Event');
+        $EventModel->method('save')
+            ->will($this->throwException(new \Exception('Save failed')));
+
+        $EventIntegration = new EventIntegration;
+        $Result = $EventIntegration->saveEvent($EventModel);
+
+        $this->assertTrue(
+            $Result->isFail()
+        );
+
+        $this->assertSame(
+            'Save failed',
+            $Result->getMessage()
+        );
+    }
 }
