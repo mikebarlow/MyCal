@@ -39,7 +39,7 @@ class Calendar
      */
     public function newEvent($id = null)
     {
-        $EventFactory = $this->dateFactory->getCalendarFactory();
+        $EventFactory = $this->dateFactory->getEventFactory();
 
         if (empty($EventFactory)) {
             throw new \UnexpectedValueException('No Calendar Factory was loaded.');
