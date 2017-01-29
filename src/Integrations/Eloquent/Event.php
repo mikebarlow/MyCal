@@ -201,7 +201,7 @@ class Event extends BaseIntegration implements EventInterface
     {
         $eventData = $this->loadModel(new $this->eventModel, $id);
 
-        if (empty($calData)) {
+        if (empty($eventData)) {
             return Result::fail()
                 ->setCode(Result::NOT_FOUND)
                 ->setMessage('Could not load event #' . $id);
