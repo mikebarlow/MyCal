@@ -137,10 +137,9 @@ class Date
     /**
      * start a new event on this date
      *
-     * @param int $id Event ID to auto load
      * @return Snscripts\MyCal\Calendar\Event
      */
-    public function newEvent($id = null)
+    public function newEvent()
     {
         $Event = $this->EventFactory->load($this->Timezone);
         list($date, $time) = explode(' ', $this->datetime);
@@ -148,10 +147,6 @@ class Date
 
         if (is_a($this->Calendar, Calendar::class)) {
             $Event->setCalendar($this->Calendar);
-        }
-
-        if (! empty($id)) {
-            $Event = $Event->load($id);
         }
 
         return $Event;

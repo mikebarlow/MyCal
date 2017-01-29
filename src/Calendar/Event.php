@@ -430,6 +430,10 @@ class Event
     public function setCalendar(Calendar $Calendar)
     {
         $this->Calendar = $Calendar;
+
+        $this->Timezone = new \DateTimeZone(
+            $this->Calendar->getOptions()->defaultTimezone
+        );
         return $this;
     }
 }

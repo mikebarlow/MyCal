@@ -50,4 +50,29 @@ class CalendarFactory
 
         return $Calendar;
     }
+
+    /**
+     * load an event - passes off to the event factory
+     *
+     * @param int $id Event ID
+     * @return Snscripts\MyCal\Calendar\Event
+     */
+    public function loadEvent($id)
+    {
+        $EventFactory = $this->dateFactory->getEventFactory();
+
+        if (empty($EventFactory)) {
+            throw new \UnexpectedValueException('No Event Factory was loaded.');
+        }
+
+        $Event = $EventFactory->load(
+            new \DateTimeZone('UTC'),
+            $id
+        );
+
+        $Calendar = $this->load($Event->calendar_id);
+        $Event->setCalendar($Calendar);
+
+        return $Event;
+    }
 }
