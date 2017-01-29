@@ -36,4 +36,14 @@ class DateFactory
             $this->eventFactory
         );
     }
+
+    /**
+     * return instance of the event factory
+     *
+     * @return Snscripts\MyCal\EventFactory|null
+     */
+    public function getEventFactory()
+    {
+        return $this->eventFactory;
+    }
 }

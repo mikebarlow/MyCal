@@ -31,6 +31,31 @@ class Calendar
     }
 
     /**
+     * load a new event
+     *
+     * @param int $id Event ID to load - default null, loads blank event object
+     * @return Snscripts\MyCal\Calendar\Event
+     * @throws \UnexpectedValueException
+     */
+    public function newEvent($id = null)
+    {
+        $EventFactory = $this->dateFactory->getCalendarFactory();
+
+        if (empty($EventFactory)) {
+            throw new \UnexpectedValueException('No Calendar Factory was loaded.');
+        }
+
+        $Event = $EventFactory->load(
+            new \DateTimeZone(
+                $this->Options->defaultTimezone
+            ),
+            $id
+        );
+
+        return $Event;
+    }
+
+    /**
      * Save the current calendar
      *
      * @return Snscripts\Result\Result

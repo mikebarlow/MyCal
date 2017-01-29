@@ -22,14 +22,19 @@ class EventFactory
      * create a new calendar instance
      *
      * @param \DateTimeZone $Timezone
+     * @param int $id Event id to load
      * @return Event $Event
      */
-    public function load(\DateTimeZone $Timezone)
+    public function load(\DateTimeZone $Timezone, $id = null)
     {
         $Event = new Event(
             $this->eventIntegration,
             $Timezone
         );
+
+        if (! empty($id)) {
+            $Event = $Event->load($id);
+        }
 
         return $Event;
     }
