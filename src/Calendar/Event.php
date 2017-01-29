@@ -90,6 +90,37 @@ class Event
     }
 
     /**
+     * load an event
+     *
+     * @param mixed $id
+     * @return Event $this
+     * @throws Snscripts\MyCal\Exceptions\NotFoundException
+     */
+    public function load($id)
+    {
+        $Result = $this->eventIntegration->load($id);
+
+        if ($Result->isFail()) {
+            throw new \Snscripts\MyCal\Exceptions\NotFoundException(
+                $Result->getMessage()
+            );
+        }
+
+        $eventData = $Result->getExtra('eventData');
+        $extras = $eventData['extras'];
+        unset($eventData['extras']);
+
+        $this->setAllData(
+            array_merge(
+                $eventData,
+                $extras
+            )
+        );
+
+        return $this;
+    }
+
+    /**
      * return the formatted start date
      *
      * @param string $format The date format to use

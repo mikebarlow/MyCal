@@ -259,4 +259,51 @@ class EventTest extends \PHPUnit_Framework_TestCase
             $Events->count()
         );
     }
+
+    public function testLoadSetsUpEventFromIntegration()
+    {
+        $Result = \Snscripts\Result\Result::success()
+            ->setExtra(
+                'eventData',
+                [
+                    'id' => 50,
+                    'name' => 'Test Event',
+                    'start_date' => '2017-01-29 17:30:00',
+                    'end_date' => '2017-01-29 20:30:00',
+                    'calendar_id' => 1,
+                    'extras' => [
+                        'author' => 'mike',
+                        'foo' => 'bar',
+                        'stuff' => [
+                            'foo',
+                            'bar',
+                            'barfoo1'
+                        ]
+                    ]
+                ]
+            );
+
+        $EventIntegration = $this->createMock('\Snscripts\MyCal\Interfaces\EventInterface');
+        $EventIntegration->method('load')
+            ->willReturn($Result);
+
+        $Event = new Event(
+            $EventIntegration,
+            new \DateTimeZone('Europe/London')
+        );
+
+        $Event = $Event->load(10);
+
+        $this->assertSame(
+            'Test Event',
+            $Event->name
+        );
+
+        $this->assertSame(
+            [
+                'foo', 'bar', 'barfoo1'
+            ],
+            $Event->stuff
+        );
+    }
 }
