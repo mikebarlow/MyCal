@@ -23,8 +23,8 @@ class EventTest extends \PHPUnit_Framework_TestCase
     {
         $this->eventObj->name = 'Test Event';
         $this->eventObj->calendar_id = 1;
-        $this->eventObj->unixStart = 1484851680;
-        $this->eventObj->unixEnd = 1484938080;
+        $this->eventObj->start_date = '2017-01-29 16:36:00';
+        $this->eventObj->end_date = '2017-01-29 20:30:00';
         $this->eventObj->test = [
             'foo' => 'bar',
             'foobar' => 'barfoo'
@@ -36,8 +36,8 @@ class EventTest extends \PHPUnit_Framework_TestCase
             [
                 'id' => null,
                 'name' => 'Test Event',
-                'start_date' => 1484851680,
-                'end_date' => 1484938080,
+                'start_date' => '2017-01-29 16:36:00',
+                'end_date' => '2017-01-29 20:30:00',
                 'calendar_id' => 1,
                 'extras' => [
                     'test' => 'a:2:{s:3:"foo";s:3:"bar";s:6:"foobar";s:6:"barfoo";}'
@@ -53,8 +53,8 @@ class EventTest extends \PHPUnit_Framework_TestCase
             [
                 'id' => 12,
                 'name' => 'Test Event',
-                'start_date' => 1484851680,
-                'end_date' => 1484938080,
+                'start_date' => '2017-01-29 16:36:00',
+                'end_date' => '2017-01-29 20:30:00',
                 'calendar_id' => 1,
                 'extras' => [
                     'test' => 'a:2:{s:3:"foo";s:3:"bar";s:6:"foobar";s:6:"barfoo";}'
@@ -71,8 +71,8 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $data = [
             'id' => null,
             'name' => 'Test Event',
-            'start_date' => 1484851680,
-            'end_date' => 1484938080,
+            'start_date' => '2017-01-29 16:36:00',
+            'end_date' => '2017-01-29 20:30:00',
             'calendar_id' => 1,
             'extras' => [
                 'test' => 'a:2:{s:3:"foo";s:3:"bar";s:6:"foobar";s:6:"barfoo";}'
@@ -101,8 +101,8 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $data = [
             'id' => 1,
             'name' => 'Test Event',
-            'start_date' => 1484851680,
-            'end_date' => 1484938080,
+            'start_date' => '2017-01-29 16:36:00',
+            'end_date' => '2017-01-29 20:30:00',
             'calendar_id' => 1,
             'extras' => [
                 'test' => 'a:2:{s:3:"foo";s:3:"bar";s:6:"foobar";s:6:"barfoo";}'
@@ -149,8 +149,8 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $data = [
             'id' => null,
             'name' => 'Test Event',
-            'start_date' => 1484851680,
-            'end_date' => 1484938080,
+            'start_date' => '2017-01-29 16:36:00',
+            'end_date' => '2017-01-29 20:30:00',
             'calendar_id' => 1,
             'extras' => [
                 'test' => 'a:2:{s:3:"foo";s:3:"bar";s:6:"foobar";s:6:"barfoo";}',
@@ -177,8 +177,8 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $data = [
             'id' => null,
             'name' => 'Test Event',
-            'start_date' => 1484851680,
-            'end_date' => 1484938080,
+            'start_date' => '2017-01-29 16:36:00',
+            'end_date' => '2017-01-29 20:30:00',
             'calendar_id' => 1,
             'extras' => []
         ];

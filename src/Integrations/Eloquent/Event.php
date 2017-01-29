@@ -81,14 +81,14 @@ class Event extends BaseIntegration implements EventInterface
             ),
             'start_date' => $this->extractVar(
                 $Event,
-                'unixStart',
+                'start_date',
                 function ($Object) {
                     throw new \DomainException('No start date set on the event');
                 }
             ),
             'end_date' => $this->extractVar(
                 $Event,
-                'unixEnd',
+                'end_date',
                 function ($Object) {
                     throw new \DomainException('No end date set on the event');
                 }
@@ -102,7 +102,7 @@ class Event extends BaseIntegration implements EventInterface
             ),
             'extras' => $this->extractData(
                 $Event,
-                ['id', 'name', 'calendar_id', 'unixStart', 'unixEnd']
+                ['id', 'name', 'calendar_id', 'start_date', 'end_date']
             )
         ];
     }
