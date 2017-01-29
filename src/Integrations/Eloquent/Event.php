@@ -39,7 +39,7 @@ class Event extends BaseIntegration implements EventInterface
 
         $extrasResult = $this->saveExtras(
             $Event,
-            $eventResults
+            $eventExtras
         );
         if ($extrasResult->isFail()) {
             return $extrasResult;
@@ -201,6 +201,4 @@ class Event extends BaseIntegration implements EventInterface
         return Result::success()
             ->setCode(Result::SAVED);
     }
-
-
 }
