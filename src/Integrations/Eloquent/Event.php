@@ -51,17 +51,6 @@ class Event extends BaseIntegration implements EventInterface
     }
 
     /**
-     * load the event
-     *
-     * @param int $id
-     * @return Snscripts\Result\Result $Result
-     */
-    public function load($id)
-    {
-        return Result::success();
-    }
-
-    /**
      * extract the event data for the model
      *
      * @todo review unixStart / unixEnd - for this to work they should be part of the Event::$data not set vars
@@ -200,5 +189,74 @@ class Event extends BaseIntegration implements EventInterface
 
         return Result::success()
             ->setCode(Result::SAVED);
+    }
+
+    /**
+     * load the event
+     *
+     * @param int $id
+     * @return Snscripts\Result\Result $Result
+     */
+    public function load($id)
+    {
+        $eventData = $this->loadModel(new $this->eventModel, $id);
+
+        if (empty($calData)) {
+            return Result::fail()
+                ->setCode(Result::NOT_FOUND)
+                ->setMessage('Could not load event #' . $id);
+        }
+
+        $eventData = $this->formatExtras($eventData);
+
+        return Result::success()
+            ->setCode(Result::FOUND)
+            ->setExtra('eventData', $eventData);
+    }
+
+    /**
+     * load the event model and data
+     *
+     * @param EventModel $EventModel
+     * @param int $id
+     * @return array
+     */
+    public function loadModel($EventModel, $id)
+    {
+        try {
+            $EventModel = $EventModel
+                ->where('id', '=', $id)
+                ->with([
+                    'eventExtra'
+                ])
+                ->first();
+        } catch (\Exception $e) {
+            return [];
+        }
+
+        return $EventModel->toArray();
+    }
+
+    /**
+     * format the extra data
+     *
+     * @param array $eventData
+     * @return array $formattedCalData
+     */
+    public function formatExtras($eventData)
+    {
+        $eventData['extras'] = [];
+        foreach ($eventData['event_extra'] as $extras) {
+            $eventData['extras'][$extras['slug']] = $extras['value'];
+        }
+
+        if (! empty($eventData['extras'])) {
+            $eventData['extras'] = $this->unserializeData(
+                $eventData['extras']
+            );
+        }
+        unset($eventData['event_extra']);
+
+        return $eventData;
     }
 }

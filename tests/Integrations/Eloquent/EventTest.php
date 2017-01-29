@@ -275,6 +275,157 @@ class EventTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testLoadModelLoadsEventData()
+    {
+        $returnModel = $this->getMockBuilder('\Snscripts\MyCal\Integrations\Eloquent\Models\Event')
+            ->setMethods(null)
+            ->getMock();
+        $returnModel->setRawAttributes([
+            'id' => 50,
+            'name' => 'Test Event',
+            'start_date' => '2017-01-29 17:30:00',
+            'end_date' => '2017-01-29 20:30:00',
+            'calendar_id' => 1,
+            'extras' => [
+                'test' => [
+                    'foo', 'bar', 'foobar', 'barfoo'
+                ]
+            ]
+        ]);
+
+        $whereMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['with', 'first'])
+            ->getMock();
+
+        $whereMock->expects($this->once())
+            ->method('with')
+            ->will($this->returnSelf());
+
+        $whereMock->expects($this->once())
+            ->method('first')
+            ->willReturn($returnModel);
+
+        $CalendarModel = $this->getMockBuilder('\Snscripts\MyCal\Integrations\Eloquent\Models\Event')
+            ->setMethods(['where'])
+            ->getMock();
+
+        $CalendarModel->expects($this->once())
+            ->method('where')
+            ->willReturn($whereMock);
+
+        $EventIntegration = new EventIntegration;
+
+        $this->assertSame(
+            [
+                'id' => 50,
+                'name' => 'Test Event',
+                'start_date' => '2017-01-29 17:30:00',
+                'end_date' => '2017-01-29 20:30:00',
+                'calendar_id' => 1,
+                'extras' => [
+                    'test' => [
+                        'foo', 'bar', 'foobar', 'barfoo'
+                    ]
+                ]
+            ],
+            $EventIntegration->loadModel(
+                $CalendarModel,
+                50
+            )
+        );
+    }
+
+    public function testLoadModelReturnsEmptyArrayWhenNoRowFound()
+    {
+        $whereMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['with', 'first'])
+            ->getMock();
+
+        $whereMock->expects($this->once())
+            ->method('with')
+            ->will($this->returnSelf());
+
+        $whereMock->expects($this->once())
+            ->method('first')
+            ->will($this->throwException(new \Exception('No record found')));
+
+        $EventModel = $this->getMockBuilder('\Snscripts\MyCal\Integrations\Eloquent\Models\Event')
+            ->setMethods(['where'])
+            ->getMock();
+
+        $EventModel->expects($this->once())
+            ->method('where')
+            ->willReturn($whereMock);
+
+        $EventIntegration = new EventIntegration;
+
+        $loadResult = $EventIntegration->loadModel(
+            $EventModel,
+            10
+        );
+
+        $this->assertEmpty($loadResult);
+        $this->assertSame(
+            [],
+            $loadResult
+        );
+    }
+
+    public function testFormatExtrasFormatsCorrectly()
+    {
+        $EventIntegration = new EventIntegration;
+        $fromDb = [
+            'id' => 50,
+            'name' => 'Test Event',
+            'start_date' => '2017-01-29 17:30:00',
+            'end_date' => '2017-01-29 20:30:00',
+            'calendar_id' => 1,
+            'event_extra' => [
+                [
+                    'slug' => 'author',
+                    'value' => 'mike',
+                    'event_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24'
+                ],
+                [
+                    'slug' => 'foo',
+                    'value' => 'bar',
+                    'event_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24'
+                ],
+                [
+                    'slug' => 'stuff',
+                    'value' => 'a:3:{i:0;s:3:"foo";i:1;s:3:"bar";i:2;s:7:"barfoo1";}',
+                    'event_id' => 1,
+                    'created_at' => '2016-12-28 11:40:24',
+                    'updated_at' => '2016-12-28 11:40:24'
+                ]
+            ]
+        ];
+
+        $this->assertSame(
+            [
+                'id' => 50,
+                'name' => 'Test Event',
+                'start_date' => '2017-01-29 17:30:00',
+                'end_date' => '2017-01-29 20:30:00',
+                'calendar_id' => 1,
+                'extras' => [
+                    'author' => 'mike',
+                    'foo' => 'bar',
+                    'stuff' => [
+                        'foo',
+                        'bar',
+                        'barfoo1'
+                    ]
+                ]
+            ],
+            $EventIntegration->formatExtras($fromDb)
+        );
+    }
+
     protected function buildSuccessEventModel($relation)
     {
         $whereMock = $this->getMockBuilder(\stdClass::class)

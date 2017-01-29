@@ -239,7 +239,6 @@ class Calendar extends BaseIntegration implements CalendarInterface
     /**
      * load the calendar and options
      *
-     * @todo refactor for tests
      * @param int $id
      * @return Snscripts\Result\Result $Result
      */
