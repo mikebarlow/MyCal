@@ -18,7 +18,7 @@ class MyCalServiceProvider extends ServiceProvider
                     new \Snscripts\MyCal\Integrations\Eloquent\Calendar,
                     new \Snscripts\MyCal\DateFactory(
                         new \Snscripts\MyCal\EventFactory(
-                            new \Snscripts\MyCal\Inegrations\Eloquent\Event
+                            new \Snscripts\MyCal\Integrations\Eloquent\Event
                         )
                     )
                 );
