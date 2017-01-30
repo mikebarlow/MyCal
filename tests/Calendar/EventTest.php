@@ -123,6 +123,38 @@ class EventTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testDisplayStartReturnsCorrectDate()
+    {
+        $Event = new Event(
+            $this->EventInterfaceMock,
+            new \DateTimeZone('America/New_York')
+        );
+
+        $Event->startsOn('2017-01-29')
+            ->startsAt('09:00:00');
+
+        $this->assertSame(
+            '29/01/2017 9:00am',
+            $Event->displayStart('d/m/Y g:ia')
+        );
+    }
+
+    public function testDisplayEndReturnsCorrectDate()
+    {
+        $Event = new Event(
+            $this->EventInterfaceMock,
+            new \DateTimeZone('America/New_York')
+        );
+
+        $Event->endsOn('2017-01-29')
+            ->endsAt('17:00:00');
+
+        $this->assertSame(
+            '29/01/2017 5:00pm',
+            $Event->displayEnd('d/m/Y g:ia')
+        );
+    }
+
     public function testIsStartBeforeEnd()
     {
         $Event = new Event(
