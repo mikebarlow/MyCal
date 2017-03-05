@@ -46,13 +46,6 @@ class Event
     ];
 
     /**
-     * repeat event, hold the config for when / how long etc..
-     * @todo Complete repeatable events - On Hold
-     * @var array|null
-     */
-    protected $repeat;
-
-    /**
      * Setup a new Event object
      *
      * @param EventInterface $eventIntegration
@@ -233,48 +226,6 @@ class Event
             $this->end,
             $this->Timezone
         );
-
-        return $this;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * setup the event to be repeatable
-     *
-     * @todo Complete repeatable events - On Hold
-     * @return Event $this
-     */
-    public function repeatable()
-    {
-        $this->repeatable = [
-            'frequency' => '',
-            'until' => ''
-        ];
-
-        return $this;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * end date for the repeatable event
-     *
-     * @todo Complete repeatable events - On Hold
-     * @param string $dateTime date time in YYYY-MM-DD HH:MM:SS format
-     * @return Event $this
-     * @throws \InvalidArgumentException
-     */
-    public function until($dateTime)
-    {
-        list($date, $time) = explode(' ', $dateTime);
-
-        if (! $this->isValidDate($date) || ! $this->isValidTime($time)) {
-            throw new \InvalidArgumentException(
-                'Event::until - The date time passed should be in the format of
-                "YYYY-MM-DD HH:MM:SS"'
-            );
-        }
-
-        $this->repeatable['until'] = $dateTime;
 
         return $this;
     }
