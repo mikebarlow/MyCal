@@ -26,6 +26,26 @@ class CalendarFactory
     }
 
     /**
+     * create a new instance of the calendar object
+     *
+     * @param CalendarInterface $calendarIntegration
+     * @param DateFactory $dateFactory
+     * @param Options $Options
+     * @return Calendar $Calendar
+     */
+    public function newInstance(
+        CalendarInterface $calendarIntegration,
+        DateFactory $dateFactory,
+        Options $Options
+    ) {
+        return new Calendar(
+            $calendarIntegration,
+            $dateFactory,
+            $Options
+        );
+    }
+
+    /**
      * create a new calendar instance
      *
      * @param mixed $id Identifier to find calendar
@@ -38,7 +58,7 @@ class CalendarFactory
             $Options = Options::set();
         }
 
-        $Calendar = new Calendar(
+        $Calendar = $this->newInstance(
             $this->calendarIntegration,
             $this->dateFactory,
             $Options
