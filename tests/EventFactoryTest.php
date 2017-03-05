@@ -21,7 +21,7 @@ class EventFactoryTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testNewInstanceReturnsCalendarObject()
+    public function testLoadReturnsEventObject()
     {
         $Factory = new EventFactory(
             $this->EventInterfaceMock
@@ -32,6 +32,54 @@ class EventFactoryTest extends \PHPUnit_Framework_TestCase
             $Factory->load(
                 new \DateTimeZone('Europe/London')
             )
+        );
+    }
+
+    public function testLoadReturnsEventObjectWhenIdSet()
+    {
+        // Event Mock object
+        $Event = new \Snscripts\MyCal\Calendar\Event(
+            new \Snscripts\MyCal\Integrations\Null\Event,
+            new \DateTimeZone('Europe/London')
+        );
+        $Event->setAllData([
+            'id' => 1,
+            'title' => 'Super cool event',
+            'location' => 'UK'
+        ]);
+
+        $EventMock = $this->getMockBuilder('\Snscripts\MyCal\Calenar\Event')
+            ->setMethods(['load'])
+            ->getMock();
+        $EventMock->expects($this->once())
+             ->method('load')
+             ->willReturn($Event);
+
+        $EventFactory = $this->getMockBuilder('\Snscripts\MyCal\EventFactory')
+            ->setMethods(['newInstance'])
+            ->setConstructorArgs([
+               new \Snscripts\MyCal\Integrations\Null\Event
+            ])
+            ->getMock();
+        $EventFactory->expects($this->once())
+             ->method('newInstance')
+             ->willReturn($EventMock);
+
+        // -----
+
+        $EventTest = $EventFactory->load(
+            new \DateTimeZone('Europe/London'),
+            1
+        );
+
+        $this->assertInstanceOf(
+            'Snscripts\MyCal\Calendar\Event',
+            $EventTest
+        );
+
+        $this->assertSame(
+            'Super cool event',
+            $EventTest->title
         );
     }
 }
