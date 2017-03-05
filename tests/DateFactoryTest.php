@@ -37,4 +37,16 @@ class DateFactoryTest extends \PHPUnit_Framework_TestCase
             )
         );
     }
+
+    public function testGetEventFactoryReturnsFactory()
+    {
+        $Factory = new DateFactory(
+            $this->EventFactoryMock
+        );
+
+        $this->assertInstanceOf(
+            'Snscripts\MyCal\EventFactory',
+            $Factory->getEventFactory()
+        );
+    }
 }
