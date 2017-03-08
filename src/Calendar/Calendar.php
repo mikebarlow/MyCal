@@ -12,6 +12,7 @@ class Calendar
     protected $calendarIntegration;
     protected $dateFactory;
     protected $Options;
+    protected $getEvents = false;
 
     /**
      * Setup a new calendar object
@@ -141,7 +142,26 @@ class Calendar
             $this->getRange($start, $end)
         );
 
-        return new \Cartalyst\Collections\Collection($dates);
+        $dateCollection = new \Cartalyst\Collections\Collection($dates);
+
+        if ($this->withEvents) {
+            // get events given the date collection
+
+            $this->withEvents = false;
+        }
+
+        return $dateCollection;
+    }
+
+    /**
+     * define whether or not to return events for the date range
+     *
+     * @return Calendar $this
+     */
+    public function withEvents()
+    {
+        $this->withEvents = true;
+        return $this;
     }
 
     /**
