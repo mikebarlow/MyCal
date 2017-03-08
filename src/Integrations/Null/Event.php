@@ -17,7 +17,7 @@ class Event extends BaseIntegration implements EventInterface
     public function save(EventObj $Event)
     {
         return Result::fail()
-            ->setCode(Result::NOT_FOUND)
+            ->setCode(Result::ERROR)
             ->setMessage('Null integration used, no database interactions available.');
     }
 
