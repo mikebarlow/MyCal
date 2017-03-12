@@ -145,9 +145,16 @@ class Calendar
         $dateCollection = new \Cartalyst\Collections\Collection($dates);
 
         if ($this->withEvents) {
-            // get events given the date collection
-
             $this->withEvents = false;
+
+            $Event = $this->newEvent();
+
+            $Event->loadRange(
+                $start,
+                $end
+            );
+
+
         }
 
         return $dateCollection;

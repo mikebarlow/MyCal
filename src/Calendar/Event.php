@@ -114,6 +114,28 @@ class Event
     }
 
     /**
+     * load events given a date range
+     *
+     * @param string $startDate
+     * @param string $endDate
+     * @return \Cartalyst\Collections\Collection
+     */
+    public function loadRange($startDate, $endDate)
+    {
+        $Result = $this->eventIntegration->loadRange($startDate, $endDate);
+
+        if ($Result->isFail()) {
+            return new \Cartalyst\Collections\Collection([]);
+        }
+
+        $events = $Result->getExtra('events');
+
+
+
+
+    }
+
+    /**
      * return the formatted start date
      *
      * @param string $format The date format to use

@@ -259,4 +259,64 @@ class Event extends BaseIntegration implements EventInterface
 
         return $eventData;
     }
+
+    /**
+     * load a range of events given the dates
+     *
+     * @param string $startDate
+     * @param string $endDate
+     * @return Snscripts\Result\Result $Result
+     */
+    public function loadRange($startDate, $endDate)
+    {
+        $events = $this->getEventsByRange(
+            new $this->eventModel,
+            $startDate,
+            $endDate
+        );
+
+        if (empty($events)) {
+            return Result::fail()
+                ->setCode(Result::NOT_FOUND)
+                ->setMessage('Not events found');
+        }
+
+        return Result::success()
+            ->setCode(Result::FOUND)
+            ->setExtra('events', $events);
+    }
+
+    public function getEventsByRange($EventModel, $startDate, $endDate)
+    {
+        $start = $startDate . ' 00:00:00';
+        $end = $endDate . ' 23:59:59';
+
+        try {
+            $EventModel = $EventModel
+                ->where(function ($query) use ($startDate, $endDate) {
+                    $query->where('start_date', '>=', $startDate . ' 00:00:00')
+                        ->where('end_date', '<=', $endDate . ' 23:59:59');
+                })
+                ->orWhere(function ($query) use ($startDate, $endDate) {
+                    $query->where('start_date', '>=', $startDate . ' 00:00:00')
+                        ->where('start_date', '<=', $endDate . ' 23:59:59');
+                })
+                ->orWhere(function ($query) use ($startDate, $endDate) {
+                    $query->where('end_date', '>=', $startDate . ' 00:00:00')
+                        ->where('end_date', '<=', $endDate . ' 23:59:59');
+                })
+                ->orWhere(function ($query) use ($startDate, $endDate) {
+                    $query->where('start_date', '<=', $startDate . ' 00:00:00')
+                        ->where('end_date', '>=', $endDate . ' 23:59:59');
+                })
+                ->with([
+                    'eventExtra'
+                ])
+                ->get();
+        } catch (\Exception $e) {
+            return [];
+        }
+
+        return $EventModel->toArray();
+    }
 }
