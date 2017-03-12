@@ -148,13 +148,12 @@ class Calendar
             $this->withEvents = false;
 
             $Event = $this->newEvent();
-
-            $Event->loadRange(
+            $events = $Event->loadRange(
                 $start,
                 $end
             );
 
-
+            // loop and assign each event to the given days it sits on
         }
 
         return $dateCollection;

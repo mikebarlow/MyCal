@@ -128,11 +128,9 @@ class Event
             return new \Cartalyst\Collections\Collection([]);
         }
 
-        $events = $Result->getExtra('events');
-
-
-
-
+        return new \Cartalyst\Collections\Collection(
+            $Result->getExtra('events')
+        );
     }
 
     /**
