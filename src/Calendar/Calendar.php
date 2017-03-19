@@ -134,7 +134,7 @@ class Calendar
      *
      * @param string $start Start date to get Y-m-d format
      * @param string $end End date to get Y-m-d format
-     * @return \Cartalyst\Collections\Collection
+     * @return \DusanKasan\Knapsack\Collection
      */
     public function build($start, $end)
     {
@@ -142,7 +142,7 @@ class Calendar
             $this->getRange($start, $end)
         );
 
-        $dateCollection = new \Cartalyst\Collections\Collection($dates);
+        $dateCollection = \DusanKasan\Knapsack\Collection::from($dates);
 
         if ($this->withEvents) {
             $this->withEvents = false;
@@ -287,7 +287,7 @@ class Calendar
      * generate the calendar table dates
      *
      * @todo Refactor this majorly, messy and got to be a better way to do it
-     * @param \Cartalyst\Collections\Collection $dates Collection of dates to display
+     * @param \DusanKasan\Knapsack\Collection $dates Collection of dates to display
      * @return string
      */
     public function getTableBody($dates)

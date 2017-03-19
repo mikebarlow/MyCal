@@ -118,7 +118,7 @@ class Event
      *
      * @param string $startDate
      * @param string $endDate
-     * @return \Cartalyst\Collections\Collection
+     * @return \DusanKasan\Knapsack\Collection
      */
     public function loadRange($startDate, $endDate)
     {
@@ -149,7 +149,7 @@ class Event
         dump($events);
         die();
 
-        return new \Cartalyst\Collections\Collection(
+        return \DusanKasan\Knapsack\Collection::from(
             $events
         );
     }
@@ -278,7 +278,7 @@ class Event
      * @todo review - can the logic here be improved?
      * @param string $start Start date in YYYY-MM-DD format
      * @param string $end End date in YYYY-MM-DD format
-     * @return Cartalyst\Collections\Collection
+     * @return DusanKasan\Knapsack\Collection
      */
     public function prepareEvent($start, $end)
     {
@@ -326,7 +326,7 @@ class Event
             }
         }
 
-        return new \Cartalyst\Collections\Collection($events);
+        return \DusanKasan\Knapsack\Collection::from($events);
     }
 
     /**
