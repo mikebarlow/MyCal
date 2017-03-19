@@ -153,6 +153,22 @@ class Calendar
                 $end
             );
 
+            dump($events);
+
+            foreach ($events as $Event) {
+
+                dump($Event);
+
+                $DatePeriod = $this->getRange(
+                    $Event->displayStart('Y-m-d'),
+                    $Event->displayEnd('Y-m-d')
+                );
+
+                foreach ($DatePeriod as $Date) {
+                    echo $Date->format('Y-m-d') . '<br>';
+                }
+            }
+
             // loop and assign each event to the given days it sits on
         }
 

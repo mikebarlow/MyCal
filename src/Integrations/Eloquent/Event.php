@@ -281,6 +281,11 @@ class Event extends BaseIntegration implements EventInterface
                 ->setMessage('Not events found');
         }
 
+        $events = array_map(
+            [$this, 'formatExtras'],
+            $events
+        );
+
         return Result::success()
             ->setCode(Result::FOUND)
             ->setExtra('events', $events);

@@ -123,13 +123,34 @@ class Event
     public function loadRange($startDate, $endDate)
     {
         $Result = $this->eventIntegration->loadRange($startDate, $endDate);
+        $events = [];
 
-        if ($Result->isFail()) {
-            return new \Cartalyst\Collections\Collection([]);
+        if ($Result->isSuccess()) {
+            $events = array_map(
+                function ($eventData) {
+                    $extras = $eventData['extras'];
+                    unset($eventData['extras']);
+
+                    $Event = $this;
+                    $Event->setAllData(
+                        array_merge(
+                            $eventData,
+                            $extras
+                        )
+                    );
+
+                    return $Event;
+                },
+                $Result->getExtra('events')
+            );
         }
 
+
+        dump($events);
+        die();
+
         return new \Cartalyst\Collections\Collection(
-            $Result->getExtra('events')
+            $events
         );
     }
 
