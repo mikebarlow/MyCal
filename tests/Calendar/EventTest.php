@@ -248,7 +248,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             1,
-            $Events->count()
+            $Events->size()
         );
     }
 
@@ -272,7 +272,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             2,
-            $Events->count()
+            $Events->size()
         );
 
         $Event->startsOn('2017-01-23')
@@ -288,7 +288,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             3,
-            $Events->count()
+            $Events->size()
         );
     }
 
