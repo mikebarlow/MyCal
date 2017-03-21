@@ -145,10 +145,6 @@ class Event
             );
         }
 
-
-        dump($events);
-        die();
-
         return new \Cartalyst\Collections\Collection(
             $events
         );
