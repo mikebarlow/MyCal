@@ -131,7 +131,10 @@ class Event
                     $extras = $eventData['extras'];
                     unset($eventData['extras']);
 
-                    $Event = $this;
+                    $Event = new static(
+                        $this->eventIntegration,
+                        $this->Timezone
+                    );
                     $Event->setAllData(
                         array_merge(
                             $eventData,
