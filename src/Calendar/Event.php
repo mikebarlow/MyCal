@@ -427,4 +427,30 @@ class Event
         );
         return $this;
     }
+
+    /**
+     * magic setter for start date
+     *
+     * @param string $fullDate
+     */
+    public function setStartDateAttr($fullDate)
+    {
+        list($date, $time) = explode(' ', $fullDate);
+
+        $this->startsOn($date)
+            ->startsAt($time);
+    }
+
+    /**
+     * magic setter for end date
+     *
+     * @param string $fullDate
+     */
+    public function setEndDateAttr($fullDate)
+    {
+        list($date, $time) = explode(' ', $fullDate);
+
+        $this->endsOn($date)
+            ->endsAt($time);
+    }
 }
