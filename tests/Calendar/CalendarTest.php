@@ -225,13 +225,13 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
         $Dates = $Calendar->build('2016-12-01', '2016-12-05');
 
         $this->assertInstanceOf(
-            'DusanKasan\Knapsack\Collection',
+            'Cartalyst\Collections\Collection',
             $Dates
         );
 
         $this->assertSame(
             5,
-            $Dates->size()
+            $Dates->count()
         );
     }
 
