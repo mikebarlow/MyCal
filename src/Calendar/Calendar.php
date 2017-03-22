@@ -132,6 +132,7 @@ class Calendar
     /**
      * Get a collection of dates inclusive of given dates
      *
+     * @todo tidy up events section
      * @param string $start Start date to get Y-m-d format
      * @param string $end End date to get Y-m-d format
      * @return \Cartalyst\Collections\Collection
@@ -153,23 +154,43 @@ class Calendar
                 $end
             );
 
-            dump($events);
-
             foreach ($events as $Event) {
-
-                dump($Event);
-
+                $start = $Event->displayStart('Y-m-d');
+                $end = $Event->displayEnd('Y-m-d');
                 $DatePeriod = $this->getRange(
-                    $Event->displayStart('Y-m-d'),
-                    $Event->displayEnd('Y-m-d')
+                    $start,
+                    $end
                 );
 
-                foreach ($DatePeriod as $Date) {
-                    echo $Date->format('Y-m-d') . '<br>';
+                foreach ($DatePeriod as $EventDate) {
+                    $eventDateFormat = $EventDate->format('Y-m-d');
+
+                    if ($dateCollection->has($eventDateFormat)) {
+                        $dateCollection->get($eventDateFormat)
+                            ->events()
+                            ->put(
+                                $Event->displayStart('Y-m-d H:i'),
+                                $Event
+                            );
+                    }
                 }
             }
 
-            // loop and assign each event to the given days it sits on
+            // go through and sort the events on each date
+            foreach ($dateCollection as $Date) {
+                $Date->events()->sort(
+                    function ($Event1, $Event2) {
+                        $start1 = $Event1->displayStart('Y-m-d H:i');
+                        $start2 = $Event2->displayStart('Y-m-d H:i');
+
+                        if ($start1 == $start2) {
+                            return 0;
+                        }
+
+                        return ($start1 < $start2) ? -1 : 1;
+                    }
+                );
+            }
         }
 
         return $dateCollection;

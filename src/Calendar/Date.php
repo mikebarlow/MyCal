@@ -17,6 +17,7 @@ class Date
     protected $isWeekStart;
     protected $timestamp;
     protected $Timezone;
+    protected $events;
 
     const
         MONDAY    = 1,
@@ -51,6 +52,8 @@ class Date
         if (is_a($EventFactory, EventFactory::class)) {
             $this->EventFactory = $EventFactory;
         }
+
+        $this->events = new \Cartalyst\Collections\Collection([]);
     }
 
     /**
@@ -132,6 +135,16 @@ class Date
         }
 
         return $DateTime->format($format);
+    }
+
+    /**
+     * return the events collection
+     *
+     * @return \Cartalyst\Collections\Collection
+     */
+    public function events()
+    {
+        return $this->events;
     }
 
     /**
