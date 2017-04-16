@@ -34,9 +34,10 @@
 }
 
 #sidebar .menu {
-    font-size: 16px;
-    margin-bottom: 10px;
+    font-size: 18px;
+    margin-bottom: 25px;
     list-style: none;
+    padding-left: 5px;
 
     li {
         &:before {
@@ -44,5 +45,11 @@
             content: "//";
             color: #9ddcff;
         }
+
+        margin-bottom: 10px;
+    }
+
+    a:hover {
+        color: #144274;
     }
 }
