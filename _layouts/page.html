@@ -38,6 +38,22 @@
                 </section>
 
                 <aside id="sidebar">
+                    <h2>Menu</h2>
+                    {% assign pages_list = site.pages | sort:"url" %}
+                    <ul>
+                        {% for node in pages_list %}
+                            {% if node.title != null %}
+                                {% if node.layout == "page" %}
+                                    <li>
+                                        <a class="sidebar-nav-item{% if page.url == node.url %} active{% endif %}" href="/MyCal{{ node.url }}">
+                                            {{ node.title }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+
                     {% if site.show_downloads %}
                         <a href="{{ site.github.zip_url }}" class="button">
                             <small>Download</small>
@@ -48,15 +64,6 @@
                             .tar.gz file
                         </a>
                     {% endif %}
-
-                    {% assign pages_list = site.pages | sort:"url" %}
-                    {% for node in pages_list %}
-                        {% if node.title != null %}
-                            {% if node.layout == "page" %}
-                                <a class="sidebar-nav-item{% if page.url == node.url %} active{% endif %}" href="/MyCal{{ node.url }}">{{ node.title }}</a>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
 
                     {% if site.github.is_project_page %}
                         <p class="repo-owner">
