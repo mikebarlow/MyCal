@@ -67,7 +67,7 @@
 
                     {% if site.github.is_project_page %}
                         <p class="repo-owner">
-                            &copy; <a href="http://mikebarlow.co.uk" target="_blank">MikeBarlow.co.uk</a> <script>document.write(new Date().getFullYear())</script>
+                            &copy; <a href="http://mikebarlow.co.uk" target="_blank">MikeBarlow.co.uk</a> {{ site.time | date: '%Y' }}
                         </p>
                     {% endif %}
                 </aside>
