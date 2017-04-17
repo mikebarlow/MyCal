@@ -31,7 +31,7 @@ Both start and end date should be in `YYYY-MM-DD` format. If you wish to generat
 
     echo $Calendar->display($startDate, $endDate);
 
-### Date collection
+## Date collection
 
 Each item in the collection of dates is an instance of a MyCal Date object, these objects come with a few helper methods.
 
