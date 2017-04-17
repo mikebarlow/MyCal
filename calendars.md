@@ -2,6 +2,7 @@
 layout: page
 title: Calendars
 permalink: /calendars
+order: 40
 ---
 # Calendars
 

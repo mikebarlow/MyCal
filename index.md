@@ -2,6 +2,7 @@
 layout: page
 title: Introduction
 permalink: /
+order: 10
 ---
 # Introduction
 
