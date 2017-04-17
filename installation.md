@@ -34,3 +34,18 @@ or adding to your projects `composer.json` file.
             "snscripts/mycal": "0.*"
         }
     }
+
+## Laravel Eloquent
+
+If you are using the Laravel Eloquent Integration then you will need add the MyCal Service Provider to your `config/app.php` file within the providers section.
+
+    'providers' => [
+        /*
+         * Package Service Providers...
+         */
+        Snscripts\MyCal\Integrations\Eloquent\MyCalServiceProvider::class
+    ]
+
+Next the tables that hold the calendar and event data need to be created. Run the standard artisan migration command.
+
+    php artisan migrate

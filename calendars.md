@@ -6,4 +6,13 @@ order: 40
 ---
 # Calendars
 
-This is test content for the calendar info page
+To get started, initiate the Calendar factory along with the Date and Events factories and your chosen integration. Currently only Laravel Eloquent Integration is available.
+
+    $CalendarFactory = new \Snscripts\MyCal\CalendarFactory(
+        new \Snscripts\MyCal\Integrations\Eloquent\Calendar,
+        new \Snscripts\MyCal\DateFactory(
+            new \Snscripts\MyCal\EventFactory(
+                new \Snscripts\MyCal\Integrations\Eloquent\Event
+            )
+        )
+    );
