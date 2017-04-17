@@ -4,9 +4,7 @@ title: Installation
 permalink: /installation
 order: 30
 ---
-# Installation
-
-## Requirements
+# Requirements
 
 MyCal requires the following:
 
@@ -22,6 +20,8 @@ And the following if you wish to run in dev mode and run tests.
 MyCal suggests the following for database integrations.
 
 * "illuminate/database": "Use Eloquent as the method for saving your calendars / events"
+
+# Installation
 
 Simplest installation is via composer.
 
