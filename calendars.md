@@ -32,7 +32,7 @@ This will load a Calendar with the default options, to amend the default options
         ])
     );
 
-When loading any defined options are merged with the default values so you only need to redefine the ones you wish to change. For the full list of options available and the default values, see [/MyCal/options](the options page).
+When loading any defined options are merged with the default values so you only need to redefine the ones you wish to change. For the full list of options available and the default values, see [/MyCal/calendar-options](the calendar options page).
 
 Once loaded, you can set a Calendar name (required data) and any other data you wish to store by simply defining them on the object.
 
