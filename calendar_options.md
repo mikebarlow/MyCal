@@ -6,7 +6,7 @@ order: 45
 ---
 # Calendar Options
 
-As shown on the [/MyCal/calendars](calendar documentation), when loading a Calendar you can set a new Options object and redefine the options you want:
+As shown on the [calendar documentation](/MyCal/calendars), when loading a Calendar you can set a new Options object and redefine the options you want:
 
     $Calendar = $CalendarFactory->load(
         null,
