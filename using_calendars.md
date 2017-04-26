@@ -1,10 +1,10 @@
 ---
 layout: page
-title: Simple Example
-permalink: /simple-example
-order: 20
+title: Using Calendars
+permalink: /using-calendars
+order: 30
 ---
-# Simple Example
+# Using Calendars
 
 To initiate the package, setup the Calendar Factory along with the Date Factory and the calendar integration you wish to use.
 
@@ -22,6 +22,17 @@ If no database integrations are necessary the Null integration can be used.
 Once setup as above, load up a new calendar by using the Calendar Factory load method
 
     $Calendar = $CalendarFactory->load();
+
+This will start a new Calendar with the default options, to amend the default options, call the `Options` object when loading from the Calendar Factory
+
+    $Calendar = $CalendarFactory->load(
+        null, // Set to null when loading a new calendar
+        \Snscripts\MyCal\Calendar\Options::set([
+            'defaultTimezone' => 'America/New_York'
+        ])
+    );
+
+When loading, any defined options are merged with the default values so you only need to redefine the ones you wish to change. For the full list of options available and the default values, see [the calendar options page](/MyCal/calendar-options).
 
 This creates a new Calendar object with default options. You can then generate a collection of dates by calling
 

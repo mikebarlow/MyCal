@@ -2,11 +2,11 @@
 layout: page
 title: Calendar Options
 permalink: /calendar-options
-order: 45
+order: 60
 ---
 # Calendar Options
 
-As shown on the [calendar documentation](/MyCal/calendars), when loading a Calendar you can set a new Options object and redefine the options you want:
+As shown on the [using calendars documentation](/MyCal/using-calendars), when loading a Calendar you can set a new Options object and redefine the options you want:
 
     $Calendar = $CalendarFactory->load(
         null,
@@ -22,7 +22,7 @@ Option Name | Default Value | Type
 weekStartsOn| 1 | int
 defaultTimezone| 'Europe/London'| string
 displayTable.tableClass | 'table mycal' | string
-displayTable.tableId | 'MyCal' | string 
+displayTable.tableId | 'MyCal' | string
 displayTable.headerRowClass | 'mycal-header-row' | string
 displayTable.headerClass | 'mycal-header' | string
 displayTable.rowClass | 'mycal-row' | string

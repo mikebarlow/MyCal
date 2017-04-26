@@ -2,7 +2,7 @@
 layout: page
 title: Events
 permalink: /events
-order: 50
+order: 70
 ---
 # Events
 
