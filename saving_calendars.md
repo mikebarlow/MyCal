@@ -4,7 +4,7 @@ title: Saving Calendars
 permalink: /saving-calendars
 order: 40
 ---
-# Save Calendars
+# Saving Calendars
 
 To get started, initiate the Calendar factory along with the Date and Events factories and your chosen integration. Currently only Laravel Eloquent integration is available for database usage and a Null integration for a manual calendar with no saving / loading from a database required.
 
