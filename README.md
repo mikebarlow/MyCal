@@ -1,7 +1,7 @@
 # MyCal
 
 [![Author](http://img.shields.io/badge/author-@mikebarlow-red.svg?style=flat-square)](https://twitter.com/mikebarlow)
-[![Source Code](http://img.shields.io/badge/source-mikebarlow/mycal-brightgreen.svg?style=flat-square)](https://github.com/mikebarlow/mycal)
+[![Docs](https://img.shields.io/badge/docs-mikebarlow.co.uk/MyCal-blue.svg?style=flat-square)](https://mikebarlow.co.uk/MyCal)
 [![Latest Version](https://img.shields.io/github/release/mikebarlow/mycal.svg?style=flat-square)](https://github.com/mikebarlow/mycal/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/mikebarlow/mycal/blob/master/LICENSE)
 [![Build Status](https://img.shields.io/travis/mikebarlow/MyCal/master.svg?style=flat-square)](https://travis-ci.org/mikebarlow/MyCal)
