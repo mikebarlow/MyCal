@@ -12,11 +12,7 @@ If no database integrations are necessary the Null integration can be used.
 
     $CalendarFactory = new \Snscripts\MyCal\CalendarFactory(
         new \Snscripts\MyCal\Integrations\Null\Calendar,
-        new \Snscripts\MyCal\DateFactory(
-            new \Snscripts\MyCal\EventFactory(
-                new \Snscripts\MyCal\Integrations\Null\Event
-            )
-        )
+        new \Snscripts\MyCal\DateFactory
     );
 
 Once setup as above, load up a new calendar by using the Calendar Factory load method

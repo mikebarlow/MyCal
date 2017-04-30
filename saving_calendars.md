@@ -10,11 +10,7 @@ To get started, initiate the Calendar factory along with the Date and Events fac
 
     $CalendarFactory = new \Snscripts\MyCal\CalendarFactory(
         new \Snscripts\MyCal\Integrations\Eloquent\Calendar,
-        new \Snscripts\MyCal\DateFactory(
-            new \Snscripts\MyCal\EventFactory(
-                new \Snscripts\MyCal\Integrations\Eloquent\Event
-            )
-        )
+        new \Snscripts\MyCal\DateFactory
     );
 
 To save a calendar and it's options, initiate the Calendar Factory as above and call the `load` method:

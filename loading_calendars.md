@@ -10,11 +10,7 @@ To get started, initiate the Calendar factory along with the Date and Events fac
 
     $CalendarFactory = new \Snscripts\MyCal\CalendarFactory(
         new \Snscripts\MyCal\Integrations\Eloquent\Calendar,
-        new \Snscripts\MyCal\DateFactory(
-            new \Snscripts\MyCal\EventFactory(
-                new \Snscripts\MyCal\Integrations\Eloquent\Event
-            )
-        )
+        new \Snscripts\MyCal\DateFactory
     );
 
 Loading a saved calendar has been made dead simple. When calling the `load` method on a Calendar Factory, simply set the Calendars ID number as the first parameter of the load method.
