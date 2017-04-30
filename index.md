@@ -15,7 +15,7 @@ order: 10
 
 MyCal is a PSR-2 compliant package used for generating calendars in an object orientated way. Built in are helpers for generating a HTML table for the requested dates.
 
-**This package is still a work in progress and the eventual goal is to add event support to provide an easy to use Calendar / Events Package.**
+**This package is still a work in progress.**
 
 ## Changelog
 
