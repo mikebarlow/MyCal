@@ -10,7 +10,7 @@
 
 MyCal is a PSR-2 compliant package used for generating calendars in an object orientated way. Built in are helpers for generating a HTML table for the requested dates.
 
-**This package is still a work in progress and the eventual goal is to add event support to provide an easy to use Calendar / Events Package.**
+**This package is still a work in progress.**
 
 ## Requirements
 
@@ -74,6 +74,11 @@ Both start and end date should be in `YYYY-MM-DD` format. If you wish to generat
 
     echo $Calendar->display($startDate, $endDate);
 
+To load any saved events simply call `withEvents()` before the `build` or `display` methods.
+
+    $dates = $Calendar->withEvents()->build($startDate, $endDate);
+    echo $Calendar->withEvents()->display($startDate, $endDate);
+
 ### Date collection
 
 Each item in the collection of dates is an instance of a MyCal Date object, these objects come with a few helper methods.
@@ -90,133 +95,27 @@ Each item in the collection of dates is an instance of a MyCal Date object, thes
         // If omitted a DateTimeZone object is created from the timezone option defined on the calendar
     }
 
-## Options
+### Events
 
-Default options are as follows:
+Below are quick code examples of how to load a blank new Event object, populate, save and finally display the start / end times.
 
-    [
-        'weekStartsOn' => Date::MONDAY,
-        'defaultTimezone' => 'Europe/London',
-        'displayTable' => [
-            'tableClass' => 'table mycal',
-            'tableId' => 'MyCal',
-            'headerRowClass' => 'mycal-header-row',
-            'headerClass' => 'mycal-header',
-            'rowClass' => 'mycal-row',
-            'dateClass' => 'mycal-date',
-            'emptyClass' => 'mycal-empty'
-        ],
-        'days' => [
-            0 => 'Sun',
-            1 => 'Mon',
-            2 => 'Tue',
-            3 => 'Wed',
-            4 => 'Thu',
-            5 => 'Fri',
-            6 => 'Sat'
-        ]
-    ];
+    $Event = $CalendarFactory->newEvent();
 
-If you wish to load a calendar with any changes to the default options simply create a new instance of the Options class and define any options you wsh to overwrite. The passed options are merged with defaults to prevent having to define every single option.
+    $Event->name = 'My Awesome Event';
+    $Event->startsOn('2017-04-30')
+        ->startsAt('12:15')
+        ->endsOn('2017-04-30')
+        ->endsAt('21:00');
 
-    $Option = \Snscripts\MyCal\Calendar\Options::set([
-        'defaultTimezone' => 'America/New_York',
-        'weekStartsOn' => Date::SUNDAY
-    ]);
+    $Event->save();
 
-With this Option object stored in `$Option` variable, simply pass this into the `load()` method on the Calendar Factory as the second parameter.
+    $Event->displayStart('jS M Y H:i');
+    $Event->displayEnd('jS M Y H:i');
 
-    $Calendar = $CalendarFactory->load(
-        null,
-        $Option
-    );
 
-## Database Integrations
+## Full Documentation
 
-### Laravel / Eloquent
-
-Out of the box MyCal comes with Eloquent / Laravel integration. If you are using Laravel 5.x you can simply include the MyCal Service Provider in your `config/app.php` file.
-
-    'providers' => [
-        /*
-         * Laravel Framework Service Providers...
-         */
-
-        // ...
-
-        /*
-         * Application Service Providers...
-         */    
-         Snscripts\MyCal\Integrations\Eloquent\MyCalServiceProvider::class
-     ]
-
-Then run `php artisan migrate` in your command line to run your applications migrations. The MyCal Service Provider makes MyCal migrations available to Laravel and will automatically setup the tables needed.
-
-If you are just using Eloquent outside of Laravel you can still use the Eloquent integration however you will need to manually create the database tables.
-
-    -- Create syntax for TABLE 'calendar_extras'
-    CREATE TABLE `calendar_extras` (
-      `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-      `value` text COLLATE utf8_unicode_ci NOT NULL,
-      `calendar_id` int(10) unsigned NOT NULL,
-      `created_at` timestamp NULL DEFAULT NULL,
-      `updated_at` timestamp NULL DEFAULT NULL,
-      PRIMARY KEY (`slug`,`calendar_id`),
-      KEY `calendar_extras_calendar_id_foreign` (`calendar_id`),
-      CONSTRAINT `calendar_extras_calendar_id_foreign` FOREIGN KEY (`calendar_id`) REFERENCES `calendars` (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-    -- Create syntax for TABLE 'calendars'
-    CREATE TABLE `calendars` (
-      `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-      `user_id` int(10) unsigned NOT NULL,
-      `created_at` timestamp NULL DEFAULT NULL,
-      `updated_at` timestamp NULL DEFAULT NULL,
-      PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-    -- Create syntax for TABLE 'options'
-    CREATE TABLE `options` (
-      `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-      `value` text COLLATE utf8_unicode_ci NOT NULL,
-      `calendar_id` int(10) unsigned NOT NULL,
-      `created_at` timestamp NULL DEFAULT NULL,
-      `updated_at` timestamp NULL DEFAULT NULL,
-      PRIMARY KEY (`slug`,`calendar_id`),
-      KEY `options_calendar_id_foreign` (`calendar_id`),
-      CONSTRAINT `options_calendar_id_foreign` FOREIGN KEY (`calendar_id`) REFERENCES `calendars` (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-Then when loading up the calendar factory make sure you use the Eloquent calendar integration.
-
-    $CalendarFactory = new \Snscripts\MyCal\CalendarFactory(
-        new \Snscripts\MyCal\Integrations\Eloquent\Calendar,
-        new \Snscripts\MyCal\DateFactory
-    );
-
-## Saving a Calendar
-
-Once setup with the integration, when you have loaded a blank calendar you can simply call the `save()` method to save the calendar along with the defined options and any extra data stored on the calendar object.
-
-    $Calendar = $CalendarFactory->load();
-
-    $Calendar->name = 'Mikes Calendar';
-    $Calendar->foo = 'bar';
-
-    $Result = $Calendar->save();
-
-$Result will contain the result object describing whether or not the calendar was saved. For documentation on the result object used see [https://github.com/mikebarlow/result](https://github.com/mikebarlow/result).
-
-Once saved, should you wish to save it in a session or in some other database table you can extract the Calendar ID number like so:
-
-    $id = $Calendar->id;
-
-## Loading a Calendar
-
-Assuming you have a calendar saved and have the ID number accessible, you can load up a calendar and all it's options by calling the load method on the Calendar Factory:
-
-    $Calendar = $CalendarFactory->load($id);
+Full documentation for MyCal can be found within the `gh-pages` branch of the repo (https://github.com/mikebarlow/MyCal/) or alternatively at [http://mikebarlow.co.uk/MyCal](http://mikebarlow.co.uk/MyCal).
 
 ## Changelog
 
