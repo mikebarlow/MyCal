@@ -14,8 +14,12 @@ trait Accessible
      */
     public function __get($var)
     {
-        // get the data
-        if (array_key_exists($var, $this->data)) {
+        $varMethod = $this->transformVar($var);
+        $method = 'get' . $varMethod . 'Attr';
+
+        if (method_exists($this, $method)) {
+            return $this->$method();
+        } elseif (array_key_exists($var, $this->data)) {
             return $this->data[$var];
         }
 
@@ -31,7 +35,14 @@ trait Accessible
      */
     public function __set($var, $value)
     {
-        $this->data[$var] = $value;
+        $varMethod = $this->transformVar($var);
+        $method = 'set' . $varMethod . 'Attr';
+
+        if (method_exists($this, $method)) {
+            $this->$method($value);
+        } else {
+            $this->data[$var] = $value;
+        }
     }
 
     /**
@@ -85,7 +96,24 @@ trait Accessible
      */
     public function setAllData($data)
     {
-        $this->data = $data;
+        array_walk(
+            $data,
+            function ($value, $key) {
+                $this->{$key} = $value;
+            }
+        );
+
         return $this;
+    }
+
+    /**
+     * transform var name into method name
+     *
+     * @param string $var
+     * @return string
+     */
+    public function transformVar($var)
+    {
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', strtolower($var))));
     }
 }

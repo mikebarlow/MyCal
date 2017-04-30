@@ -137,4 +137,80 @@ class DateTest extends \PHPUnit_Framework_TestCase
             $Date->isWeekend()
         );
     }
+
+    public function testNewEventSetsUpNewEvent()
+    {
+        $EventMock = new \Snscripts\MyCal\Calendar\Event(
+            $this->createMock('\Snscripts\MyCal\Interfaces\EventInterface'),
+            new \DateTimeZone('Europe/London')
+        );
+
+        $EventFactory = $this->createMock('\Snscripts\MyCal\EventFactory');
+        $EventFactory->method('load')
+            ->willReturn($EventMock);
+
+        $time = mktime('12', '00', '00', '01', '29', '2017');
+        $Date = new Date(
+            $time,
+            new DateTimeZone('Europe/London'),
+            Date::MONDAY,
+            $EventFactory
+        );
+
+        $Event = $Date->newEvent();
+
+        $this->assertInstanceOf(
+            '\Snscripts\MyCal\Calendar\Event',
+            $Event
+        );
+
+        $this->assertSame(
+            '2017-01-29',
+            $Event->displayStart('Y-m-d')
+        );
+    }
+
+    public function testNewEventSetsUpNewEventWithCalendar()
+    {
+        $EventMock = new \Snscripts\MyCal\Calendar\Event(
+            $this->createMock('\Snscripts\MyCal\Interfaces\EventInterface'),
+            new \DateTimeZone('Europe/London')
+        );
+
+        $EventFactory = $this->createMock('\Snscripts\MyCal\EventFactory');
+        $EventFactory->method('load')
+            ->willReturn($EventMock);
+
+        $CalOptions = $this->createMock('\Snscripts\MyCal\Calendar\Options');
+        $CalOptions->method('__get')
+            ->with('defaultTimezone')
+            ->willReturn('America/New_York');
+
+        $Calendar = $this->createMock('\Snscripts\MyCal\Calendar\Calendar');
+        $Calendar->method('getOptions')
+            ->willReturn($CalOptions);
+
+        $time = mktime('12', '00', '00', '01', '29', '2017');
+        $Date = new Date(
+            $time,
+            new DateTimeZone('Europe/London'),
+            Date::MONDAY,
+            $EventFactory
+        );
+        $Date->setCalendar($Calendar);
+
+        $Event = $Date->newEvent();
+
+        $this->assertInstanceOf(
+            '\Snscripts\MyCal\Calendar\Event',
+            $Event
+        );
+
+        // timezone test - this should prove the calendar was set
+        // along with it's timezone
+        $this->assertSame(
+            '2017-01-28 19:00:00',
+            $Event->displayStart('Y-m-d H:i:s')
+        );
+    }
 }

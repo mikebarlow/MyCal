@@ -1,18 +1,23 @@
 <?php
 namespace Snscripts\MyCal\Calendar;
 
-use Snscripts\MyCal\Traits;
 use DateTimeZone;
+use Snscripts\MyCal\Traits;
+use Snscripts\MyCal\EventFactory;
+use Snscripts\MyCal\Calendar\Calendar;
 
 class Date
 {
     use Traits\Accessible;
 
-    protected $timestamp;
+    protected $Calendar;
     protected $datetime;
-    protected $timezone;
+    protected $EventFactory;
     protected $isWeekend;
     protected $isWeekStart;
+    protected $timestamp;
+    protected $Timezone;
+    protected $events;
 
     const
         MONDAY    = 1,
@@ -23,22 +28,32 @@ class Date
         SATURDAY  = 6,
         SUNDAY    = 0;
 
-
     /**
      * setup the date object
      *
      * @param int $timestamp UTC timestamp
      * @param DateTimeZone $timezone
      * @param int $weekStart int corresponding to date of week - equivilant of 'w' format in php.net/date
+     * @param EventFactory $eventFactory
      */
-    public function __construct($timestamp, \DateTimeZone $Timezone, $weekStart)
-    {
+    public function __construct(
+        $timestamp,
+        \DateTimeZone $Timezone,
+        $weekStart,
+        EventFactory $EventFactory = null
+    ) {
         $this->datetime = date('Y-m-d H:i:s', $timestamp);
         $this->isWeekend = $this->setWeekend($this->datetime, $Timezone);
         $this->isWeekStart = $this->setWeekStart($this->datetime, $Timezone, $weekStart);
 
         $this->timestamp = $timestamp;
-        $this->timezone = $Timezone;
+        $this->Timezone = $Timezone;
+
+        if (is_a($EventFactory, EventFactory::class)) {
+            $this->EventFactory = $EventFactory;
+        }
+
+        $this->events = new \Cartalyst\Collections\Collection([]);
     }
 
     /**
@@ -116,9 +131,50 @@ class Date
         if (! empty($Timezone) && is_a($Timezone, 'DateTimeZone')) {
             $DateTime->setTimezone($Timezone);
         } else {
-            $DateTime->setTimezone($this->timezone);
+            $DateTime->setTimezone($this->Timezone);
         }
 
         return $DateTime->format($format);
+    }
+
+    /**
+     * return the events collection
+     *
+     * @return \Cartalyst\Collections\Collection
+     */
+    public function events()
+    {
+        return $this->events;
+    }
+
+    /**
+     * start a new event on this date
+     *
+     * @return Snscripts\MyCal\Calendar\Event
+     */
+    public function newEvent()
+    {
+        $Event = $this->EventFactory->load($this->Timezone);
+        list($date, $time) = explode(' ', $this->datetime);
+        $Event->startsOn($date);
+
+        if (is_a($this->Calendar, Calendar::class)) {
+            $Event->setCalendar($this->Calendar);
+        }
+
+        return $Event;
+    }
+
+    /**
+     * Set the parent Calendar to the Date
+     * required when using Events
+     *
+     * @param Snscripts\MyCal\Calendar\Calendar $Calendar
+     * @return Date $this
+     */
+    public function setCalendar(Calendar $Calendar)
+    {
+        $this->Calendar = $Calendar;
+        return $this;
     }
 }

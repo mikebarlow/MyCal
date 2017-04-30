@@ -12,6 +12,7 @@ class Calendar
     protected $calendarIntegration;
     protected $dateFactory;
     protected $Options;
+    protected $getEvents = false;
 
     /**
      * Setup a new calendar object
@@ -28,6 +29,29 @@ class Calendar
         $this->calendarIntegration = $calendarIntegration;
         $this->dateFactory = $dateFactory;
         $this->Options = $Options;
+    }
+
+    /**
+     * load a new event
+     *
+     * @return Snscripts\MyCal\Calendar\Event
+     * @throws \UnexpectedValueException
+     */
+    public function newEvent()
+    {
+        $EventFactory = $this->dateFactory->getEventFactory();
+
+        if (empty($EventFactory)) {
+            throw new \UnexpectedValueException('No Event Factory was loaded.');
+        }
+
+        $Event = $EventFactory->load(
+            new \DateTimeZone(
+                $this->Options->defaultTimezone
+            )
+        );
+
+        return $Event;
     }
 
     /**
@@ -108,6 +132,7 @@ class Calendar
     /**
      * Get a collection of dates inclusive of given dates
      *
+     * @todo tidy up events section
      * @param string $start Start date to get Y-m-d format
      * @param string $end End date to get Y-m-d format
      * @return \Cartalyst\Collections\Collection
@@ -118,7 +143,68 @@ class Calendar
             $this->getRange($start, $end)
         );
 
-        return new \Cartalyst\Collections\Collection($dates);
+        $dateCollection = new \Cartalyst\Collections\Collection($dates);
+
+        if ($this->withEvents) {
+            $this->withEvents = false;
+
+            $Event = $this->newEvent();
+            $events = $Event->loadRange(
+                $start,
+                $end
+            );
+
+            foreach ($events as $Event) {
+                $start = $Event->displayStart('Y-m-d');
+                $end = $Event->displayEnd('Y-m-d');
+                $DatePeriod = $this->getRange(
+                    $start,
+                    $end
+                );
+
+                foreach ($DatePeriod as $EventDate) {
+                    $eventDateFormat = $EventDate->format('Y-m-d');
+
+                    if ($dateCollection->has($eventDateFormat)) {
+                        $dateCollection->get($eventDateFormat)
+                            ->events()
+                            ->put(
+                                $Event->displayStart('Y-m-d H:i'),
+                                $Event
+                            );
+                    }
+                }
+            }
+
+            // go through and sort the events on each date
+            foreach ($dateCollection as $Date) {
+                $Date->events()->sort(
+                    function ($Event1, $Event2) {
+                        $start1 = $Event1->displayStart('Y-m-d H:i');
+                        $start2 = $Event2->displayStart('Y-m-d H:i');
+
+                        if ($start1 == $start2) {
+                            return 0;
+                        }
+
+                        return ($start1 < $start2) ? -1 : 1;
+                    }
+                );
+            }
+        }
+
+        return $dateCollection;
+    }
+
+    /**
+     * define whether or not to return events for the date range
+     *
+     * @return Calendar $this
+     */
+    public function withEvents()
+    {
+        $this->withEvents = true;
+        return $this;
     }
 
     /**
@@ -165,11 +251,13 @@ class Calendar
         foreach ($range as $date) {
             $date->setTimezone($UTCTime);
 
-            $dates[$date->format('Y-m-d')] = $this->dateFactory->newInstance(
+            $DateObj = $this->dateFactory->newInstance(
                 $date->getTimestamp(),
                 $DateTimeZone,
                 $this->Options->weekStartsOn
             );
+            $DateObj->setCalendar($this);
+            $dates[$date->format('Y-m-d')] = $DateObj;
         }
 
         return $dates;

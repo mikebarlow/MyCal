@@ -16,7 +16,11 @@ class MyCalServiceProvider extends ServiceProvider
             function ($app) {
                 return new \Snscripts\MyCal\CalendarFactory(
                     new \Snscripts\MyCal\Integrations\Eloquent\Calendar,
-                    new \Snscripts\MyCal\DateFactory
+                    new \Snscripts\MyCal\DateFactory(
+                        new \Snscripts\MyCal\EventFactory(
+                            new \Snscripts\MyCal\Integrations\Eloquent\Event
+                        )
+                    )
                 );
             }
         );

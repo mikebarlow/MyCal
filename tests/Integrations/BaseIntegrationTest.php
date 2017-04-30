@@ -19,7 +19,7 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             22,
-            $BaseIntegration->extractId($Calendar)
+            $BaseIntegration->extractVar($Calendar, 'id')
         );
     }
 
@@ -34,7 +34,7 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
         $BaseIntegration = new BaseIntegration;
 
         $this->assertNull(
-            $BaseIntegration->extractId($Calendar)
+            $BaseIntegration->extractVar($Calendar, 'id')
         );
     }
 
@@ -51,13 +51,25 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             'MyCal Tests',
-            $BaseIntegration->extractName($Calendar)
+            $BaseIntegration->extractVar(
+                $Calendar,
+                'name',
+                function ($Object) {
+                    throw new \DomainException('No name set on ' . get_class($Object));
+                }
+            )
         );
 
         $Calendar->name = 'New Name';
         $this->assertSame(
             'New Name',
-            $BaseIntegration->extractName($Calendar)
+            $BaseIntegration->extractVar(
+                $Calendar,
+                'name',
+                function ($Object) {
+                    throw new \DomainException('No name set on ' . get_class($Object));
+                }
+            )
         );
     }
 
@@ -72,38 +84,12 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
         $Calendar = $Factory->load();
 
         $BaseIntegration = new BaseIntegration;
-        $BaseIntegration->extractName($Calendar);
-    }
-
-    public function testExtractUserIdReturnsId()
-    {
-        $Factory = new CalendarFactory(
-            $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
-            $this->createMock('\Snscripts\MyCal\DateFactory')
-        );
-        $Calendar = $Factory->load();
-        $Calendar->user_id = 69;
-
-        $BaseIntegration = new BaseIntegration;
-
-        $this->assertSame(
-            69,
-            $BaseIntegration->extractUserId($Calendar)
-        );
-    }
-
-    public function testExtractUserIdReturnsNullWhenNoIdSet()
-    {
-        $Factory = new CalendarFactory(
-            $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface'),
-            $this->createMock('\Snscripts\MyCal\DateFactory')
-        );
-        $Calendar = $Factory->load();
-
-        $BaseIntegration = new BaseIntegration;
-
-        $this->assertNull(
-            $BaseIntegration->extractUserId($Calendar)
+        $BaseIntegration->extractVar(
+            $Calendar,
+            'name',
+            function ($Object) {
+                throw new \DomainException('No name set on ' . get_class($Object));
+            }
         );
     }
 
@@ -127,7 +113,10 @@ class BaseIntegrationTest extends \PHPUnit_Framework_TestCase
                 'author' => 'Mike Barlow',
                 'array_test' => 'a:3:{i:0;s:3:"foo";i:1;s:3:"bar";i:2;s:6:"foobar";}'
             ],
-            $BaseIntegration->extractData($Calendar)
+            $BaseIntegration->extractData(
+                $Calendar,
+                ['id', 'name', 'user_id']
+            )
         );
     }
 

@@ -7,17 +7,26 @@ use DateTimeZone;
 
 class DateFactoryTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        $this->EventFactoryMock = $this->createMock('\Snscripts\MyCal\EventFactory');
+    }
+
     public function testCanCreateInstance()
     {
         $this->assertInstanceOf(
             'Snscripts\MyCal\DateFactory',
-            new DateFactory
+            new DateFactory(
+                $this->EventFactoryMock
+            )
         );
     }
 
     public function testNewInstanceReturnsDateObject()
     {
-        $Factory = new DateFactory;
+        $Factory = new DateFactory(
+            $this->EventFactoryMock
+        );
 
         $this->assertInstanceOf(
             'Snscripts\MyCal\Calendar\Date',
@@ -26,6 +35,18 @@ class DateFactoryTest extends \PHPUnit_Framework_TestCase
                 new DateTimeZone('Europe/London'),
                 Date::MONDAY
             )
+        );
+    }
+
+    public function testGetEventFactoryReturnsFactory()
+    {
+        $Factory = new DateFactory(
+            $this->EventFactoryMock
+        );
+
+        $this->assertInstanceOf(
+            'Snscripts\MyCal\EventFactory',
+            $Factory->getEventFactory()
         );
     }
 }

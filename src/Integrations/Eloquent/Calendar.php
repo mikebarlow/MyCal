@@ -22,9 +22,9 @@ class Calendar extends BaseIntegration implements CalendarInterface
      * @param Snscripts\MyCal\Calendar $Calendar
      * @return Snscripts\Result\Result $Result
      */
-    public function save(CalendarObj $Calendar)
+    public function save(CalendarObj $CalendarObj)
     {
-        $data = $this->getCalendarData($Calendar);
+        $data = $this->getCalendarData($CalendarObj);
 
         $Calendar = $this->setupModel(
             new $this->calModel,
@@ -74,10 +74,19 @@ class Calendar extends BaseIntegration implements CalendarInterface
     public function getCalendarData(CalendarObj $Calendar)
     {
         return [
-            'id' => $this->extractId($Calendar),
-            'name' => $this->extractName($Calendar),
-            'user_id' => $this->extractUserId($Calendar),
-            'extras' => $this->extractData($Calendar),
+            'id' => $this->extractVar($Calendar, 'id'),
+            'name' => $this->extractVar(
+                $Calendar,
+                'name',
+                function ($Object) {
+                    throw new \DomainException('No name set on the calendar');
+                }
+            ),
+            'user_id' => $this->extractVar($Calendar, 'user_id'),
+            'extras' => $this->extractData(
+                $Calendar,
+                ['id', 'name', 'user_id']
+            ),
             'options' => $this->extractOptions($Calendar)
         ];
     }
@@ -230,7 +239,6 @@ class Calendar extends BaseIntegration implements CalendarInterface
     /**
      * load the calendar and options
      *
-     * @todo refactor for tests
      * @param int $id
      * @return Snscripts\Result\Result $Result
      */

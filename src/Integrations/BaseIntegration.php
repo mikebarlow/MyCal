@@ -6,68 +6,46 @@ use Snscripts\MyCal\Calendar\Calendar;
 class BaseIntegration
 {
     /**
-     * extract the id field from the calendar
+     * generic extract data method
+     * with custom default OptionsMock
      *
-     * @param Snscripts\MyCal\Calendar\Calendar
-     * @return int|null $id
+     * @param object $Object The item we wish to extract from
+     * @param string $var The variable to extract
+     * @param null|closure $default return value if empty - defaults to null|closure accepts $Object as a param
+     * @return mixed $item
      */
-    public function extractId(Calendar $Calendar)
+    public function extractVar($Object, $var, $default = null)
     {
-        $id = $Calendar->id;
+        $item = $Object->{$var};
 
-        if (empty($id)) {
-            return null;
+        if (empty($item)) {
+            if (is_callable($default)) {
+                return $default($Object);
+            }
+            return $default;
         }
 
-        return $id;
-    }
-
-    /**
-     * extract the name field from the calendar
-     *
-     * @param Snscripts\MyCal\Calendar\Calendar
-     * @return string $calName
-     * @throws \DomainException
-     */
-    public function extractName(Calendar $Calendar)
-    {
-        $name = $Calendar->name;
-
-        if (empty($name)) {
-            throw new \DomainException('No Calendar ' . $name . ' set');
-        }
-
-        return $name;
-    }
-
-    /**
-     * extract the id field from the calendar
-     *
-     * @param Snscripts\MyCal\Calendar\Calendar
-     * @return int|null $id
-     */
-    public function extractUserId(Calendar $Calendar)
-    {
-        $user_id = $Calendar->user_id;
-
-        if (empty($user_id)) {
-            return null;
-        }
-
-        return $user_id;
+        return $item;
     }
 
     /**
      * Extract the rest of the data into key => value with
      * any arrays / objects serialized
      *
-     * @param Snscripts\MyCal\Calendar\Calendar
+     * @param object $Object The item we wish to extract from
+     * @param array $ignore Array of vars to ignore
      * @return array
      */
-    public function extractData(Calendar $Calendar)
+    public function extractData($Object, $ignore = [])
     {
-        $data = $Calendar->toArray();
-        unset($data['id'], $data['name'], $data['user_id']);
+        $data = $Object->toArray();
+        array_walk(
+            $ignore,
+            function ($value, $key) use (&$data) {
+                unset($data[$value]);
+            }
+        );
+
         return $this->serializeData($data);
     }
 
