@@ -42,3 +42,14 @@ To load any events for the dates you are loading simply call `withEvents()` meth
     }
 
 MyCal supports events that span multiple days, in those instances an Event object will be created and assigned to each Date object that the Event takes place on.
+
+## Displaying Event Times
+
+As shown briefly in the example above there are two methods available on an Event object to be used when needing to display the start and end times.
+
+    $Event->displayStart();
+    $Event->displayEnd();
+
+Both methods accept one parameter which is the format required for the output. See [http://php.net/date](http://php.net/date) for the characters and formats available.
+
+This method will also handle any date time conversions needed for timezones. The times are automatically converted from UTC to the required timezone as defined by the [Calendar Options](/MyCal/calendar-options).
