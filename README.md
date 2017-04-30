@@ -89,7 +89,7 @@ Each item in the collection of dates is an instance of a MyCal Date object, thes
         var_dump($Date->isWeekend()); // true if date is a saturday or sunday.
         var_dump($Date->isWeekStart()); // true if date matches the week start option defined on the calendar
 
-        echo $Date->display($format, $DateTimeZone = '');
+        echo $Date->display($format);
     }
 
 ### Events
