@@ -90,9 +90,6 @@ Each item in the collection of dates is an instance of a MyCal Date object, thes
         var_dump($Date->isWeekStart()); // true if date matches the week start option defined on the calendar
 
         echo $Date->display($format, $DateTimeZone = '');
-        // $format is the date format to use as described on http://php.net/date
-        // $DateTImeZone should be passed as a DateTimeZone object (http://php.net/datetimezone)
-        // If omitted a DateTimeZone object is created from the timezone option defined on the calendar
     }
 
 ### Events
