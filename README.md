@@ -115,7 +115,7 @@ Below are quick code examples of how to load a blank new Event object, populate,
 
 ## Full Documentation
 
-Full documentation for MyCal can be found within the `gh-pages` branch of the repo (https://github.com/mikebarlow/MyCal/) or alternatively at [http://mikebarlow.co.uk/MyCal](http://mikebarlow.co.uk/MyCal).
+Full documentation for MyCal can be found within the `gh-pages` branch of the repo [https://github.com/mikebarlow/MyCal/](https://github.com/mikebarlow/MyCal/) or alternatively at [http://mikebarlow.co.uk/MyCal](http://mikebarlow.co.uk/MyCal).
 
 ## Changelog
 
