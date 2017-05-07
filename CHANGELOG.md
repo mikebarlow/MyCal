@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.0] - 2017-04-30
+
+* Saving and loading of events
+
 ## [0.3.0] - 2017-01-16
 
 * Added key of the date to Dates Collection in the format of YYYY-MM-DD.
