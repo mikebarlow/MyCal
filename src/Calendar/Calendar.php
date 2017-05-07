@@ -335,9 +335,16 @@ class Calendar
                 $body .= '</tr><tr class="' . $this->Options->displayTable['rowClass'] . '">';
             }
 
-            $body .= '<td class="' . $this->Options->displayTable['dateClass'] . '">' .
-                $Date->display('j') .
-                '</td>';
+            $body .= '<td class="' . $this->Options->displayTable['dateClass'] . '">';
+            $body .= '<div class="date-num"><sup>' . $Date->display('j') . '</sup></div>';
+
+            if ($Date->events()->count() > 0) {
+                $body .= '<div class="mycal-events">';
+
+                $body .= '</div>';
+            }
+
+            $body .= '</td>';
             $first = false;
         }
 

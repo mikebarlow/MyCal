@@ -4,6 +4,7 @@ namespace Snscripts\MyCal\Calendar;
 use DateTimeZone;
 use Snscripts\MyCal\Traits;
 use Snscripts\MyCal\EventFactory;
+use Snscripts\MyCal\Calendar\Event;
 use Snscripts\MyCal\Calendar\Calendar;
 
 class Date
@@ -163,6 +164,18 @@ class Date
         }
 
         return $Event;
+    }
+
+    /**
+     * manually attach a new event to the end of this date
+     *
+     * @param Snscripts\MyCal\Calendar\Event $Event
+     * @return Date $this
+     */
+    public function attachEvent(Event $Event)
+    {
+        $this->events()->push($Event);
+        return $this;
     }
 
     /**
