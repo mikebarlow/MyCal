@@ -1,9 +1,11 @@
 <?php
 namespace Snscripts\MyCal\Calendar;
 
-use Snscripts\MyCal\DateFactory;
-use Snscripts\MyCal\Interfaces\CalendarInterface;
 use Snscripts\MyCal\Traits;
+use Snscripts\MyCal\DateFactory;
+use Cartalyst\Collections\Collection;
+use Snscripts\MyCal\Interfaces\CalendarInterface;
+use Snscripts\MyCal\Interfaces\FormatterInterface;
 
 class Calendar
 {
@@ -12,7 +14,6 @@ class Calendar
     protected $calendarIntegration;
     protected $dateFactory;
     protected $Options;
-    protected $displayFormatter;
     protected $getEvents = false;
     protected $dates = [];
 
@@ -120,7 +121,7 @@ class Calendar
      * @param string $end End date to get Y-m-d format
      * @return string
      */
-    public function display($start, $end)
+    public function _display($start, $end)
     {
         $dates = $this->dates($start, $end)->get();
 
@@ -130,6 +131,20 @@ class Calendar
         );
 
         return $this->getTableWrapper($header . $content);
+    }
+
+    /**
+     * given a formatter and the date collection
+     * display a calendar table
+     *
+     * @param FormatterInterface $Formatter
+     * @param \Cartalyst\Collections\Collection $Dates
+     * @return string
+     */
+    public function display(FormatterInterface $Formatter, Collection $Dates)
+    {
+
+
     }
 
     /**
