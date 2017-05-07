@@ -12,7 +12,9 @@ class Calendar
     protected $calendarIntegration;
     protected $dateFactory;
     protected $Options;
+    protected $displayFormatter;
     protected $getEvents = false;
+    protected $dates = [];
 
     /**
      * Setup a new calendar object
@@ -113,13 +115,14 @@ class Calendar
     /**
      * display html table calendar of given dates
      *
+     * @todo refactor - https://github.com/mikebarlow/MyCal/issues/8
      * @param string $start Start date to get Y-m-d format
      * @param string $end End date to get Y-m-d format
      * @return string
      */
     public function display($start, $end)
     {
-        $dates = $this->build($start, $end);
+        $dates = $this->dates($start, $end)->get();
 
         $header = $this->getTableHeader();
         $content = $this->getTableBody(
@@ -132,15 +135,15 @@ class Calendar
     /**
      * Get a collection of dates inclusive of given dates
      *
-     * @todo tidy up events section
-     * @param string $start Start date to get Y-m-d format
-     * @param string $end End date to get Y-m-d format
      * @return \Cartalyst\Collections\Collection
      */
-    public function build($start, $end)
+    public function get()
     {
+        // @todo
+        // check for start / end dates, throw exception
+
         $dates = $this->processDateRange(
-            $this->getRange($start, $end)
+            $this->getRange($this->dates['start'], $this->dates['end'])
         );
 
         $dateCollection = new \Cartalyst\Collections\Collection($dates);
@@ -204,6 +207,23 @@ class Calendar
     public function withEvents()
     {
         $this->withEvents = true;
+        return $this;
+    }
+
+    /**
+     * set the start / end dates you want to get
+     *
+     * @param string $start Start date to get Y-m-d format
+     * @param string $end End date to get Y-m-d format
+     * @return Calendar $this
+     */
+    public function dates($start, $end)
+    {
+        $this->dates = [
+            'start' => $start,
+            'end' => $end
+        ];
+
         return $this;
     }
 

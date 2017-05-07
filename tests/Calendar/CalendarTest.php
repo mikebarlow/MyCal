@@ -222,7 +222,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             \Snscripts\MyCal\Calendar\Options::set()
         );
 
-        $Dates = $Calendar->build('2016-12-01', '2016-12-05');
+        $Dates = $Calendar->dates('2016-12-01', '2016-12-05')->get();
 
         $this->assertInstanceOf(
             'Cartalyst\Collections\Collection',
@@ -281,7 +281,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             \Snscripts\MyCal\Calendar\Options::set()
         );
 
-        $Dates = $Calendar->build('2016-12-01', '2016-12-05');
+        $Dates = $Calendar->dates('2016-12-01', '2016-12-05')->get();
 
         $this->assertSame(
             '<tbody><tr class="mycal-row"><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-date"><div class="date-num"><sup>1</sup></div></td><td class="mycal-date"><div class="date-num"><sup>2</sup></div></td><td class="mycal-date"><div class="date-num"><sup>3</sup></div></td><td class="mycal-date"><div class="date-num"><sup>4</sup></div></td></tr><tr class="mycal-row"><td class="mycal-date"><div class="date-num"><sup>5</sup></div></td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td></tr></tbody>',
@@ -299,7 +299,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             \Snscripts\MyCal\Calendar\Options::set(['weekStartsOn' => Date::SUNDAY])
         );
 
-        $Dates = $Calendar->build('2016-12-01', '2016-12-05');
+        $Dates = $Calendar->dates('2016-12-01', '2016-12-05')->get();
 
         $this->assertSame(
             '<tbody><tr class="mycal-row"><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-date"><div class="date-num"><sup>1</sup></div></td><td class="mycal-date"><div class="date-num"><sup>2</sup></div></td><td class="mycal-date"><div class="date-num"><sup>3</sup></div></td></tr><tr class="mycal-row"><td class="mycal-date"><div class="date-num"><sup>4</sup></div></td><td class="mycal-date"><div class="date-num"><sup>5</sup></div></td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td></tr></tbody>',
