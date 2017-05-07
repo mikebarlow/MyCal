@@ -136,11 +136,13 @@ class Calendar
      * Get a collection of dates inclusive of given dates
      *
      * @return \Cartalyst\Collections\Collection
+     * @throws \BadMethodCallException
      */
     public function get()
     {
-        // @todo
-        // check for start / end dates, throw exception
+        if (empty($this->dates['start']) || empty($this->dates['end'])) {
+            throw new \BadMethodCallException('Start and end dates are required');
+        }
 
         $dates = $this->processDateRange(
             $this->getRange($this->dates['start'], $this->dates['end'])

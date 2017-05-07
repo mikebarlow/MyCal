@@ -235,6 +235,22 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testBuildThrowsExceptionWhenNoDatesSet()
+    {
+        $this->expectException('\BadMethodCallException');
+        $this->expectExceptionMessage('Start and end dates are required');
+
+        $CalendarIntegration = $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+
+        $Calendar = new Calendar(
+            $CalendarIntegration,
+            $this->DateFactoryMock,
+            $this->OptionsMock
+        );
+
+        $Calendar->get();
+    }
+
     public function testGetTableHeaderReturnsCorrectHtmlForHeaderRow()
     {
         $Calendar = new Calendar(
