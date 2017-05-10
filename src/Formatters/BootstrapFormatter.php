@@ -92,7 +92,7 @@ class BootstrapFormatter implements FormatterInterface
     {
         $cell = '<td class="mycal-date">';
         $cell .= '<div class="date-num"><sup>' . $Date->display('j') . '</sup></div>';
-        $cell .= $parsedEvents;
+        $cell .= '<div class="events">' . $parsedEvents . '</div>';
         $cell .= '</td>';
         return $cell;
     }
@@ -115,6 +115,10 @@ class BootstrapFormatter implements FormatterInterface
      */
     public function parseEvent(Event $Event)
     {
-        return '';
+        $display = '<span class="badge badge-primary">';
+        $display .= $Event->name . ': ';
+        $display .= $Event->displayStart('H:i') . ' - ' . $Event->displayEnd('H:i');
+        $display .= '</span>';
+        return $display;
     }
 }
