@@ -8,11 +8,12 @@ use Snscripts\MyCal\Calendar\Calendar;
 interface FormatterInterface
 {
     /**
-     * constructor
+     * set the calendar object
+     * should set to protected $Calendar on the formatter
      *
      * @param Calendar $Calendar
      */
-    public function __construct(Calendar $Calendar);
+    public function setCalendar(Calendar $Calendar);
 
     /**
      * process table

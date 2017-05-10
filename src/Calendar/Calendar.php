@@ -276,6 +276,8 @@ class Calendar
      */
     public function display(FormatterInterface $Formatter, Collection $Dates)
     {
+        $Formatter->setCalendar($this);
+
         // process the header
         $header = $this->getTableHeader($Formatter);
         $body = $this->getTableBody($Formatter, $Dates);

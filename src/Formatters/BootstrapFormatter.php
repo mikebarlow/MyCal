@@ -14,11 +14,11 @@ class BootstrapFormatter implements FormatterInterface
     protected $Calendar;
 
     /**
-     * constructor
+     * set the calendar
      *
      * @param Calendar $Calendar
      */
-    public function __construct(Calendar $Calendar)
+    public function setCalendar(Calendar $Calendar)
     {
         $this->Calendar = $Calendar;
     }
