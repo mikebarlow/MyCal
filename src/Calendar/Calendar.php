@@ -136,8 +136,8 @@ class Calendar
 
             $Event = $this->newEvent();
             $events = $Event->loadRange(
-                $start,
-                $end
+                $this->dates['start'],
+                $this->dates['end']
             );
 
             foreach ($events as $Event) {
