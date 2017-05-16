@@ -14,7 +14,7 @@ To create and save an event, you first need an instance of the Event object, thi
     $Event = $Calendar->newEvent();
 
     // New event object - method two
-    $Dates = $Calendar->build('2017-01-01', '2017-01-31');
+    $Dates = $Calendar->dates('2017-01-01', '2017-01-31')->get();
     $Date = $Dates->get('2017-01-10');
 
     $Event = $Date->newEvent();

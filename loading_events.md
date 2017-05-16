@@ -6,12 +6,13 @@ order: 90
 ---
 # Loading Events
 
-To load events for an entire date range, simply set `withEvents()` method when calling the `build` method on a Calendar object.
+To load events for an entire date range, simply call the `withEvents()` method when loading a date collection:
 
     $Calendar = $CalendarFactory->load($calendarId);
     $dates = $Calendar
         ->withEvents()
-        ->build('2017-01-01', '2017-01-31'); // Returns date collection
+        ->dates('2017-01-01', '2017-01-31')
+        ->get(); // Returns date collection
 
 If you have an Event id and wish to load just that specific event object you can do so via the Calendar Factory
 
@@ -27,7 +28,7 @@ To load a new event there are two methods to do this:
     $Event = $Calendar->newEvent();
 
     // New event object - method two
-    $Dates = $Calendar->build('2017-01-01', '2017-01-31');
+    $Dates = $Calendar->dates('2017-01-01', '2017-01-31')->get();
     $Date = $Dates->get('2017-01-10');
 
     $Event = $Date->newEvent();

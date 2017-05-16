@@ -21,13 +21,6 @@ Option Name | Default Value | Type
 ------------|---------------|-----
 weekStartsOn| 1 | int
 defaultTimezone| 'Europe/London'| string
-displayTable.tableClass | 'table mycal' | string
-displayTable.tableId | 'MyCal' | string
-displayTable.headerRowClass | 'mycal-header-row' | string
-displayTable.headerClass | 'mycal-header' | string
-displayTable.rowClass | 'mycal-row' | string
-displayTable.dateClass | 'mycal-date' | string
-displayTable.emptyClass | 'mycal-empty' | string
 days.0 | 'Sun' | string
 days.1 | 'Mon' | string
 days.2 | 'Tue' | string
