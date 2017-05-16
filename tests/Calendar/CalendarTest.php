@@ -96,15 +96,6 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             [
                 'weekStartsOn' => 1,
                 'defaultTimezone' => 'Europe/London',
-                'displayTable' => [
-                    'tableClass' => 'table mycal',
-                    'tableId' => 'MyCal',
-                    'headerRowClass' => 'mycal-header-row',
-                    'headerClass' => 'mycal-header',
-                    'rowClass' => 'mycal-row',
-                    'dateClass' => 'mycal-date',
-                    'emptyClass' => 'mycal-empty'
-                ],
                 'days' => [
                     0 => 'Sun',
                     1 => 'Mon',
@@ -143,15 +134,6 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             [
                 'weekStartsOn' => 0,
                 'defaultTimezone' => 'America/New_York',
-                'displayTable' => [
-                    'tableClass' => 'table mycal',
-                    'tableId' => 'MyCal',
-                    'headerRowClass' => 'mycal-header-row',
-                    'headerClass' => 'mycal-header',
-                    'rowClass' => 'mycal-row',
-                    'dateClass' => 'mycal-date',
-                    'emptyClass' => 'mycal-empty'
-                ],
                 'days' => [
                     0 => 'Sun',
                     1 => 'Mon',
@@ -222,7 +204,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             \Snscripts\MyCal\Calendar\Options::set()
         );
 
-        $Dates = $Calendar->build('2016-12-01', '2016-12-05');
+        $Dates = $Calendar->dates('2016-12-01', '2016-12-05')->get();
 
         $this->assertInstanceOf(
             'Cartalyst\Collections\Collection',
@@ -235,6 +217,22 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testBuildThrowsExceptionWhenNoDatesSet()
+    {
+        $this->expectException('\BadMethodCallException');
+        $this->expectExceptionMessage('Start and end dates are required');
+
+        $CalendarIntegration = $this->createMock('\Snscripts\MyCal\Interfaces\CalendarInterface');
+
+        $Calendar = new Calendar(
+            $CalendarIntegration,
+            $this->DateFactoryMock,
+            $this->OptionsMock
+        );
+
+        $Calendar->get();
+    }
+
     public function testGetTableHeaderReturnsCorrectHtmlForHeaderRow()
     {
         $Calendar = new Calendar(
@@ -245,11 +243,18 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             \Snscripts\MyCal\Calendar\Options::set()
         );
 
-        $expected = '<thead><tr class="mycal-header-row"><td class="mycal-header">Mon</td><td class="mycal-header">Tue</td><td class="mycal-header">Wed</td><td class="mycal-header">Thu</td><td class="mycal-header">Fri</td><td class="mycal-header">Sat</td><td class="mycal-header">Sun</td></tr></thead>';
+        $expected = '<tr class="mycal-header-row"><th class="mycal-header">Mon</th><th class="mycal-header">Tue</th><th class="mycal-header">Wed</th><th class="mycal-header">Thu</th><th class="mycal-header">Fri</th><th class="mycal-header">Sat</th><th class="mycal-header">Sun</th></tr>';
+
+        $Formatter = new \Snscripts\MyCal\Formatters\BootstrapFormatter;
+        $Formatter->setCalendar(
+            $Calendar
+        );
 
         $this->assertSame(
             $expected,
-            $Calendar->getTableHeader()
+            $Calendar->getTableHeader(
+                $Formatter
+            )
         );
     }
 
@@ -263,11 +268,18 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             \Snscripts\MyCal\Calendar\Options::set(['weekStartsOn' => Date::SUNDAY])
         );
 
-        $expected = '<thead><tr class="mycal-header-row"><td class="mycal-header">Sun</td><td class="mycal-header">Mon</td><td class="mycal-header">Tue</td><td class="mycal-header">Wed</td><td class="mycal-header">Thu</td><td class="mycal-header">Fri</td><td class="mycal-header">Sat</td></tr></thead>';
+        $expected = '<tr class="mycal-header-row"><th class="mycal-header">Sun</th><th class="mycal-header">Mon</th><th class="mycal-header">Tue</th><th class="mycal-header">Wed</th><th class="mycal-header">Thu</th><th class="mycal-header">Fri</th><th class="mycal-header">Sat</th></tr>';
+
+        $Formatter = new \Snscripts\MyCal\Formatters\BootstrapFormatter;
+        $Formatter->setCalendar(
+            $Calendar
+        );
 
         $this->assertSame(
             $expected,
-            $Calendar->getTableHeader()
+            $Calendar->getTableHeader(
+                $Formatter
+            )
         );
     }
 
@@ -281,11 +293,19 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             \Snscripts\MyCal\Calendar\Options::set()
         );
 
-        $Dates = $Calendar->build('2016-12-01', '2016-12-05');
+        $Dates = $Calendar->dates('2016-12-01', '2016-12-05')->get();
+
+        $Formatter = new \Snscripts\MyCal\Formatters\BootstrapFormatter;
+        $Formatter->setCalendar(
+            $Calendar
+        );
 
         $this->assertSame(
-            '<tbody><tr class="mycal-row"><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-date">1</td><td class="mycal-date">2</td><td class="mycal-date">3</td><td class="mycal-date">4</td></tr><tr class="mycal-row"><td class="mycal-date">5</td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td></tr></tbody>',
-            $Calendar->getTableBody($Dates)
+            '<tr class="mycal-row"><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-date"><div class="date-num"><sup>1</sup></div><div class="events"></div></td><td class="mycal-date"><div class="date-num"><sup>2</sup></div><div class="events"></div></td><td class="mycal-date"><div class="date-num"><sup>3</sup></div><div class="events"></div></td><td class="mycal-date"><div class="date-num"><sup>4</sup></div><div class="events"></div></td></tr><tr class="mycal-row"><td class="mycal-date"><div class="date-num"><sup>5</sup></div><div class="events"></div></td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td></tr>',
+            $Calendar->getTableBody(
+                $Formatter,
+                $Dates
+            )
         );
     }
 
@@ -299,11 +319,19 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             \Snscripts\MyCal\Calendar\Options::set(['weekStartsOn' => Date::SUNDAY])
         );
 
-        $Dates = $Calendar->build('2016-12-01', '2016-12-05');
+        $Dates = $Calendar->dates('2016-12-01', '2016-12-05')->get();
+
+        $Formatter = new \Snscripts\MyCal\Formatters\BootstrapFormatter;
+        $Formatter->setCalendar(
+            $Calendar
+        );
 
         $this->assertSame(
-            '<tbody><tr class="mycal-row"><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-date">1</td><td class="mycal-date">2</td><td class="mycal-date">3</td></tr><tr class="mycal-row"><td class="mycal-date">4</td><td class="mycal-date">5</td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td></tr></tbody>',
-            $Calendar->getTableBody($Dates)
+            '<tr class="mycal-row"><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-date"><div class="date-num"><sup>1</sup></div><div class="events"></div></td><td class="mycal-date"><div class="date-num"><sup>2</sup></div><div class="events"></div></td><td class="mycal-date"><div class="date-num"><sup>3</sup></div><div class="events"></div></td></tr><tr class="mycal-row"><td class="mycal-date"><div class="date-num"><sup>4</sup></div><div class="events"></div></td><td class="mycal-date"><div class="date-num"><sup>5</sup></div><div class="events"></div></td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td></tr>',
+            $Calendar->getTableBody(
+                $Formatter,
+                $Dates
+            )
         );
     }
 
@@ -317,9 +345,18 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             \Snscripts\MyCal\Calendar\Options::set(['weekStartsOn' => Date::SUNDAY])
         );
 
+        $Formatter = new \Snscripts\MyCal\Formatters\BootstrapFormatter;
+        $Formatter->setCalendar(
+            $Calendar
+        );
+
         $this->assertSame(
-            '<table class="table mycal" id="MyCal"><tr><td>My Test Row</td></tr></table>',
-            $Calendar->getTableWrapper('<tr><td>My Test Row</td></tr>')
+            '<table class="table mycal" id="MyCal"><thead><tr><th>Test Header</th></tr></thead><tbody><tr><td>My Test Row</td></tr></tbody></table>',
+            $Calendar->getTableWrapper(
+                $Formatter,
+                '<tr><th>Test Header</th></tr>',
+                '<tr><td>My Test Row</td></tr>'
+            )
         );
     }
 
@@ -333,9 +370,14 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
             \Snscripts\MyCal\Calendar\Options::set()
         );
 
+        $Dates = $Calendar->dates('2016-12-01', '2016-12-05')->get();
+
         $this->assertSame(
-            '<table class="table mycal" id="MyCal"><thead><tr class="mycal-header-row"><td class="mycal-header">Mon</td><td class="mycal-header">Tue</td><td class="mycal-header">Wed</td><td class="mycal-header">Thu</td><td class="mycal-header">Fri</td><td class="mycal-header">Sat</td><td class="mycal-header">Sun</td></tr></thead><tbody><tr class="mycal-row"><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-date">1</td><td class="mycal-date">2</td><td class="mycal-date">3</td><td class="mycal-date">4</td></tr><tr class="mycal-row"><td class="mycal-date">5</td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td></tr></tbody></table>',
-            $Calendar->display('2016-12-01', '2016-12-05')
+            '<table class="table mycal" id="MyCal"><thead><tr class="mycal-header-row"><th class="mycal-header">Mon</th><th class="mycal-header">Tue</th><th class="mycal-header">Wed</th><th class="mycal-header">Thu</th><th class="mycal-header">Fri</th><th class="mycal-header">Sat</th><th class="mycal-header">Sun</th></tr></thead><tbody><tr class="mycal-row"><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-date"><div class="date-num"><sup>1</sup></div><div class="events"></div></td><td class="mycal-date"><div class="date-num"><sup>2</sup></div><div class="events"></div></td><td class="mycal-date"><div class="date-num"><sup>3</sup></div><div class="events"></div></td><td class="mycal-date"><div class="date-num"><sup>4</sup></div><div class="events"></div></td></tr><tr class="mycal-row"><td class="mycal-date"><div class="date-num"><sup>5</sup></div><div class="events"></div></td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td><td class="mycal-empty"> &nbsp; </td></tr></tbody></table>',
+            $Calendar->display(
+                new \Snscripts\MyCal\Formatters\BootstrapFormatter,
+                $Dates
+            )
         );
     }
 
@@ -434,15 +476,6 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
                     'options' => [
                         'weekStartsOn' => 1,
                         'defaultTimezone' => 'Europe/London',
-                        'displayTable' => [
-                            'tableClass' => 'table mycal',
-                            'tableId' => 'MyCal',
-                            'headerRowClass' => 'mycal-header-row',
-                            'headerClass' => 'mycal-header',
-                            'rowClass' => 'mycal-row',
-                            'dateClass' => 'mycal-date',
-                            'emptyClass' => 'mycal-empty'
-                        ],
                         'days' => [
                             0 => 'Sun',
                             1 => 'Mon',

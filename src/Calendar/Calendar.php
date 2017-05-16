@@ -1,9 +1,11 @@
 <?php
 namespace Snscripts\MyCal\Calendar;
 
-use Snscripts\MyCal\DateFactory;
-use Snscripts\MyCal\Interfaces\CalendarInterface;
 use Snscripts\MyCal\Traits;
+use Snscripts\MyCal\DateFactory;
+use Cartalyst\Collections\Collection;
+use Snscripts\MyCal\Interfaces\CalendarInterface;
+use Snscripts\MyCal\Interfaces\FormatterInterface;
 
 class Calendar
 {
@@ -13,6 +15,7 @@ class Calendar
     protected $dateFactory;
     protected $Options;
     protected $getEvents = false;
+    protected $dates = [];
 
     /**
      * Setup a new calendar object
@@ -111,36 +114,19 @@ class Calendar
     }
 
     /**
-     * display html table calendar of given dates
-     *
-     * @param string $start Start date to get Y-m-d format
-     * @param string $end End date to get Y-m-d format
-     * @return string
-     */
-    public function display($start, $end)
-    {
-        $dates = $this->build($start, $end);
-
-        $header = $this->getTableHeader();
-        $content = $this->getTableBody(
-            $dates
-        );
-
-        return $this->getTableWrapper($header . $content);
-    }
-
-    /**
      * Get a collection of dates inclusive of given dates
      *
-     * @todo tidy up events section
-     * @param string $start Start date to get Y-m-d format
-     * @param string $end End date to get Y-m-d format
      * @return \Cartalyst\Collections\Collection
+     * @throws \BadMethodCallException
      */
-    public function build($start, $end)
+    public function get()
     {
+        if (empty($this->dates['start']) || empty($this->dates['end'])) {
+            throw new \BadMethodCallException('Start and end dates are required');
+        }
+
         $dates = $this->processDateRange(
-            $this->getRange($start, $end)
+            $this->getRange($this->dates['start'], $this->dates['end'])
         );
 
         $dateCollection = new \Cartalyst\Collections\Collection($dates);
@@ -150,8 +136,8 @@ class Calendar
 
             $Event = $this->newEvent();
             $events = $Event->loadRange(
-                $start,
-                $end
+                $this->dates['start'],
+                $this->dates['end']
             );
 
             foreach ($events as $Event) {
@@ -204,6 +190,23 @@ class Calendar
     public function withEvents()
     {
         $this->withEvents = true;
+        return $this;
+    }
+
+    /**
+     * set the start / end dates you want to get
+     *
+     * @param string $start Start date to get Y-m-d format
+     * @param string $end End date to get Y-m-d format
+     * @return Calendar $this
+     */
+    public function dates($start, $end)
+    {
+        $this->dates = [
+            'start' => $start,
+            'end' => $end
+        ];
+
         return $this;
     }
 
@@ -264,34 +267,51 @@ class Calendar
     }
 
     /**
-     * given the content of the table wrap in a table
+     * given a formatter and the date collection
+     * display a calendar table
      *
-     * @param string $content Table header and body to display
+     * @param FormatterInterface $Formatter
+     * @param \Cartalyst\Collections\Collection $Dates
      * @return string
      */
-    public function getTableWrapper($content)
+    public function display(FormatterInterface $Formatter, Collection $Dates)
     {
-        return '<table class="' . $this->Options->displayTable['tableClass']
-            . '" id="' . $this->Options->displayTable['tableId'] . '">' .
-            $content .
-            '</table>';
+        $Formatter->setCalendar($this);
+
+        // process the header
+        $header = $this->getTableHeader($Formatter);
+        $body = $this->getTableBody($Formatter, $Dates);
+
+        return $this->getTableWrapper($Formatter, $header, $body);
+    }
+
+
+    /**
+     * given the content of the table wrap in a table
+     *
+     * @param FormatterInterface $Formatter
+     * @param string $header
+     * @param string $, $body
+     * @return string
+     */
+    public function getTableWrapper(FormatterInterface $Formatter, $header, $body)
+    {
+        return $Formatter->parseTable($header, $body);
     }
 
     /**
      * build the days header for the table
      *
+     * @param FormatterInterface $Formatter
      * @return string
      */
-    public function getTableHeader()
+    public function getTableHeader(FormatterInterface $Formatter)
     {
-        $header = '<thead><tr class="' . $this->Options->displayTable['headerRowClass'] . '">';
+        $day = $this->getOptions()->weekStartsOn;
 
-        $day = $this->Options->weekStartsOn;
-
+        $cells = '';
         for ($i = 0; $i <= 6; $i++) {
-            $header .= '<td class="' . $this->Options->displayTable['headerClass'] . '">' .
-                $this->Options->days[$day] .
-                '</td>';
+            $cells .= $Formatter->parseHeaderCell($day);
 
             if ($day == 6) {
                 $day = 0;
@@ -300,48 +320,53 @@ class Calendar
             }
         }
 
-        $header .= '</tr></thead>';
-        return $header;
+        return $Formatter->parseHeaderRow($cells);
     }
 
     /**
      * generate the calendar table dates
      *
      * @todo Refactor this majorly, messy and got to be a better way to do it
+     * @param FormatterInterface $Formatter
      * @param \Cartalyst\Collections\Collection $dates Collection of dates to display
      * @return string
      */
-    public function getTableBody($dates)
+    public function getTableBody(FormatterInterface $Formatter, $dates)
     {
-        $body = '<tbody><tr class="' . $this->Options->displayTable['rowClass'] . '">';
+        $day = $startOn = intval($this->getOptions()->weekStartsOn);
+        $rows = '';
+        $cells = '';
 
-        $day = $startOn = intval($this->Options->weekStartsOn);
-        $first = true;
+        // pad the start row
+        $firstDay = $dates->first()->display('w');
+        while ($day != $firstDay) {
+            $cells .= $Formatter->parseEmptyCell();
 
-        foreach ($dates as $Date) {
-            if ($first && ! $Date->isWeekStart()) {
-                $dateDay = $Date->display('w');
-
-                while ($day != $dateDay) {
-                    $body .= '<td class="' . $this->Options->displayTable['emptyClass'] . '"> &nbsp; </td>';
-
-                    if ($day == 6) {
-                        $day = 0;
-                    } else {
-                        $day++;
-                    }
-                }
-            } elseif (!$first && $Date->isWeekStart()) {
-                $body .= '</tr><tr class="' . $this->Options->displayTable['rowClass'] . '">';
+            if ($day == 6) {
+                $day = 0;
+            } else {
+                $day++;
             }
-
-            $body .= '<td class="' . $this->Options->displayTable['dateClass'] . '">' .
-                $Date->display('j') .
-                '</td>';
-            $first = false;
         }
 
-        // work out if we need to pad the row
+        // process the date collection
+        foreach ($dates as $Date) {
+            if ($Date->isWeekStart()) {
+                $rows .= $Formatter->parseDateRow($cells);
+                $cells = '';
+            }
+
+            $events = '';
+            if ($Date->events()->count() > 0) {
+                foreach ($Date->events() as $Event) {
+                    $events .= $Formatter->parseEvent($Event);
+                }
+            }
+
+            $cells .= $Formatter->parseDateCell($Date, $events);
+        }
+
+        // pad the end row
         $day = $dates->last()->display('w');
         if ($day == 6) {
             $day = 0;
@@ -349,8 +374,8 @@ class Calendar
             $day++;
         }
 
-        while ($day !== $startOn) {
-            $body .= '<td class="' . $this->Options->displayTable['emptyClass'] . '"> &nbsp; </td>';
+        while ($day != $startOn) {
+            $cells .= $Formatter->parseEmptyCell();
 
             if ($day == 6) {
                 $day = 0;
@@ -359,7 +384,9 @@ class Calendar
             }
         }
 
-        return $body . '</tr></tbody>';
+        $rows .= $Formatter->parseDateRow($cells);
+
+        return $rows;
     }
 
     /**

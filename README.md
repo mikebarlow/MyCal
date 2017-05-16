@@ -68,22 +68,27 @@ Once setup as above, load up a new calendar by using the Calendar Factory load m
 
 This creates a new Calendar object with default options. You can then generate a collection of dates by calling
 
-    $dates = $Calendar->build($startDate, $endDate);
+    $dates = $Calendar->dates($startDate, $endDate)->get();
 
-Both start and end date should be in `YYYY-MM-DD` format. If you wish to generate a html table for the dates automatically you can call:
+Both start and end date should be in `YYYY-MM-DD` format. If you wish to generate a html table for the dates automatically you can pass the date collection from the above example into the display method along with a formatter object.
 
-    echo $Calendar->display($startDate, $endDate);
+    echo $Calendar->display(
+        new \Snscripts\MyCal\Formatters\BootstrapFormatter,
+        $dates
+    );
 
-To load any saved events simply call `withEvents()` before the `build` or `display` methods.
+To load any saved events simply call `withEvents()` before the `get`.
 
-    $dates = $Calendar->withEvents()->build($startDate, $endDate);
-    echo $Calendar->withEvents()->display($startDate, $endDate);
+    $dates = $Calendar
+        ->dates($startDate, $endDate)
+        ->withEvents()
+        ->get();
 
 ### Date collection
 
 Each item in the collection of dates is an instance of a MyCal Date object, these objects come with a few helper methods.
 
-    $dates = $Calendar->build($startDate, $endDate);
+    $dates = $Calendar->dates($startDate, $endDate)->get();
     foreach ($dates as $Date) {
 
         var_dump($Date->isWeekend()); // true if date is a saturday or sunday.

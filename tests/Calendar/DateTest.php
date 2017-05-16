@@ -2,6 +2,7 @@
 namespace Snscripts\MyCal\Tests\Calendar;
 
 use Snscripts\MyCal\Calendar\Date;
+use Snscripts\MyCal\Calendar\Event;
 use DateTimeZone;
 
 class DateTest extends \PHPUnit_Framework_TestCase
@@ -211,6 +212,33 @@ class DateTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             '2017-01-28 19:00:00',
             $Event->displayStart('Y-m-d H:i:s')
+        );
+    }
+
+    public function testAttachEventAddsEventToCollection()
+    {
+        $time = mktime('12', '00', '00', '10', '24', '2016');
+        $Date = new Date(
+            $time,
+            new DateTimeZone('Europe/London'),
+            Date::MONDAY
+        );
+
+        $this->assertSame(
+            0,
+            $Date->events()->count()
+        );
+
+        $Event = new Event(
+            $this->createMock('\Snscripts\MyCal\Interfaces\EventInterface'),
+            new DateTimeZone('Europe/London')
+        );
+
+        $Date->attachEvent($Event);
+
+        $this->assertSame(
+            1,
+            $Date->events()->count()
         );
     }
 }

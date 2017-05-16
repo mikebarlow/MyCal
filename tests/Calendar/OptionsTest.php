@@ -22,15 +22,6 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
             [
                 'weekStartsOn' => 1,
                 'defaultTimezone' => 'Europe/London',
-                'displayTable' => [
-                    'tableClass' => 'table mycal',
-                    'tableId' => 'MyCal',
-                    'headerRowClass' => 'mycal-header-row',
-                    'headerClass' => 'mycal-header',
-                    'rowClass' => 'mycal-row',
-                    'dateClass' => 'mycal-date',
-                    'emptyClass' => 'mycal-empty'
-                ],
                 'days' => [
                     0 => 'Sun',
                     1 => 'Mon',
