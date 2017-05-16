@@ -3,9 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.5.0] - TBC
+## [0.5.0] - 2017-05-16
 
 * Added `attachEvent()` method to Date object to allow adding manual events easier.
+* Changed the API for generating date collections
+* Changed how to display a calendar
+* Added Formatters for controlling how calendar display looks
 
 ## [0.4.0] - 2017-04-30
 
