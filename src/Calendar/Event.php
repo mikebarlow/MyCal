@@ -2,12 +2,12 @@
 namespace Snscripts\MyCal\Calendar;
 
 use DateTimeZone;
-use Snscripts\MyCal\Traits;
+use Snscripts\GetSet\GetSet;
 use Snscripts\MyCal\Interfaces\EventInterface;
 
 class Event
 {
-    use Traits\Accessible;
+    use GetSet;
 
     /**
      * Parent Calendar object, used when saving events

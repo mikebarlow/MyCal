@@ -1,7 +1,7 @@
 <?php
 namespace Snscripts\MyCal\Calendar;
 
-use Snscripts\MyCal\Traits;
+use Snscripts\GetSet\GetSet;
 use Snscripts\MyCal\DateFactory;
 use Cartalyst\Collections\Collection;
 use Snscripts\MyCal\Interfaces\CalendarInterface;
@@ -9,7 +9,7 @@ use Snscripts\MyCal\Interfaces\FormatterInterface;
 
 class Calendar
 {
-    use Traits\Accessible;
+    use GetSet;
 
     protected $calendarIntegration;
     protected $dateFactory;

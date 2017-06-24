@@ -2,14 +2,14 @@
 namespace Snscripts\MyCal\Calendar;
 
 use DateTimeZone;
-use Snscripts\MyCal\Traits;
+use Snscripts\GetSet\GetSet;
 use Snscripts\MyCal\EventFactory;
 use Snscripts\MyCal\Calendar\Event;
 use Snscripts\MyCal\Calendar\Calendar;
 
 class Date
 {
-    use Traits\Accessible;
+    use GetSet;
 
     protected $Calendar;
     protected $datetime;

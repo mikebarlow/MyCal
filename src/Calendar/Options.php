@@ -1,11 +1,11 @@
 <?php
 namespace Snscripts\MyCal\Calendar;
 
-use Snscripts\MyCal\Traits;
+use Snscripts\GetSet\GetSet;
 
 class Options
 {
-    use Traits\Accessible;
+    use GetSet;
 
     /**
      * Static method for loading options up
