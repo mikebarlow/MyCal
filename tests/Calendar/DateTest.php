@@ -241,4 +241,42 @@ class DateTest extends \PHPUnit_Framework_TestCase
             $Date->events()->count()
         );
     }
+
+    public function testSetTodayWorksTodayOutCorrectly()
+    {
+        $time = mktime('12', '00', '00', '10', '24', '2016');
+        $Date = new Date(
+            $time,
+            new DateTimeZone('Europe/London'),
+            Date::MONDAY
+        );
+
+        $this->assertTrue(
+            $Date->setToday(
+                new \DateTime(
+                    '2017-06-26 08:30:00',
+                    new \DateTimeZone('UTC')
+                ),
+                new \DateTime(
+                    '2017-06-26 12:30:00',
+                    new \DateTimeZone('UTC')
+                ),
+                new \DateTimeZone('America/New_York')
+            )
+        );
+
+        $this->assertFalse(
+            $Date->setToday(
+                new \DateTime(
+                    '2017-06-25 08:30:00',
+                    new \DateTimeZone('UTC')
+                ),
+                new \DateTime(
+                    '2017-06-26 12:30:00',
+                    new \DateTimeZone('UTC')
+                ),
+                new \DateTimeZone('America/New_York')
+            )
+        );
+    }
 }

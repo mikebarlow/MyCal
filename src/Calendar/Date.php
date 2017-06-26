@@ -1,6 +1,7 @@
 <?php
 namespace Snscripts\MyCal\Calendar;
 
+use DateTime;
 use DateTimeZone;
 use Snscripts\GetSet\GetSet;
 use Snscripts\MyCal\EventFactory;
@@ -16,6 +17,7 @@ class Date
     protected $EventFactory;
     protected $isWeekend;
     protected $isWeekStart;
+    protected $isToday;
     protected $timestamp;
     protected $Timezone;
     protected $events;
@@ -39,13 +41,24 @@ class Date
      */
     public function __construct(
         $timestamp,
-        \DateTimeZone $Timezone,
+        DateTimeZone $Timezone,
         $weekStart,
         EventFactory $EventFactory = null
     ) {
         $this->datetime = date('Y-m-d H:i:s', $timestamp);
         $this->isWeekend = $this->setWeekend($this->datetime, $Timezone);
         $this->isWeekStart = $this->setWeekStart($this->datetime, $Timezone, $weekStart);
+        $this->isToday = $this->setToday(
+            new DateTime(
+                $this->datetime,
+                new DateTimeZone('UTC')
+            ),
+            new DateTime(
+                'now',
+                new DateTimeZone('UTC')
+            ),
+            $Timezone
+        );
 
         $this->timestamp = $timestamp;
         $this->Timezone = $Timezone;
@@ -78,6 +91,16 @@ class Date
     }
 
     /**
+     * based on the calendars settings, is this date, today?
+     *
+     * @return bool
+     */
+    public function isToday()
+    {
+        return $this->isToday;
+    }
+
+    /**
      * take the timestamp and timezone, work out if it's a weekend date and set
      *
      * @param string $date Date time string
@@ -86,7 +109,7 @@ class Date
      */
     public function setWeekend($date, DateTimeZone $Timezone)
     {
-        $DateTime = new \DateTime(
+        $DateTime = new DateTime(
             $date,
             new DateTimeZone('UTC')
         );
@@ -105,7 +128,7 @@ class Date
      */
     public function setWeekStart($date, DateTimeZone $Timezone, $weekStart)
     {
-        $DateTime = new \DateTime(
+        $DateTime = new DateTime(
             $date,
             new DateTimeZone('UTC')
         );
@@ -113,6 +136,22 @@ class Date
         $weekStart = intval($weekStart);
 
         return (intval($DateTime->format('w')) === $weekStart);
+    }
+
+    /**
+     * take date time and now + timezone, is it "today"
+     *
+     * @param \DateTime $Date
+     * @param \DateTIme $Now
+     * @param \DateTimeZone $Timezone
+     * @return bool
+     */
+    public function setToday(DateTime $Date, DateTime $Now, DateTimeZone $Timezone)
+    {
+        $Date->setTimezone($Timezone);
+        $Now->setTimezone($Timezone);
+
+        return ($Date->format('Y-m-d') === $Now->format('Y-m-d'));
     }
 
     /**
@@ -124,7 +163,7 @@ class Date
      */
     public function display($format, $Timezone = '')
     {
-        $DateTime = new \DateTime(
+        $DateTime = new DateTime(
             $this->datetime,
             new DateTimeZone('UTC')
         );

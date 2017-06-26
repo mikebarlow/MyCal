@@ -90,7 +90,9 @@ class BootstrapFormatter implements FormatterInterface
      */
     public function parseDateCell(Date $Date, $parsedEvents = '')
     {
-        $cell = '<td class="mycal-date">';
+        $today = ($Date->isToday() ? ' today' : '');
+
+        $cell = '<td class="mycal-date' . $today . '">';
         $cell .= '<div class="date-num"><sup>' . $Date->display('j') . '</sup></div>';
         $cell .= '<div class="events">' . $parsedEvents . '</div>';
         $cell .= '</td>';
