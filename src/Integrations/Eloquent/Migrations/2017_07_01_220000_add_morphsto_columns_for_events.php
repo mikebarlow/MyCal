@@ -25,7 +25,7 @@ class AddMorphstoColumnsForEvents extends Migration
                 ->nullable()
                 ->after('taggable_type');
 
-            $table->index(["taggable_id", "taggable_type"], $indexName);
+            $table->index(["taggable_id", "taggable_type"], null);
         });
     }
 
