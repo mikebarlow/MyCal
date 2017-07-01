@@ -23,4 +23,9 @@ class Event extends Model
             'calendar_id'
         );
     }
+
+    public function taggable()
+    {
+        return $this->morphTo();
+    }
 }
