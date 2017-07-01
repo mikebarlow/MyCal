@@ -17,8 +17,15 @@ class AddMorphstoColumnsForEvents extends Migration
     public function up()
     {
         Schema::table('events', function (Blueprint $table) {
-            $table->nullableMorphs('taggable')
+            $table->string("taggable_type")
+                ->nullable()
                 ->after('calendar_id');
+
+            $table->unsignedInteger("taggable_id")
+                ->nullable()
+                ->after('taggable_type');
+
+            $table->index(["taggable_id", "taggable_type"], $indexName);
         });
     }
 
