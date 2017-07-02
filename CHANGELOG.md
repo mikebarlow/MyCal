@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.7.0] - 2017-07-01
+
+* Added polymorphic columns to events for extendability
+
+## [0.6.0] - 2017-06-26
+
+* Added `isToday()` method to Date object to return boolean if today matches Date object.
+* Added `today` CSS class to formatter to allow highlighting of current date when generating html table.
+
 ## [0.5.0] - 2017-05-16
 
 * Added `attachEvent()` method to Date object to allow adding manual events easier.
