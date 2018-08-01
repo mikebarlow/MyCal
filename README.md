@@ -19,7 +19,7 @@ MyCal is a PSR-2 compliant package used for generating calendars in an object or
 MyCal requires the following:
 
 * "php": ">=5.6.0"
-* "Illuminate/Support": "5.*",
+* "illuminate/support": "5.*",
 * "snscripts/result": "1.0.*"
 
 And the following if you wish to run in dev mode and run tests.
