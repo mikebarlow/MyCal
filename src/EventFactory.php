@@ -1,8 +1,8 @@
 <?php
 namespace Snscripts\MyCal;
 
-use Snscripts\MyCal\Interfaces\EventInterface;
 use Snscripts\MyCal\Calendar\Event;
+use Snscripts\MyCal\Interfaces\EventInterface;
 
 class EventFactory
 {

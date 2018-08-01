@@ -3,7 +3,7 @@ namespace Snscripts\MyCal\Calendar;
 
 use Snscripts\GetSet\GetSet;
 use Snscripts\MyCal\DateFactory;
-use Cartalyst\Collections\Collection;
+use Illuminate\Support\Collection;
 use Snscripts\MyCal\Interfaces\CalendarInterface;
 use Snscripts\MyCal\Interfaces\FormatterInterface;
 
@@ -116,7 +116,7 @@ class Calendar
     /**
      * Get a collection of dates inclusive of given dates
      *
-     * @return \Cartalyst\Collections\Collection
+     * @return \Illuminate\Support\Collection
      * @throws \BadMethodCallException
      */
     public function get()
@@ -129,7 +129,7 @@ class Calendar
             $this->getRange($this->dates['start'], $this->dates['end'])
         );
 
-        $dateCollection = new \Cartalyst\Collections\Collection($dates);
+        $dateCollection = collect($dates);
 
         if ($this->withEvents) {
             $this->withEvents = false;
@@ -271,7 +271,7 @@ class Calendar
      * display a calendar table
      *
      * @param FormatterInterface $Formatter
-     * @param \Cartalyst\Collections\Collection $Dates
+     * @param \Illuminate\Support\Collection $Dates
      * @return string
      */
     public function display(FormatterInterface $Formatter, Collection $Dates)
@@ -328,7 +328,7 @@ class Calendar
      *
      * @todo Refactor this majorly, messy and got to be a better way to do it
      * @param FormatterInterface $Formatter
-     * @param \Cartalyst\Collections\Collection $dates Collection of dates to display
+     * @param \Illuminate\Support\Collection $dates Collection of dates to display
      * @return string
      */
     public function getTableBody(FormatterInterface $Formatter, $dates)

@@ -67,7 +67,7 @@ class Date
             $this->EventFactory = $EventFactory;
         }
 
-        $this->events = new \Cartalyst\Collections\Collection([]);
+        $this->events = collect([]);
     }
 
     /**
@@ -180,7 +180,7 @@ class Date
     /**
      * return the events collection
      *
-     * @return \Cartalyst\Collections\Collection
+     * @return \Illuminate\Support\Collection
      */
     public function events()
     {

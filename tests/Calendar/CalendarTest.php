@@ -207,7 +207,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
         $Dates = $Calendar->dates('2016-12-01', '2016-12-05')->get();
 
         $this->assertInstanceOf(
-            'Cartalyst\Collections\Collection',
+            'Illuminate\Support\Collection',
             $Dates
         );
 

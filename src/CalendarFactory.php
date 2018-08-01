@@ -2,9 +2,9 @@
 namespace Snscripts\MyCal;
 
 use Snscripts\MyCal\DateFactory;
-use Snscripts\MyCal\Interfaces\CalendarInterface;
-use Snscripts\MyCal\Calendar\Calendar;
 use Snscripts\MyCal\Calendar\Options;
+use Snscripts\MyCal\Calendar\Calendar;
+use Snscripts\MyCal\Interfaces\CalendarInterface;
 
 class CalendarFactory
 {

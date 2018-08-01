@@ -1,9 +1,9 @@
 <?php
 namespace Snscripts\MyCal;
 
+use DateTimeZone;
 use Snscripts\MyCal\EventFactory;
 use Snscripts\MyCal\Calendar\Date;
-use DateTimeZone;
 
 class DateFactory
 {
