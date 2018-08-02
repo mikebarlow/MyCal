@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.9.1] - 2018-08-02
+
+* Bug fix for updated formatters
+
 ## [0.9.0] - 2018-08-02
 
 * Removed an unused method from Event object.

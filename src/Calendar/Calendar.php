@@ -359,7 +359,7 @@ class Calendar
             $events = '';
             if ($Date->events()->count() > 0) {
                 foreach ($Date->events() as $Event) {
-                    $events .= $Formatter->parseEvent($Event);
+                    $events .= $Formatter->parseEvent($Event, $Date);
                 }
             }
 
