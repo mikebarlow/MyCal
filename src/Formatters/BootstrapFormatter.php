@@ -11,16 +11,16 @@ class BootstrapFormatter implements FormatterInterface
     /**
      * Calendar Object
      */
-    protected $Calendar;
+    protected $calendar;
 
     /**
      * set the calendar
      *
-     * @param Calendar $Calendar
+     * @param Calendar $calendar
      */
-    public function setCalendar(Calendar $Calendar)
+    public function setCalendar(Calendar $calendar)
     {
-        $this->Calendar = $Calendar;
+        $this->calendar = $calendar;
     }
 
     /**
@@ -62,7 +62,7 @@ class BootstrapFormatter implements FormatterInterface
     public function parseHeaderCell($day)
     {
         $cell = '<th class="mycal-header">';
-        $cell .= $this->Calendar->getOptions()->days[$day];
+        $cell .= $this->calendar->getOptions()->days[$day];
         $cell .= '</th>';
         return $cell;
     }
@@ -84,16 +84,16 @@ class BootstrapFormatter implements FormatterInterface
     /**
      * process a date cell
      *
-     * @param Date $Date
+     * @param Date $date
      * @param string $parsedEvents
      * @return string
      */
-    public function parseDateCell(Date $Date, $parsedEvents = '')
+    public function parseDateCell(Date $date, $parsedEvents = '')
     {
-        $today = ($Date->isToday() ? ' today' : '');
+        $today = ($date->isToday() ? ' today' : '');
 
         $cell = '<td class="mycal-date' . $today . '">';
-        $cell .= '<div class="date-num"><sup>' . $Date->display('j') . '</sup></div>';
+        $cell .= '<div class="date-num"><sup>' . $date->display('j') . '</sup></div>';
         $cell .= '<div class="events">' . $parsedEvents . '</div>';
         $cell .= '</td>';
         return $cell;
@@ -112,14 +112,15 @@ class BootstrapFormatter implements FormatterInterface
     /**
      * process an individual event
      *
-     * @param Event $Event
+     * @param Event $event
+     * @param Date $date
      * @return string
      */
-    public function parseEvent(Event $Event)
+    public function parseEvent(Event $event, Date $date)
     {
         $display = '<span class="badge badge-primary">';
-        $display .= $Event->name . ': ';
-        $display .= $Event->displayStart('H:i') . ' - ' . $Event->displayEnd('H:i');
+        $display .= $event->name . ': ';
+        $display .= $event->displayStart('H:i') . ' - ' . $event->displayEnd('H:i');
         $display .= '</span>';
         return $display;
     }
