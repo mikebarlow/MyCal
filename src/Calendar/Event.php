@@ -352,6 +352,35 @@ class Event
     }
 
     /**
+     * check if a date in within this event
+     *
+     * @param Snscripts\MyCal\Calendar\Date $date
+     * @return bool
+     */
+    public function isDateWithinEvent(Date $date)
+    {
+        $start = new \DateTime(
+            $this->start_date,
+            new \DateTimeZone('UTC')
+        );
+        $end = new \DateTime(
+            $this->end_date,
+            new \DateTimeZone('UTC')
+        );
+
+        $date = new \DateTime(
+            $date->display('Y-m-d H:i:s', new \DateTimeZone('UTC')),
+            new \DateTimeZone('UTC')
+        );
+
+        if ($date->getTimestamp() >= $start->getTimestamp() && $date->getTimestamp() <= $end->getTimestamp()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Set the parent Calendar to the Event
      * required when saving
      *
