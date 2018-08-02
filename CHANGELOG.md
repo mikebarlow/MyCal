@@ -3,13 +3,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.9.0] - 2018-08-02
+
+* Removed an unused method from Event object.
+* Added method to events for checking if a Date object is within an event.
+* Modified formatters to pass Date object into parseEvents method.
+
 ## [0.8.0] - 2018-08-01
 
-* Converted to use Laravel collections
+* Converted to use Laravel collections.
 
 ## [0.7.0] - 2017-07-01
 
-* Added polymorphic columns to events for extendability
+* Added polymorphic columns to events for extendability.
 
 ## [0.6.0] - 2017-06-26
 
