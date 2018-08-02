@@ -269,64 +269,6 @@ class Event
     }
 
     /**
-     * Start to prepare the event for saving or attaching
-     * This checks to see if the event spans multiple days
-     *
-     * @todo review - can the logic here be improved?
-     * @param string $start Start date in YYYY-MM-DD format
-     * @param string $end End date in YYYY-MM-DD format
-     * @return \Illuminate\Support\Collection
-     */
-    public function prepareEvent($start, $end)
-    {
-        if (! $this->isStartBeforeEnd($this->start_date, $this->end_date)) {
-            throw new \UnexpectedValueException(
-                'The event end date can not occur before event start date'
-            );
-        }
-
-        $events = [];
-
-        if ($start === $end) {
-            $events[$this->startDate['date']] = $this;
-        } else {
-            $dates = new \DatePeriod(
-                new \DateTime(
-                    $start,
-                    new \DateTimeZone('UTC')
-                ),
-                new \DateInterval('P1D'),
-                (new \DateTime(
-                    $end,
-                    new \DateTimeZone('UTC')
-                ))->modify("+1 Day")
-            );
-
-            foreach ($dates as $Date) {
-                $curDate = $Date->format('Y-m-d');
-                $Event = $this;
-
-                if ($curDate === $start) {
-                    $Event->endsOn($start)
-                        ->endsAt('23:59:59');
-                } elseif ($curDate != $end && $curDate != $start) {
-                    $Event->startsOn($curDate)
-                        ->startsAt('00:00:00')
-                        ->endsOn($curDate)
-                        ->endsAt('23:59:59');
-                } elseif ($curDate === $end) {
-                    $Event->startsOn($curDate)
-                        ->startsAt('00:00:00');
-                }
-
-                $events[$curDate] = $Event;
-            }
-        }
-
-        return collect($events);
-    }
-
-    /**
      * given an array of date and time, and a Timezone
      * generate the UTC date / time
      *
