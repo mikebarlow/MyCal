@@ -359,6 +359,10 @@ class Event
      */
     public function isDateWithinEvent(Date $date)
     {
+        if ($this->start_date === null || $this->end_date === null) {
+            throw new \InvalidArgumentException('Both a start and end date are required to check if date is within event.');
+        }
+
         $start = new \DateTime(
             $this->start_date,
             new \DateTimeZone('UTC')

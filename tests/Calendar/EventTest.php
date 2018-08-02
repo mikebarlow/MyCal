@@ -312,4 +312,22 @@ class EventTest extends \PHPUnit_Framework_TestCase
             $event->isDateWithinEvent($exactDate2)
         );
     }
+
+    public function testisDateWithinEventHandlesNoDatesSet()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $event = new Event(
+            $this->EventInterfaceMock,
+            new \DateTimeZone('UTC')
+        );
+
+        $date = new Date(
+            mktime('12', '00', '00', '08', '10', '2018'),
+            new \DateTimeZone('UTC'),
+            1
+        );
+
+        $event->isDateWithinEvent($date);
+    }
 }
