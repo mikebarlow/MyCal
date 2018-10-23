@@ -4,10 +4,12 @@ namespace Snscripts\MyCal;
 use DateTimeZone;
 use Snscripts\MyCal\EventFactory;
 use Snscripts\MyCal\Calendar\Date;
+use Snscripts\MyCal\Calendar\Options;
 
 class DateFactory
 {
     protected $eventFactory;
+    protected $options;
 
     /**
      * Setup a new date factory
@@ -44,6 +46,20 @@ class DateFactory
      */
     public function getEventFactory()
     {
+        if ($this->options !== null) {
+            $this->eventFactory->setOptions($this->options);
+        }
+
         return $this->eventFactory;
+    }
+
+    /**
+     * set the options object
+     *
+     * @param Options $options
+     */
+    public function setOptions(Options $options)
+    {
+        $this->options = $options;
     }
 }

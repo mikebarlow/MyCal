@@ -2,11 +2,13 @@
 namespace Snscripts\MyCal;
 
 use Snscripts\MyCal\Calendar\Event;
+use Snscripts\MyCal\Calendar\Options;
 use Snscripts\MyCal\Interfaces\EventInterface;
 
 class EventFactory
 {
     protected $eventIntegration;
+    protected $options;
 
     /**
      * Setup a new event factory
@@ -29,6 +31,8 @@ class EventFactory
         EventInterface $eventIntegration,
         \DateTimeZone $Timezone
     ) {
+        $eventIntegration->setOptions($this->options);
+
         return new Event(
             $eventIntegration,
             $Timezone
@@ -54,5 +58,15 @@ class EventFactory
         }
 
         return $Event;
+    }
+
+    /**
+     * set the options object
+     *
+     * @param Options $options
+     */
+    public function setOptions(Options $options)
+    {
+        $this->options = $options;
     }
 }

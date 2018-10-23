@@ -1,10 +1,23 @@
 <?php
 namespace Snscripts\MyCal\Integrations;
 
+use Snscripts\MyCal\Calendar\Options;
 use Snscripts\MyCal\Calendar\Calendar;
 
 class BaseIntegration
 {
+    protected $options;
+
+    /**
+     * set the options object
+     *
+     * @param Options $options
+     */
+    public function setOptions(Options $options)
+    {
+        $this->options = $options;
+    }
+
     /**
      * generic extract data method
      * with custom default OptionsMock

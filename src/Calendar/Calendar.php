@@ -13,7 +13,7 @@ class Calendar
 
     protected $calendarIntegration;
     protected $dateFactory;
-    protected $Options;
+    protected $options;
     protected $getEvents = false;
     protected $dates = [];
 
@@ -22,16 +22,19 @@ class Calendar
      *
      * @param CalendarInterface $calendarIntegration
      * @param DateFactory $dateFactory
-     * @param Options $Options
+     * @param Options $options
      */
     public function __construct(
         CalendarInterface $calendarIntegration,
         DateFactory $dateFactory,
-        Options $Options
+        Options $options
     ) {
         $this->calendarIntegration = $calendarIntegration;
         $this->dateFactory = $dateFactory;
-        $this->Options = $Options;
+        $this->options = $options;
+
+        $this->calendarIntegration->setOptions($this->options);
+        $this->dateFactory->setOptions($this->options);
     }
 
     /**
@@ -50,7 +53,7 @@ class Calendar
 
         $Event = $EventFactory->load(
             new \DateTimeZone(
-                $this->Options->defaultTimezone
+                $this->options->defaultTimezone
             )
         );
 
@@ -105,9 +108,9 @@ class Calendar
             )
         );
 
-        $Options = new \Snscripts\MyCal\Calendar\Options;
-        $Options->setAllData($calOptions);
-        $this->setOptions($Options);
+        $options = new \Snscripts\MyCal\Calendar\Options;
+        $options->setAllData($calOptions);
+        $this->setOptions($options);
         unset($calData['options']);
 
         return $this;
@@ -220,7 +223,7 @@ class Calendar
     public function getRange($start, $end)
     {
         $calTime = new \DateTimeZone(
-            $this->Options->defaultTimezone
+            $this->options->defaultTimezone
         );
 
         return new \DatePeriod(
@@ -247,7 +250,7 @@ class Calendar
     {
         $UTCTime = new \DateTimeZone('UTC');
         $DateTimeZone = new \DateTimeZone(
-            $this->Options->defaultTimezone
+            $this->options->defaultTimezone
         );
 
         $dates = [];
@@ -257,7 +260,7 @@ class Calendar
             $DateObj = $this->dateFactory->newInstance(
                 $date->getTimestamp(),
                 $DateTimeZone,
-                $this->Options->weekStartsOn
+                $this->options->weekStartsOn
             );
             $DateObj->setCalendar($this);
             $dates[$date->format('Y-m-d')] = $DateObj;
@@ -396,7 +399,7 @@ class Calendar
      */
     public function getOptions()
     {
-        return $this->Options;
+        return $this->options;
     }
 
     /**
@@ -404,9 +407,9 @@ class Calendar
      *
      * @param Snscripts\MyCal\Calendar\Option $Options
      */
-    public function setOptions(Options $Options)
+    public function setOptions(Options $options)
     {
-        $this->Options = $Options;
+        $this->options = $options;
         return $this;
     }
 }
