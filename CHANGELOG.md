@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.10.0] - 2018-10-23
+
+* Making calendar options available to Calendar and Event Integrations
+
 ## [0.9.1] - 2018-08-02
 
 * Bug fix for updated formatters

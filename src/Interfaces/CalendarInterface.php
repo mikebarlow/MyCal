@@ -1,6 +1,7 @@
 <?php
 namespace Snscripts\MyCal\Interfaces;
 
+use Snscripts\MyCal\Calendar\Options;
 use Snscripts\MyCal\Calendar\Calendar as CalendarObj;
 
 interface CalendarInterface
@@ -20,4 +21,11 @@ interface CalendarInterface
      * @return Snscripts\Result\Result $Result
      */
     public function load($id);
+
+    /**
+     * set the options object
+     *
+     * @param Options $options
+     */
+    public function setOptions(Options $options);
 }

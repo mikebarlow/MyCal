@@ -9,6 +9,7 @@ class EventFactoryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->EventInterfaceMock = $this->createMock('\Snscripts\MyCal\Interfaces\EventInterface');
+        $this->OptionsMock = $this->createMock('\Snscripts\MyCal\Calendar\Options');
     }
 
     public function testCanCreateInstance()
@@ -26,6 +27,8 @@ class EventFactoryTest extends \PHPUnit_Framework_TestCase
         $Factory = new EventFactory(
             $this->EventInterfaceMock
         );
+
+        $Factory->setOptions($this->OptionsMock);
 
         $this->assertInstanceOf(
             'Snscripts\MyCal\Calendar\Event',
